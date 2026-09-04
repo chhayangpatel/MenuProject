@@ -21,8 +21,20 @@ export async function loadAllRestaurants(): Promise<Restaurant[]> {
     const configPath = path.join(restaurantsDir, entry.name, 'config.json');
     try {
       const configRaw = await fs.readFile(configPath, 'utf-8');
-      const configJson = JSON.parse(configRaw);
-      
+      let configJson = JSON.parse(configRaw);
+
+      // Backward compatibility: migrate flat hours to new format
+      if (configJson.hours && !configJson.hours.regular && typeof configJson.hours === 'object') {
+        const flatHours = configJson.hours;
+        const isFlatFormat = Object.values(flatHours).some(v => typeof v === 'string');
+        if (isFlatFormat) {
+          configJson = {
+            ...configJson,
+            hours: { regular: flatHours }
+          };
+        }
+      }
+
       const parsed = RestaurantSchema.safeParse(configJson);
       
       if (!parsed.success) {

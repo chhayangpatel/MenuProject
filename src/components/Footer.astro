@@ -7,7 +7,7 @@ interface Props {
 
 const { restaurant } = Astro.props;
 const { hours, contact } = restaurant;
-const hourEntries = hours ? Object.entries(hours) : [];
+const hourEntries = hours?.regular ? Object.entries(hours.regular) : (hours && !hours.regular ? Object.entries(hours as Record<string, string>) : []);
 ---
 
 <footer class="site-footer" role="contentinfo">

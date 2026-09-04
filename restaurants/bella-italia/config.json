@@ -5,6 +5,8 @@
   "description": "Family-run Italian trattoria serving handmade pasta and wood-fired pizza.",
   "logo": "logo.svg",
   "coverImage": "cover.svg",
+  "cuisine": ["Italian", "Pasta", "Pizza"],
+  "priceRange": "$$",
   "moodPreset": "fine-dining",
   "story": {
     "heading": "Our Story",

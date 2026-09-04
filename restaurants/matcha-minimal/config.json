@@ -5,6 +5,8 @@
   "description": "A serene Japanese-inspired café focused on clean, plant-forward food and premium matcha drinks.",
   "logo": "logo.svg",
   "coverImage": "cover.svg",
+  "cuisine": ["Japanese", "Café", "Plant-Based"],
+  "priceRange": "$$",
   "moodPreset": "modern-minimal",
   "story": {
     "heading": "A Place for Stillness",

@@ -31,7 +31,7 @@ export const moodPresets: Record<MoodPresetName, MoodPreset> = {
   'rustic-traditional': {
     name: 'rustic-traditional',
     fontHeading: '"Fraunces", serif',
-    fontBody: '"Source Sans 3", sans-serif',
+    fontBody: '"Crimson Pro", serif',
     radius: '0.375rem', // md
     spacing: 'generous',
     motif: `<svg width="40" height="12" viewBox="0 0 40 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0C20 0 10 12 0 12C10 12 20 0 20 0ZM20 0C20 0 30 12 40 12C30 12 20 0 20 0Z" fill="currentColor"/></svg>`,
@@ -40,7 +40,7 @@ export const moodPresets: Record<MoodPresetName, MoodPreset> = {
   'playful-casual': {
     name: 'playful-casual',
     fontHeading: '"Poppins", sans-serif',
-    fontBody: '"Nunito", sans-serif',
+    fontBody: '"Outfit", sans-serif',
     radius: '9999px', // full
     spacing: 'compact',
     motif: `<svg width="60" height="10" viewBox="0 0 60 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 5C10 -5 20 15 30 5C40 -5 50 15 60 5" stroke="currentColor" stroke-width="2" fill="none"/></svg>`,
@@ -48,7 +48,7 @@ export const moodPresets: Record<MoodPresetName, MoodPreset> = {
   'bold-street': {
     name: 'bold-street',
     fontHeading: '"Archivo Black", sans-serif',
-    fontBody: '"Work Sans", sans-serif',
+    fontBody: '"DM Sans", sans-serif',
     radius: '0px',
     spacing: 'compact',
     motif: `<svg width="80" height="10" viewBox="0 0 80 10" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="2" width="20" height="6" fill="currentColor" transform="skewX(-20)"/><rect x="30" y="2" width="20" height="6" fill="currentColor" transform="skewX(-20)"/><rect x="60" y="2" width="20" height="6" fill="currentColor" transform="skewX(-20)"/></svg>`,

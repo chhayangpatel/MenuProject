@@ -1,0 +1,147 @@
+---
+import type { MoodPresetName } from '../lib/moodPresets';
+
+interface Props {
+  moodPreset: MoodPresetName;
+  restaurantName: string;
+}
+
+const { moodPreset, restaurantName } = Astro.props;
+---
+
+<div class={`loading-screen loading-screen--${moodPreset}`} id="loading-screen" aria-hidden="true">
+  <div class="loading-content">
+    <div class="loading-logo-ring">
+      <div class="loading-logo-inner">
+        <span class="loading-initial">{restaurantName.charAt(0)}</span>
+      </div>
+    </div>
+    <p class="loading-name">{restaurantName}</p>
+  </div>
+</div>
+
+<style>
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-secondary);
+    transition: opacity 0.6s cubic-bezier(0.32, 0.72, 0, 1),
+                visibility 0.6s;
+  }
+  .loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    animation: loadingFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes loadingFadeIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .loading-logo-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: loadingRingPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loadingRingPulse {
+    0%, 100% { transform: scale(1); border-color: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+    50% { transform: scale(1.05); border-color: color-mix(in srgb, var(--color-accent) 60%, transparent); }
+  }
+
+  .loading-logo-inner {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading-initial {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+  }
+
+  .loading-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* Mood-specific enhancements */
+  .loading-screen--fine-dining .loading-logo-ring {
+    border-color: color-mix(in srgb, #d4af37 30%, transparent);
+    animation: loadingGoldPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes loadingGoldPulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, #d4af37 0%, transparent); }
+    50% { box-shadow: 0 0 20px 4px color-mix(in srgb, #d4af37 20%, transparent); }
+  }
+
+  .loading-screen--bold-street .loading-logo-ring {
+    animation: loadingGlitch 0.3s ease-in-out infinite alternate;
+  }
+  @keyframes loadingGlitch {
+    from { transform: translate(-1px, 1px); }
+    to { transform: translate(1px, -1px); }
+  }
+
+  .loading-screen--playful-casual .loading-logo-ring {
+    animation: loadingBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
+  }
+  @keyframes loadingBounce {
+    from { transform: scale(0.95); }
+    to { transform: scale(1.05); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loading-screen { animation: none; transition: none; }
+    .loading-content { animation: none; }
+    .loading-logo-ring { animation: none; }
+  }
+</style>
+
+<script>
+  function hideLoadingScreen() {
+    const screen = document.getElementById('loading-screen');
+    if (screen) {
+      screen.classList.add('hidden');
+      setTimeout(() => screen.remove(), 600);
+    }
+  }
+
+  // Hide after page load
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(hideLoadingScreen, 800);
+  });
+
+  // Fallback: hide after 3 seconds max
+  setTimeout(hideLoadingScreen, 3000);
+</script>

@@ -4,6 +4,8 @@
   "tagline": "Smash burgers & street vibes",
   "logo": "logo.svg",
   "coverImage": "cover.svg",
+  "cuisine": ["Burgers", "Street Food", "American"],
+  "priceRange": "$",
   "moodPreset": "bold-street",
   "hero": { "style": "split" },
   "contact": {

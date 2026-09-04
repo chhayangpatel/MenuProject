@@ -9,6 +9,7 @@ import FeaturedCarousel from '../../../components/FeaturedCarousel.astro';
 import StorySection from '../../../components/StorySection.astro';
 import Footer from '../../../components/Footer.astro';
 import SectionDivider from '../../../components/SectionDivider.astro';
+import CategoryHero from '../../../components/CategoryHero.astro';
 import ItemDetailSheet from '../../../components/ItemDetailSheet';
 import SearchFilterBar from '../../../components/SearchFilterBar';
 
@@ -54,13 +55,25 @@ const flatItems = menu.flatMap(c => c.items);
   <div class="menu-body px-4 py-8 max-w-3xl mx-auto" id="menu-body">
     {menu.map((category, index) => (
       <section id={"category-" + category.id} class="mb-14 scroll-mt-28">
-        {/* Category header */}
-        <div class="category-header">
-          <h2 class="category-name">{category.name}</h2>
-          {category.description && (
-            <p class="category-desc">{category.description}</p>
-          )}
-        </div>
+        {/* Immersive CategoryHero if heroImage exists, otherwise standard header */}
+        {category.heroImage ? (
+          <CategoryHero
+            name={category.name}
+            description={category.description}
+            heroImage={category.heroImage}
+            heroQuote={category.heroQuote}
+            slug={restaurant.slug}
+            categoryId={category.id}
+            categoryIndex={index}
+          />
+        ) : (
+          <div class="category-header">
+            <h2 class="category-name" data-scramble>{category.name}</h2>
+            {category.description && (
+              <p class="category-desc">{category.description}</p>
+            )}
+          </div>
+        )}
 
         {/* Items grid */}
         <div class="items-grid">
@@ -135,6 +148,110 @@ const flatItems = menu.flatMap(c => c.items);
 
   document.addEventListener('astro:page-load', setupScrollReveal);
   setupScrollReveal();
+
+  // Text Scramble on category headings
+  function setupTextScramble() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    document.querySelectorAll('[data-scramble]').forEach(el => {
+      const finalText = el.textContent || '';
+      let frame = 0;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            // Start scramble effect
+            const scramble = () => {
+              let output = '';
+              for (let i = 0; i < finalText.length; i++) {
+                if (frame >= finalText.length + 10) {
+                  output += finalText[i];
+                } else if (frame > i) {
+                  output += finalText[i];
+                } else {
+                  output += CHARS[Math.floor(Math.random() * CHARS.length)];
+                }
+              }
+              el.textContent = output;
+              frame++;
+              if (frame <= finalText.length + 15) {
+                requestAnimationFrame(scramble);
+              } else {
+                el.textContent = finalText;
+              }
+            };
+            requestAnimationFrame(scramble);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(el);
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupTextScramble);
+  setupTextScramble();
+
+  // Mobile swipe navigation between categories
+  function setupSwipeNav() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('ontouchstart' in window)) return;
+
+    const sections = document.querySelectorAll('section[id^="category-"]');
+    if (sections.length < 2) return;
+
+    let startX = 0, startY = 0, startTime = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startTime = Date.now();
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      const dt = Date.now() - startTime;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) || dt > 500) return;
+
+      const currentIndex = Array.from(sections).findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        return rect.top <= 100 && rect.bottom > 100;
+      });
+      if (currentIndex === -1) return;
+
+      if (dx < 0 && currentIndex < sections.length - 1) {
+        sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (dx > 0 && currentIndex > 0) {
+        sections[currentIndex - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, { passive: true });
+  }
+
+  document.addEventListener('astro:page-load', setupSwipeNav);
+  setupSwipeNav();
+
+  // 3D Card tilt on hover
+  function setupCardTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.querySelectorAll('[data-item-id]').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-3px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupCardTilt);
+  setupCardTilt();
 </script>
 
 <style>
@@ -193,5 +310,11 @@ const flatItems = menu.flatMap(c => c.items);
   }
   @media (min-width: 520px) {
     .items-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* 3D tilt on cards */
+  [data-item-id] {
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
   }
 </style>
