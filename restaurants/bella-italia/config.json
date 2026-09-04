@@ -4,7 +4,7 @@
   "tagline": "Authentic Italian Cuisine Since 1985",
   "description": "Family-run Italian trattoria serving handmade pasta and wood-fired pizza.",
   "logo": "logo.svg",
-  "coverImage": "cover.svg",
+  "coverImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80",
   "cuisine": ["Italian", "Pasta", "Pizza"],
   "priceRange": "$$",
   "moodPreset": "fine-dining",
@@ -21,17 +21,23 @@
     "googleMapsUrl": "https://maps.google.com/?q=123+Main+St+Springfield"
   },
   "hours": {
-    "monday": "11:00-22:00",
-    "tuesday": "11:00-22:00",
-    "sunday": "12:00-21:00"
+    "regular": {
+      "monday": "11:00-22:00",
+      "tuesday": "11:00-22:00",
+      "wednesday": "11:00-22:00",
+      "thursday": "11:00-22:00",
+      "friday": "11:00-23:00",
+      "saturday": "12:00-23:00",
+      "sunday": "12:00-21:00"
+    }
   },
   "theme": {
     "primaryColor": "#8B0000",
-    "secondaryColor": "#F5F0E6",
-    "accentColor": "#D4AF37",
+    "secondaryColor": "#FAF7F2",
+    "accentColor": "#C9A227",
     "fontHeading": "Playfair Display",
-    "fontBody": "Inter",
-    "borderRadius": "md",
+    "fontBody": "Plus Jakarta Sans",
+    "borderRadius": "lg",
     "mode": "light"
   },
   "settings": {
@@ -44,32 +50,109 @@
   },
   "menu": [
     {
-      "id": "starters",
-      "name": "Starters",
+      "id": "antipasti",
+      "name": "Antipasti",
+      "description": "Traditional starters to share.",
+      "heroImage": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80",
+      "heroQuote": "\"Simplicity is the ultimate sophistication.\"",
       "items": [
         {
           "id": "bruschetta",
           "name": "Bruschetta al Pomodoro",
-          "description": "Grilled bread, tomato, basil, olive oil",
-          "price": 8.5,
-          "image": "menu/bruschetta.svg",
+          "description": "Grilled sourdough, heirloom tomatoes, fresh basil, aged balsamic",
+          "price": 12,
+          "image": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=400&q=80",
           "tags": ["vegetarian"],
+          "available": true
+        },
+        {
+          "id": "burrata",
+          "name": "Burrata & Prosciutto",
+          "description": "Creamy burrata, San Daniele prosciutto, arugula, pine nuts",
+          "price": 18,
+          "image": "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=400&q=80",
+          "tags": [],
           "available": true
         }
       ]
     },
     {
-      "id": "mains",
-      "name": "Main Courses",
+      "id": "pasta",
+      "name": "Pasta Fatta in Casa",
+      "description": "Handmade daily using our grandmother's recipe.",
       "items": [
         {
           "id": "carbonara",
           "name": "Spaghetti Carbonara",
-          "description": "Guanciale, egg, pecorino, black pepper",
-          "price": 16,
-          "image": "menu/carbonara.svg",
-          "pairsWith": "Try with our house Chianti",
+          "description": "Guanciale, pecorino romano, egg yolk, black pepper",
+          "price": 22,
+          "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400&q=80",
+          "pairsWith": "House Chianti Classico",
           "tags": [],
+          "available": true,
+          "featured": true,
+          "popularity": "most-ordered"
+        },
+        {
+          "id": "cacio-pepe",
+          "name": "Cacio e Pepe",
+          "description": "Tonnarelli, pecorino, black pepper, lemon zest",
+          "price": 19,
+          "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80",
+          "tags": ["vegetarian"],
+          "available": true
+        },
+        {
+          "id": "ragù",
+          "name": "Tagliatelle al Ragù",
+          "description": "Slow-cooked beef and pork ragù, 8 hours on the stove",
+          "price": 21,
+          "image": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=400&q=80",
+          "tags": [],
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "pizza",
+      "name": "Pizza Napoletana",
+      "description": "Wood-fired in our imported Vesuvio oven.",
+      "heroImage": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=1600&q=80",
+      "items": [
+        {
+          "id": "margherita",
+          "name": "Margherita DOP",
+          "description": "San Marzano tomatoes, mozzarella di bufala, fresh basil",
+          "price": 16,
+          "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80",
+          "tags": ["vegetarian"],
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "diavola",
+          "name": "Diavola",
+          "description": "Spicy salami, mozzarella, chili honey",
+          "price": 18,
+          "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&q=80",
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "dolci",
+      "name": "Dolci",
+      "description": "Homemade Italian desserts.",
+      "items": [
+        {
+          "id": "tiramisu",
+          "name": "Classic Tiramisu",
+          "description": "Mascarpone, espresso-soaked savoiardi, cocoa",
+          "price": 10,
+          "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&q=80",
+          "tags": ["vegetarian"],
           "available": true,
           "featured": true
         }

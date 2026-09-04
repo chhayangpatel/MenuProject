@@ -4,7 +4,7 @@
   "tagline": "Mindful bites, clean flavors",
   "description": "A serene Japanese-inspired café focused on clean, plant-forward food and premium matcha drinks.",
   "logo": "logo.svg",
-  "coverImage": "cover.svg",
+  "coverImage": "https://images.unsplash.com/photo-1515823064-d6e0c04616ea?w=1600&q=80",
   "cuisine": ["Japanese", "Café", "Plant-Based"],
   "priceRange": "$$",
   "moodPreset": "modern-minimal",
@@ -19,21 +19,23 @@
     "address": "88 Zen Lane, Westside"
   },
   "hours": {
-    "monday": "08:00-17:00",
-    "tuesday": "08:00-17:00",
-    "wednesday": "08:00-17:00",
-    "thursday": "08:00-17:00",
-    "friday": "08:00-18:00",
-    "saturday": "09:00-18:00",
-    "sunday": "Closed"
+    "regular": {
+      "monday": "08:00-17:00",
+      "tuesday": "08:00-17:00",
+      "wednesday": "08:00-17:00",
+      "thursday": "08:00-17:00",
+      "friday": "08:00-18:00",
+      "saturday": "09:00-18:00",
+      "sunday": "Closed"
+    }
   },
   "theme": {
-    "primaryColor": "#1a2a1a",
-    "secondaryColor": "#f7f8f5",
-    "accentColor": "#4a7c59",
+    "primaryColor": "#1A2A1A",
+    "secondaryColor": "#FAFAF8",
+    "accentColor": "#4A7C59",
     "fontHeading": "Space Grotesk",
-    "fontBody": "Inter",
-    "borderRadius": "lg",
+    "fontBody": "Plus Jakarta Sans",
+    "borderRadius": "xl",
     "mode": "light"
   },
   "settings": {
@@ -49,25 +51,38 @@
       "id": "drinks",
       "name": "Matcha Drinks",
       "description": "Ceremonial-grade matcha sourced from Uji, Kyoto.",
+      "heroImage": "https://images.unsplash.com/photo-1515823064-d6e0c04616ea?w=1600&q=80",
+      "heroQuote": "\"Every cup is a small ritual.\"",
       "items": [
         {
           "id": "classic-matcha-latte",
           "name": "Classic Matcha Latte",
-          "description": "Whisked ceremonial matcha, oat milk, light sweetness.",
-          "price": 6.5,
-          "image": "menu/matcha-latte.svg",
+          "description": "Whisked ceremonial matcha, oat milk, light sweetness",
+          "price": 7.5,
+          "image": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&q=80",
           "tags": ["vegan"],
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "most-ordered"
         },
         {
           "id": "iced-hojicha",
           "name": "Iced Hōjicha",
-          "description": "Roasted green tea over ice, smooth and caramel-like.",
-          "price": 5.5,
-          "image": "menu/hojicha.svg",
+          "description": "Roasted green tea over ice, smooth and caramel-like",
+          "price": 6.5,
+          "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
           "tags": ["vegan"],
           "available": true
+        },
+        {
+          "id": "matcha-espresso",
+          "name": "Matcha Espresso Tonic",
+          "description": "Ceremonial matcha, espresso shot, tonic water, citrus",
+          "price": 8,
+          "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400&q=80",
+          "tags": ["vegan"],
+          "available": true,
+          "popularity": "staff-favorite"
         }
       ]
     },
@@ -75,13 +90,14 @@
       "id": "bowls",
       "name": "Nourish Bowls",
       "description": "Balanced, seasonal, plant-forward.",
+      "heroImage": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1600&q=80",
       "items": [
         {
           "id": "green-goddess",
           "name": "Green Goddess Bowl",
-          "description": "Brown rice, edamame, avocado, pickled cucumber, sesame dressing.",
-          "price": 14.5,
-          "image": "menu/green-bowl.svg",
+          "description": "Brown rice, edamame, avocado, pickled cucumber, sesame dressing",
+          "price": 16,
+          "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
           "tags": ["vegan", "gluten-free"],
           "available": true,
           "featured": true
@@ -89,11 +105,21 @@
         {
           "id": "miso-tofu",
           "name": "Miso Glazed Tofu",
-          "description": "Silken tofu, white miso glaze, bok choy, black sesame.",
-          "price": 13,
-          "image": "menu/tofu.svg",
+          "description": "Silken tofu, white miso glaze, bok choy, black sesame",
+          "price": 15,
+          "image": "https://images.unsplash.com/photo-1615937461627-bf3f0f8b3b94?w=400&q=80",
           "tags": ["vegetarian", "gluten-free"],
           "available": true
+        },
+        {
+          "id": "shiso-salmon",
+          "name": "Shiso Salmon Bowl",
+          "description": "Miso-cured salmon, shiso leaf, pickled ginger, scallions",
+          "price": 19,
+          "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=80",
+          "tags": ["gluten-free"],
+          "available": true,
+          "popularity": "trending"
         }
       ]
     },
@@ -104,12 +130,21 @@
         {
           "id": "matcha-roll",
           "name": "Matcha Swiss Roll",
-          "description": "Light sponge, matcha cream, dusted with ceremonial matcha powder.",
-          "price": 7.5,
-          "image": "menu/roll.svg",
+          "description": "Light sponge, matcha cream, ceremonial matcha dust",
+          "price": 8.5,
+          "image": "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&q=80",
           "tags": ["vegetarian"],
           "available": true,
           "featured": true
+        },
+        {
+          "id": "mochi",
+          "name": "Matcha Mochi Ice Cream",
+          "description": "Three pieces: classic, black sesame, yuzu",
+          "price": 7,
+          "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80",
+          "tags": ["vegetarian", "gluten-free"],
+          "available": true
         }
       ]
     }

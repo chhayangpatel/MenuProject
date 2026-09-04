@@ -25,7 +25,7 @@ const { items, currencySymbol, showPrices } = Astro.props;
   <div class="featured-scroll-track" role="list" aria-label="Featured items carousel">
     {items.map(item => (
       <div class="featured-card-wrapper" role="listitem">
-        <MenuItemCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} />
+        <MenuItemCard item={{ ...item, restaurantSlug: (item as any).restaurantSlug || '' }} currencySymbol={currencySymbol} showPrices={showPrices} />
       </div>
     ))}
   </div>

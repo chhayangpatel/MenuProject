@@ -4,17 +4,34 @@
   "tagline": "A generic template",
   "description": "Copy this folder to start a new restaurant.",
   "logo": "logo.svg",
-  "coverImage": "cover.svg",
+  "coverImage": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80",
+  "cuisine": ["Cuisine Type"],
+  "priceRange": "$$",
   "moodPreset": "fine-dining",
   "contact": {
-    "phone": "+1-555-0100"
+    "phone": "+1-555-0100",
+    "email": "hello@example.com",
+    "address": "123 Main St, City",
+    "googleMapsUrl": "https://maps.google.com/?q=123+Main+St+City"
+  },
+  "hours": {
+    "regular": {
+      "monday": "11:00-22:00",
+      "tuesday": "11:00-22:00",
+      "wednesday": "11:00-22:00",
+      "thursday": "11:00-22:00",
+      "friday": "11:00-23:00",
+      "saturday": "12:00-23:00",
+      "sunday": "12:00-21:00"
+    }
   },
   "theme": {
-    "primaryColor": "#000000",
-    "secondaryColor": "#ffffff",
+    "primaryColor": "#1a1a1a",
+    "secondaryColor": "#fafafa",
+    "accentColor": "#D4AF37",
     "fontHeading": "Playfair Display",
-    "fontBody": "Inter",
-    "borderRadius": "md",
+    "fontBody": "Plus Jakarta Sans",
+    "borderRadius": "lg",
     "mode": "light"
   },
   "settings": {
@@ -27,16 +44,65 @@
   },
   "menu": [
     {
-      "id": "mains",
-      "name": "Main Courses",
+      "id": "starters",
+      "name": "Starters",
+      "description": "Shareable plates to begin.",
       "items": [
         {
           "id": "example-item",
           "name": "Example Item",
-          "price": 10,
-          "available": true
+          "description": "A delicious starter with fresh ingredients.",
+          "price": 12,
+          "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80",
+          "tags": ["vegetarian"],
+          "available": true,
+          "featured": true,
+          "popularity": "most-ordered"
         }
       ]
+    },
+    {
+      "id": "mains",
+      "name": "Main Courses",
+      "description": "Handcrafted entrees.",
+      "heroImage": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80",
+      "heroQuote": "\"Quality ingredients, honest cooking.\"",
+      "items": [
+        {
+          "id": "example-main",
+          "name": "Signature Dish",
+          "description": "Our chef's signature creation with seasonal ingredients.",
+          "price": 24,
+          "image": "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&q=80",
+          "tags": ["vegetarian", "gluten-free"],
+          "available": true,
+          "featured": true,
+          "variants": [
+            { "id": "small", "name": "Small", "priceModifier": 0 },
+            { "id": "large", "name": "Large", "priceModifier": 6 }
+          ],
+          "modifiers": [
+            { "id": "extra-protein", "name": "Extra Protein", "price": 4, "group": "Add-ons" }
+          ],
+          "prepTime": 15,
+          "portionSize": "Serves 1",
+          "nutrition": { "calories": 450, "protein": 28, "carbs": 42, "fat": 18 },
+          "allergens": [
+            { "name": "Dairy", "severity": "contains" },
+            { "name": "Gluten", "severity": "may-contain" }
+          ]
+        }
+      ]
+    }
+  ],
+  "combos": [
+    {
+      "id": "lunch-combo",
+      "name": "Lunch Combo",
+      "description": "Starter + Main + Drink",
+      "items": ["example-item", "example-main"],
+      "comboPrice": 30,
+      "available": true
     }
   ]
 }

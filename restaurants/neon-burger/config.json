@@ -3,7 +3,7 @@
   "name": "NEON BURGER",
   "tagline": "Smash burgers & street vibes",
   "logo": "logo.svg",
-  "coverImage": "cover.svg",
+  "coverImage": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600&q=80",
   "cuisine": ["Burgers", "Street Food", "American"],
   "priceRange": "$",
   "moodPreset": "bold-street",
@@ -13,14 +13,22 @@
     "address": "456 Urban Ave, Downtown"
   },
   "hours": {
-    "everyday": "12:00-02:00"
+    "regular": {
+      "monday": "12:00-02:00",
+      "tuesday": "12:00-02:00",
+      "wednesday": "12:00-02:00",
+      "thursday": "12:00-02:00",
+      "friday": "12:00-03:00",
+      "saturday": "12:00-03:00",
+      "sunday": "12:00-02:00"
+    }
   },
   "theme": {
-    "primaryColor": "#111111",
-    "secondaryColor": "#FAFAFA",
-    "accentColor": "#FF0055",
+    "primaryColor": "#0A0A0A",
+    "secondaryColor": "#FFFFFF",
+    "accentColor": "#FF1744",
     "fontHeading": "Archivo Black",
-    "fontBody": "Work Sans",
+    "fontBody": "DM Sans",
     "borderRadius": "none",
     "mode": "light"
   },
@@ -35,26 +43,89 @@
   "menu": [
     {
       "id": "burgers",
-      "name": "Burgers",
+      "name": "Smash Burgers",
+      "description": "Smashed thin, caramelized edges, american cheese.",
+      "heroImage": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600&q=80",
+      "heroQuote": "\"Grease is flavor.\"",
       "items": [
         {
           "id": "classic-smash",
           "name": "Classic Smash",
-          "description": "Double patty, american cheese, house sauce, pickles.",
+          "description": "Double patty, american cheese, house sauce, pickles, diced onion",
           "price": 12,
-          "image": "menu/burger.svg",
+          "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
           "tags": [],
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "most-ordered"
+        },
+        {
+          "id": "double-trouble",
+          "name": "Double Trouble",
+          "description": "Triple patty, double cheese, bacon, special sauce",
+          "price": 16,
+          "image": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80",
+          "tags": [],
+          "available": true,
+          "popularity": "trending"
         },
         {
           "id": "spicy-chicken",
           "name": "Spicy Chicken Sando",
-          "description": "Crispy fried chicken, Nashville hot oil, slaw.",
+          "description": "Crispy fried chicken, Nashville hot oil, slaw, pickles",
           "price": 14,
-          "image": "menu/chicken.svg",
+          "image": "https://images.unsplash.com/photo-1606755962770-8a8e0e0a1b44?w=400&q=80",
           "tags": [],
-          "spicyLevel": 2,
+          "spicyLevel": 3,
+          "available": true,
+          "featured": true
+        }
+      ]
+    },
+    {
+      "id": "sides",
+      "name": "Sides",
+      "items": [
+        {
+          "id": "fries",
+          "name": "Crinkle Cut Fries",
+          "description": "Seasoned salt, house ketchup",
+          "price": 5,
+          "image": "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80",
+          "tags": ["vegan", "gluten-free"],
+          "available": true
+        },
+        {
+          "id": "onion-rings",
+          "name": "Beer-Battered Onion Rings",
+          "description": "Ranch dipping sauce",
+          "price": 6,
+          "image": "https://images.unsplash.com/photo-1639024471283-03518883590d?w=400&q=80",
+          "tags": ["vegetarian"],
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "shakes",
+      "name": "Thick Shakes",
+      "items": [
+        {
+          "id": "vanilla-shake",
+          "name": "Vanilla Bean",
+          "description": "Real vanilla bean, whole milk, whipped cream",
+          "price": 7,
+          "image": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80",
+          "tags": ["vegetarian"],
+          "available": true
+        },
+        {
+          "id": "chocolate-shake",
+          "name": "Dark Chocolate",
+          "description": "70% cacao, chocolate syrup, chocolate shavings",
+          "price": 7.5,
+          "image": "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?w=400&q=80",
+          "tags": ["vegetarian"],
           "available": true
         }
       ]

@@ -9,6 +9,7 @@ interface Props {
 
 const { item, currencySymbol = '$', showPrices = true } = Astro.props;
 const hasImage = !!item.image;
+const imageUrl = hasImage && item.image.startsWith('http') ? item.image : (hasImage ? '/r/' + (item as any).restaurantSlug + '/assets/' + item.image : '');
 const isVegetarian = item.tags.includes('vegetarian');
 const isVegan = item.tags.includes('vegan');
 const isGlutenFree = item.tags.includes('gluten-free');
@@ -103,7 +104,7 @@ const hasVariants = item.variants && item.variants.length > 0;
       {hasImage && (
         <div class="card-img-wrap">
           <img
-            src={item.image}
+            src={imageUrl}
             alt={item.name}
             class="card-img"
             loading="lazy"

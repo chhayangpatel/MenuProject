@@ -7,8 +7,10 @@ const restaurants = await loadAllRestaurants();
 // Build cover/logo URLs for each restaurant
 const cards = restaurants.map(r => ({
   r,
-  coverUrl: r.coverImage ? ('/r/' + r.slug + '/assets/' + r.coverImage) : null,
-  logoUrl: '/r/' + r.slug + '/assets/' + r.logo,
+  coverUrl: r.coverImage
+    ? (r.coverImage.startsWith('http') ? r.coverImage : '/r/' + r.slug + '/assets/' + r.coverImage)
+    : null,
+  logoUrl: r.logo.startsWith('http') ? r.logo : '/r/' + r.slug + '/assets/' + r.logo,
   href: '/r/' + r.slug + '/',
 }));
 ---

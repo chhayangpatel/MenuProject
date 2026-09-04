@@ -62,7 +62,7 @@ export const ThemeSchema = z.object({
   accentColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   fontHeading: z.string().default("Playfair Display"),
   fontBody: z.string().default("Inter"),
-  borderRadius: z.enum(["none", "sm", "md", "lg", "full"]).default("md"),
+  borderRadius: z.enum(["none", "sm", "md", "lg", "xl", "full"]).default("md"),
   mode: z.enum(["light", "dark"]).default("light"),
 });
 

@@ -80,7 +80,7 @@ const flatItems = menu.flatMap(c => c.items);
           {category.items.map((item, itemIndex) => (
             <div data-reveal style={`transition-delay: ${itemIndex * 100}ms`}>
               <MenuItemCard
-                item={item}
+                item={{ ...item, restaurantSlug: restaurant.slug }}
                 currencySymbol={settings?.currencySymbol}
                 showPrices={settings?.showPrices}
               />

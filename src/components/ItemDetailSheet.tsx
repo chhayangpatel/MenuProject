@@ -69,7 +69,11 @@ export default function ItemDetailSheet({ currencySymbol }: Props) {
             <div className="overflow-y-auto">
               {selectedItem.image && (
                 <div className="w-full h-64 sm:h-80 bg-black/5">
-                  <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
+                  <img
+                    src={selectedItem.image.startsWith('http') ? selectedItem.image : ''}
+                    alt={selectedItem.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               )}
               
