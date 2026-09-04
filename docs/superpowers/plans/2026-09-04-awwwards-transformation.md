@@ -2022,6 +2022,271 @@ git commit -m "feat: add View Transition choreography between directory and rest
 
 ---
 
+## BATCH 6: Wow-Factor Micro-Interactions (NEW)
+
+> The "holy shit" moments that make people screenshot and share.
+
+---
+
+### Task 39: Mouse Parallax Depth System
+
+**Files:**
+- Create: `src/lib/parallax.ts`
+- Modify: `src/components/Hero.astro`
+- Modify: `src/components/MenuItemCard.astro`
+
+- [ ] **Step 1: Create parallax utility**
+
+Create `src/lib/parallax.ts`:
+```ts
+export function initParallax() {
+  const layers = document.querySelectorAll<HTMLElement>('[data-parallax]');
+  if (!layers.length) return;
+
+  let ticking = false;
+  document.addEventListener('mousemove', (e) => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const cx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const cy = (e.clientY / window.innerHeight - 0.5) * 2;
+      layers.forEach(layer => {
+        const depth = parseFloat(layer.dataset.parallax || '1');
+        const x = cx * depth * 10;
+        const y = cy * depth * 10;
+        layer.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      ticking = false;
+    });
+  });
+}
+```
+
+- [ ] **Step 2: Add data-parallax to Hero**
+
+In `Hero.astro`, add `data-parallax="2"` to background image, `data-parallax="0.5"` to text content.
+
+- [ ] **Step 3: Add 3D tilt to MenuItemCard**
+
+In `MenuItemCard.astro`, add tilt on hover:
+```js
+card.addEventListener('mousemove', (e) => {
+  const rect = card.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width - 0.5;
+  const y = (e.clientY - rect.top) / rect.height - 0.5;
+  card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-3px)`;
+});
+card.addEventListener('mouseleave', () => {
+  card.style.transform = '';
+});
+```
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/lib/parallax.ts src/components/Hero.astro src/components/MenuItemCard.astro
+git commit -m "feat: add mouse parallax depth and 3D card tilt system"
+```
+
+---
+
+### Task 40: Text Scramble Effect
+
+**Files:**
+- Create: `src/lib/textScramble.ts`
+- Modify: `src/pages/r/[slug]/index.astro`
+
+- [ ] **Step 1: Create text scramble utility**
+
+Create `src/lib/textScramble.ts`:
+```ts
+const CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+export class TextScramble {
+  el: HTMLElement;
+  queue: { char: string; update: (v: string) => void }[] = [];
+  frame: number = 0;
+  frameRequest: number = 0;
+
+  constructor(el: HTMLElement) {
+    this.el = el;
+  }
+
+  setText(newText: string) {
+    const oldText = this.el.textContent || '';
+    const length = Math.max(oldText.length, newText.length);
+    this.queue = [];
+    for (let i = 0; i < length; i++) {
+      const from = oldText[i] || '';
+      const to = newText[i] || '';
+      const start = Math.floor(Math.random() * 20);
+      const end = start + Math.floor(Math.random() * 20);
+      this.queue.push({ char: from, update: () => to });
+    }
+    cancelAnimationFrame(this.frameRequest);
+    this.frame = 0;
+    this.update();
+  }
+
+  update() {
+    let output = '';
+    let complete = 0;
+    for (let i = 0; i < this.queue.length; i++) {
+      let { char, update } = this.queue[i];
+      if (this.frame >= update.length) {
+        complete++;
+        output += update;
+      } else {
+        output += CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+    }
+    this.el.textContent = output;
+    if (complete === this.queue.length) return;
+    this.frameRequest = requestAnimationFrame(() => this.frame++);
+    this.update();
+  }
+}
+```
+
+- [ ] **Step 2: Apply to category headings on scroll**
+
+Add IntersectionObserver in `index.astro` script that triggers TextScramble on category names when they enter viewport.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add src/lib/textScramble.ts src/pages/r/\[slug\]/index.astro
+git commit -m "feat: add text scramble effect on category headings"
+```
+
+---
+
+### Task 41: Mobile Swipe Navigation
+
+**Files:**
+- Create: `src/lib/swipeNav.ts`
+- Modify: `src/pages/r/[slug]/index.astro`
+
+- [ ] **Step 1: Create swipe navigation utility**
+
+Create `src/lib/swipeNav.ts`:
+```ts
+export function initSwipeNav() {
+  const sections = document.querySelectorAll<HTMLElement>('section[id^="category-"]');
+  if (sections.length < 2) return;
+
+  let startX = 0;
+  let startY = 0;
+
+  document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+
+    const currentIndex = Array.from(sections).findIndex(s => {
+      const rect = s.getBoundingClientRect();
+      return rect.top <= 100 && rect.bottom > 100;
+    });
+
+    if (dx < 0 && currentIndex < sections.length - 1) {
+      sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (dx > 0 && currentIndex > 0) {
+      sections[currentIndex - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, { passive: true });
+}
+```
+
+- [ ] **Step 2: Wire into page script**
+
+Add `initSwipeNav()` call in the `astro:page-load` listener in `index.astro`.
+
+- [ ] **Step 3: Add visual swipe hint**
+
+Add a subtle animated arrow indicator at bottom of screen on mobile that dismisses after first swipe.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/lib/swipeNav.ts src/pages/r/\[slug\]/index.astro
+git commit -m "feat: add mobile swipe navigation between menu categories"
+```
+
+---
+
+### Task 42: Magnetic Button Physics
+
+**Files:**
+- Create: `src/lib/magnetic.ts`
+- Apply to: CTA buttons in `Header.astro`, `index.astro` directory cards
+
+- [ ] **Step 1: Create magnetic button utility**
+
+Create `src/lib/magnetic.ts`:
+```ts
+export function initMagnetic() {
+  document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+      btn.style.transition = 'transform 0.5s cubic-bezier(0.32, 0.72, 0, 1)';
+      setTimeout(() => btn.style.transition = '', 500);
+    });
+  });
+}
+```
+
+- [ ] **Step 2: Add data-magnetic to buttons**
+
+Add `data-magnetic` attribute to primary CTA buttons.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add src/lib/magnetic.ts src/components/Header.astro src/pages/index.astro
+git commit -m "feat: add magnetic button physics on CTAs"
+```
+
+---
+
+### Task 43: Personality Loading Screen
+
+**Files:**
+- Create: `src/components/LoadingScreen.astro`
+- Modify: `src/layouts/RestaurantLayout.astro`
+
+- [ ] **Step 1: Create loading screen component**
+
+Create `src/components/LoadingScreen.astro` with mood-specific entrance animations:
+- fine-dining: gold particles coalescing into logo
+- bold-street: glitch-in effect
+- playful: bounce-in with spring physics
+- modern-minimal: clean fade + scale
+- rustic: warm fade with grain overlay
+
+- [ ] **Step 2: Add to RestaurantLayout**
+
+Insert loading screen that shows on initial page load, fades out after 1.2s.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add src/components/LoadingScreen.astro src/layouts/RestaurantLayout.astro
+git commit -m "feat: add personality loading screen per mood preset"
+```
+
+---
+
 ## Verification Checklist
 
 After all tasks complete:
