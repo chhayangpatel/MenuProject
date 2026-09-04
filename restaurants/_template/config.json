@@ -1,0 +1,42 @@
+{
+  "slug": "template-slug",
+  "name": "Template Restaurant",
+  "tagline": "A generic template",
+  "description": "Copy this folder to start a new restaurant.",
+  "logo": "logo.svg",
+  "coverImage": "cover.svg",
+  "moodPreset": "fine-dining",
+  "contact": {
+    "phone": "+1-555-0100"
+  },
+  "theme": {
+    "primaryColor": "#000000",
+    "secondaryColor": "#ffffff",
+    "fontHeading": "Playfair Display",
+    "fontBody": "Inter",
+    "borderRadius": "md",
+    "mode": "light"
+  },
+  "settings": {
+    "currency": "USD",
+    "currencySymbol": "$",
+    "language": "en",
+    "showPrices": true,
+    "enableSearch": true,
+    "enableDietaryFilters": true
+  },
+  "menu": [
+    {
+      "id": "mains",
+      "name": "Main Courses",
+      "items": [
+        {
+          "id": "example-item",
+          "name": "Example Item",
+          "price": 10,
+          "available": true
+        }
+      ]
+    }
+  ]
+}

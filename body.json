@@ -1,0 +1,10 @@
+{
+  "model": "auto/best-coding",
+  "max_tokens": 50,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Reply with exactly: OMNIROUTE_OK"
+    }
+  ]
+}

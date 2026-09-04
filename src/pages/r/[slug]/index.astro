@@ -1,0 +1,159 @@
+---
+import { loadAllRestaurants } from '../../../lib/loadRestaurants';
+import RestaurantLayout from '../../../layouts/RestaurantLayout.astro';
+import Hero from '../../../components/Hero.astro';
+import Header from '../../../components/Header.astro';
+import CategoryNav from '../../../components/CategoryNav.astro';
+import MenuItemCard from '../../../components/MenuItemCard.astro';
+import FeaturedCarousel from '../../../components/FeaturedCarousel.astro';
+import StorySection from '../../../components/StorySection.astro';
+import Footer from '../../../components/Footer.astro';
+import ItemDetailSheet from '../../../components/ItemDetailSheet';
+import SearchFilterBar from '../../../components/SearchFilterBar';
+
+export async function getStaticPaths() {
+  const restaurants = await loadAllRestaurants();
+  return restaurants.map((restaurant) => ({
+    params: { slug: restaurant.slug },
+    props: { restaurant },
+  }));
+}
+
+const { restaurant } = Astro.props;
+const { menu, settings, story } = restaurant;
+
+// Extract featured items
+const featuredItems = menu.flatMap(cat => cat.items).filter(item => item.featured);
+// Flatten all items for the client data store
+const flatItems = menu.flatMap(c => c.items);
+---
+
+<RestaurantLayout restaurant={restaurant}>
+  <Hero restaurant={restaurant} />
+  <Header restaurant={restaurant} />
+
+  {story && <StorySection story={story} />}
+
+  {featuredItems.length > 0 && (
+    <FeaturedCarousel
+      items={featuredItems}
+      currencySymbol={settings?.currencySymbol}
+      showPrices={settings?.showPrices}
+    />
+  )}
+
+  <SearchFilterBar
+    client:load
+    enabled={settings?.enableSearch ?? true}
+  />
+
+  <CategoryNav categories={menu} />
+
+  <div class="menu-body px-4 py-8 max-w-3xl mx-auto" id="menu-body">
+    {menu.map((category, index) => (
+      <section id={"category-" + category.id} class="mb-14 scroll-mt-28">
+        {/* Category header */}
+        <div class="category-header">
+          <h2 class="category-name">{category.name}</h2>
+          {category.description && (
+            <p class="category-desc">{category.description}</p>
+          )}
+        </div>
+
+        {/* Items grid */}
+        <div class="items-grid">
+          {category.items.map(item => (
+            <MenuItemCard
+              item={item}
+              currencySymbol={settings?.currencySymbol}
+              showPrices={settings?.showPrices}
+            />
+          ))}
+        </div>
+
+        {/* Divider between categories */}
+        {index < menu.length - 1 && (
+          <div class="category-divider" aria-hidden="true"></div>
+        )}
+      </section>
+    ))}
+  </div>
+
+  <Footer restaurant={restaurant} />
+
+  {/* React island for item detail bottom sheet */}
+  <ItemDetailSheet
+    client:load
+    currencySymbol={settings?.currencySymbol ?? '$'}
+  />
+</RestaurantLayout>
+
+{/* Inject menu data for the client-side item detail sheet */}
+<script define:vars={{ flatItems }}>
+  window.__RESTAURANT_ITEMS__ = flatItems;
+
+  function setupCardListeners() {
+    document.querySelectorAll('[data-item-id]').forEach(card => {
+      if (card.dataset.listenerAttached) return;
+      card.dataset.listenerAttached = 'true';
+      card.addEventListener('click', () => {
+        const id = card.getAttribute('data-item-id');
+        const item = (window.__RESTAURANT_ITEMS__ || []).find(i => i.id === id);
+        if (item) {
+          window.dispatchEvent(new CustomEvent('open-item-detail', { detail: item }));
+        }
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupCardListeners);
+  setupCardListeners();
+</script>
+
+<style>
+  .menu-body {}
+
+  .category-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 2px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+  .category-name {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .category-desc {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+    margin-top: 0.35rem;
+    line-height: 1.55;
+    max-width: 46ch;
+  }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 520px) {
+    .items-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .category-divider {
+    width: 100%;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    margin: 2rem 0 0;
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import type { Restaurant } from '../schemas/restaurant.schema';
+import { getThemeStyles } from '../lib/theme';
+import '../styles/global.css';
+
+interface Props {
+  restaurant: Restaurant;
+}
+
+const { restaurant } = Astro.props;
+const { theme, moodPreset } = restaurant;
+
+// Returns HTML string with <link> tags + <style>
+const themeHTML = getThemeStyles(theme, moodPreset);
+---
+<html lang={restaurant.settings?.language || "en"}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{restaurant.name} | Menu</title>
+    <meta name="description" content={restaurant.description || (restaurant.name + " – Digital Menu")} />
+    <Fragment set:html={themeHTML} />
+    <ClientRouter />
+  </head>
+  <body class="bg-[var(--color-secondary)] text-[var(--color-primary)] antialiased">
+    <div class="min-h-screen relative max-w-3xl mx-auto bg-[var(--color-secondary)]" style="box-shadow: 0 0 80px rgba(0,0,0,0.12);">
+      <slot />
+    </div>
+  </body>
+</html>

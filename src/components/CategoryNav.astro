@@ -1,0 +1,140 @@
+---
+import type { MenuCategory } from '../schemas/restaurant.schema';
+
+interface Props {
+  categories: MenuCategory[];
+}
+
+const { categories } = Astro.props;
+---
+
+<nav class="cat-nav sticky top-14 z-30" aria-label="Menu categories" id="cat-nav">
+  <div class="cat-nav-inner max-w-3xl mx-auto">
+    <ul class="cat-list" id="category-nav-list" role="list">
+      {categories.map((cat, i) => (
+        <li class="cat-item" role="listitem">
+          <a
+            href={"#category-" + cat.id}
+            class={"cat-link" + (i === 0 ? " cat-link--active" : "")}
+            data-target={"category-" + cat.id}
+          >
+            {cat.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="cat-indicator" id="nav-indicator" aria-hidden="true"></div>
+  </div>
+</nav>
+
+<style>
+  .cat-nav {
+    background: color-mix(in srgb, var(--color-secondary) 92%, transparent);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
+  }
+  .cat-nav-inner {
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-list {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0;
+    padding: 0 1rem;
+    margin: 0;
+    list-style: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .cat-list::-webkit-scrollbar { display: none; }
+
+  .cat-item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  .cat-link {
+    display: block;
+    padding: 0.875rem 1.1rem;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+  .cat-link:hover {
+    color: var(--color-primary);
+  }
+  .cat-link--active {
+    color: var(--color-accent);
+  }
+
+  /* Sliding pill indicator */
+  .cat-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 2px 2px 0 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, width;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const navList = document.getElementById('category-nav-list');
+    const indicator = document.getElementById('nav-indicator');
+    if (!navList) return;
+
+    const navLinks = navList.querySelectorAll<HTMLAnchorElement>('.cat-link');
+    if (!navLinks.length) return;
+
+    function setActive(link: HTMLAnchorElement) {
+      navLinks.forEach(l => l.classList.remove('cat-link--active'));
+      link.classList.add('cat-link--active');
+      if (indicator) {
+        indicator.style.width = link.offsetWidth + 'px';
+        indicator.style.transform = 'translateX(' + link.offsetLeft + 'px)';
+      }
+      link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    // Init
+    setActive(navLinks[0]);
+
+    // Smooth scroll on click
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('data-target');
+        if (targetId) {
+          const target = document.getElementById(targetId);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setActive(link);
+      });
+    });
+
+    // IntersectionObserver to update active on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const link = navList.querySelector<HTMLAnchorElement>('.cat-link[data-target="' + id + '"]');
+          if (link) setActive(link);
+        }
+      });
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: 0 });
+
+    document.querySelectorAll('section[id^="category-"]').forEach(s => observer.observe(s));
+  });
+</script>

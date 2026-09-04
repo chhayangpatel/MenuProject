@@ -1,0 +1,277 @@
+---
+import type { MenuItem } from '../schemas/restaurant.schema';
+
+interface Props {
+  item: MenuItem;
+  currencySymbol?: string;
+  showPrices?: boolean;
+}
+
+const { item, currencySymbol = '$', showPrices = true } = Astro.props;
+const hasImage = !!item.image;
+const isVegetarian = item.tags.includes('vegetarian');
+const isVegan = item.tags.includes('vegan');
+const isGlutenFree = item.tags.includes('gluten-free');
+---
+
+<article
+  class={"menu-card" + (!item.available ? " menu-card--unavailable" : "") + (item.featured ? " menu-card--featured" : "")}
+  data-item-id={item.id}
+  role="button"
+  tabindex="0"
+  aria-label={"View details for " + item.name}
+>
+  {/* Featured badge */}
+  {item.featured && (
+    <div class="featured-badge" aria-label="Chef's Pick">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      Chef's Pick
+    </div>
+  )}
+
+  {/* Sold Out overlay */}
+  {!item.available && (
+    <div class="sold-out-overlay" aria-live="polite">
+      <span class="sold-out-badge">Sold Out</span>
+    </div>
+  )}
+
+  <div class="card-body">
+    {/* Text */}
+    <div class="card-text">
+      <div class="card-header-row">
+        <h3 class="item-name">{item.name}</h3>
+        {showPrices && (
+          <span class="item-price">{currencySymbol}{item.price.toFixed(2)}</span>
+        )}
+      </div>
+
+      {item.description && (
+        <p class="item-desc">{item.description}</p>
+      )}
+
+      {/* Tags row */}
+      <div class="tags-row">
+        {isVegetarian && !isVegan && (
+          <span class="tag tag--green" title="Vegetarian">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2"/></svg>
+            Veg
+          </span>
+        )}
+        {isVegan && (
+          <span class="tag tag--green" title="Vegan">🌱 Vegan</span>
+        )}
+        {isGlutenFree && (
+          <span class="tag tag--amber" title="Gluten-Free">GF</span>
+        )}
+        {item.spicyLevel > 0 && (
+          <span class="tag tag--red" title={"Spicy Level " + item.spicyLevel}>
+            {"🌶️".repeat(item.spicyLevel)}
+          </span>
+        )}
+        {item.pairsWith && (
+          <span class="tag tag--muted" title={"Pairs with: " + item.pairsWith}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Pairing
+          </span>
+        )}
+      </div>
+    </div>
+
+    {/* Image */}
+    {hasImage && (
+      <div class="card-img-wrap">
+        <img
+          src={item.image}
+          alt={item.name}
+          class="card-img"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
+  </div>
+
+  {/* Hover arrow cue */}
+  <div class="card-arrow" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  </div>
+</article>
+
+<style>
+  .menu-card {
+    position: relative;
+    background: var(--color-secondary);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
+    border-radius: var(--radius, 0.5rem);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.2s ease;
+    will-change: transform;
+  }
+  .menu-card:hover, .menu-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -8px color-mix(in srgb, var(--color-primary) 18%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    outline: none;
+  }
+  .menu-card--featured {
+    border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 3%, var(--color-secondary));
+  }
+  .menu-card--unavailable {
+    opacity: 0.55;
+    filter: grayscale(0.4);
+    pointer-events: none;
+  }
+
+  /* Featured badge */
+  .featured-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 999px;
+  }
+
+  /* Sold out */
+  .sold-out-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-secondary) 60%, transparent);
+  }
+  .sold-out-badge {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    background: var(--color-secondary);
+    border: 1.5px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  /* Body layout */
+  .card-body {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  /* Text */
+  .card-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+  .item-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    color: var(--color-primary);
+    transition: color 0.2s;
+  }
+  .menu-card:hover .item-name { color: var(--color-accent); }
+  .item-price {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-primary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .item-desc {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-primary) 62%, transparent);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Tags */
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tag--green  { background: #dcfce7; color: #15803d; }
+  .tag--amber  { background: #fef3c7; color: #b45309; }
+  .tag--red    { background: #fee2e2; color: #b91c1c; }
+  .tag--muted  { background: color-mix(in srgb, var(--color-primary) 8%, transparent); color: color-mix(in srgb, var(--color-primary) 60%, transparent); }
+
+  /* Image */
+  .card-img-wrap {
+    flex-shrink: 0;
+    width: 88px;
+    height: 88px;
+    border-radius: calc(var(--radius, 0.5rem) * 0.8);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .menu-card:hover .card-img { transform: scale(1.07); }
+
+  /* Arrow cue */
+  .card-arrow {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .menu-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+</style>

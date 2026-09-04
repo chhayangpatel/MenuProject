@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#4a7c59"/>
+  <!-- White circle -->
+  <circle cx="100" cy="100" r="72" fill="#f7f8f5"/>
+  <!-- Matcha leaf mark -->
+  <path d="M100 60 Q130 75 130 110 Q130 140 100 148 Q70 140 70 110 Q70 75 100 60 Z" fill="#4a7c59" fill-opacity="0.85"/>
+  <!-- Center vein -->
+  <line x1="100" y1="65" x2="100" y2="145" stroke="#f7f8f5" stroke-width="1.5" stroke-opacity="0.6" stroke-linecap="round"/>
+  <!-- Side veins -->
+  <line x1="100" y1="90" x2="118" y2="100" stroke="#f7f8f5" stroke-width="0.8" stroke-opacity="0.4" stroke-linecap="round"/>
+  <line x1="100" y1="105" x2="82" y2="115" stroke="#f7f8f5" stroke-width="0.8" stroke-opacity="0.4" stroke-linecap="round"/>
+  <line x1="100" y1="120" x2="115" y2="128" stroke="#f7f8f5" stroke-width="0.8" stroke-opacity="0.4" stroke-linecap="round"/>
+</svg>

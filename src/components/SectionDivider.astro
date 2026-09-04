@@ -1,0 +1,14 @@
+---
+import { moodPresets, type MoodPresetName } from '../lib/moodPresets';
+
+interface Props {
+  presetName: MoodPresetName;
+}
+
+const { presetName } = Astro.props;
+const preset = moodPresets[presetName] || moodPresets['fine-dining'];
+---
+
+<div class="flex justify-center items-center py-10 opacity-60 text-[var(--color-accent)]" aria-hidden="true">
+  <Fragment set:html={preset.motif} />
+</div>

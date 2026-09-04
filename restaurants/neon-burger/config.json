@@ -1,0 +1,61 @@
+{
+  "slug": "neon-burger",
+  "name": "NEON BURGER",
+  "tagline": "Smash burgers & street vibes",
+  "logo": "logo.svg",
+  "coverImage": "cover.svg",
+  "moodPreset": "bold-street",
+  "hero": { "style": "split" },
+  "contact": {
+    "phone": "+1-555-9999",
+    "address": "456 Urban Ave, Downtown"
+  },
+  "hours": {
+    "everyday": "12:00-02:00"
+  },
+  "theme": {
+    "primaryColor": "#111111",
+    "secondaryColor": "#FAFAFA",
+    "accentColor": "#FF0055",
+    "fontHeading": "Archivo Black",
+    "fontBody": "Work Sans",
+    "borderRadius": "none",
+    "mode": "light"
+  },
+  "settings": {
+    "currency": "USD",
+    "currencySymbol": "$",
+    "language": "en",
+    "showPrices": true,
+    "enableSearch": true,
+    "enableDietaryFilters": false
+  },
+  "menu": [
+    {
+      "id": "burgers",
+      "name": "Burgers",
+      "items": [
+        {
+          "id": "classic-smash",
+          "name": "Classic Smash",
+          "description": "Double patty, american cheese, house sauce, pickles.",
+          "price": 12,
+          "image": "menu/burger.svg",
+          "tags": [],
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "spicy-chicken",
+          "name": "Spicy Chicken Sando",
+          "description": "Crispy fried chicken, Nashville hot oil, slaw.",
+          "price": 14,
+          "image": "menu/chicken.svg",
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true
+        }
+      ]
+    }
+  ]
+}

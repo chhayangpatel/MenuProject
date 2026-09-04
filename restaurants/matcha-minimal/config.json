@@ -1,0 +1,115 @@
+{
+  "slug": "matcha-minimal",
+  "name": "Matcha & Co.",
+  "tagline": "Mindful bites, clean flavors",
+  "description": "A serene Japanese-inspired café focused on clean, plant-forward food and premium matcha drinks.",
+  "logo": "logo.svg",
+  "coverImage": "cover.svg",
+  "moodPreset": "modern-minimal",
+  "story": {
+    "heading": "A Place for Stillness",
+    "body": "Born from a trip to Uji, Japan, Matcha & Co. brings the meditative ritual of tea to everyday dining. Every dish is crafted to be as nourishing as it is beautiful."
+  },
+  "hero": { "style": "fullbleed" },
+  "contact": {
+    "phone": "+1-555-0234",
+    "email": "hello@matchaco.example",
+    "address": "88 Zen Lane, Westside"
+  },
+  "hours": {
+    "monday": "08:00-17:00",
+    "tuesday": "08:00-17:00",
+    "wednesday": "08:00-17:00",
+    "thursday": "08:00-17:00",
+    "friday": "08:00-18:00",
+    "saturday": "09:00-18:00",
+    "sunday": "Closed"
+  },
+  "theme": {
+    "primaryColor": "#1a2a1a",
+    "secondaryColor": "#f7f8f5",
+    "accentColor": "#4a7c59",
+    "fontHeading": "Space Grotesk",
+    "fontBody": "Inter",
+    "borderRadius": "lg",
+    "mode": "light"
+  },
+  "settings": {
+    "currency": "USD",
+    "currencySymbol": "$",
+    "language": "en",
+    "showPrices": true,
+    "enableSearch": true,
+    "enableDietaryFilters": true
+  },
+  "menu": [
+    {
+      "id": "drinks",
+      "name": "Matcha Drinks",
+      "description": "Ceremonial-grade matcha sourced from Uji, Kyoto.",
+      "items": [
+        {
+          "id": "classic-matcha-latte",
+          "name": "Classic Matcha Latte",
+          "description": "Whisked ceremonial matcha, oat milk, light sweetness.",
+          "price": 6.5,
+          "image": "menu/matcha-latte.svg",
+          "tags": ["vegan"],
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "iced-hojicha",
+          "name": "Iced Hōjicha",
+          "description": "Roasted green tea over ice, smooth and caramel-like.",
+          "price": 5.5,
+          "image": "menu/hojicha.svg",
+          "tags": ["vegan"],
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "bowls",
+      "name": "Nourish Bowls",
+      "description": "Balanced, seasonal, plant-forward.",
+      "items": [
+        {
+          "id": "green-goddess",
+          "name": "Green Goddess Bowl",
+          "description": "Brown rice, edamame, avocado, pickled cucumber, sesame dressing.",
+          "price": 14.5,
+          "image": "menu/green-bowl.svg",
+          "tags": ["vegan", "gluten-free"],
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "miso-tofu",
+          "name": "Miso Glazed Tofu",
+          "description": "Silken tofu, white miso glaze, bok choy, black sesame.",
+          "price": 13,
+          "image": "menu/tofu.svg",
+          "tags": ["vegetarian", "gluten-free"],
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "sweets",
+      "name": "Sweets",
+      "items": [
+        {
+          "id": "matcha-roll",
+          "name": "Matcha Swiss Roll",
+          "description": "Light sponge, matcha cream, dusted with ceremonial matcha powder.",
+          "price": 7.5,
+          "image": "menu/roll.svg",
+          "tags": ["vegetarian"],
+          "available": true,
+          "featured": true
+        }
+      ]
+    }
+  ]
+}

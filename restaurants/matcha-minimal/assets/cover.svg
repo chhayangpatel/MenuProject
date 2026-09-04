@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4edda"/>
+      <stop offset="50%" stop-color="#c8e6c9"/>
+      <stop offset="100%" stop-color="#b2dfdb"/>
+    </linearGradient>
+    <radialGradient id="fogGlow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#c8e6c9" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="lines" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="60" x2="60" y2="0" stroke="#4a7c59" stroke-opacity="0.05" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#lines)"/>
+  <rect width="800" height="450" fill="url(#fogGlow)"/>
+  <!-- Tea bowl illustration (abstract) -->
+  <ellipse cx="400" cy="340" rx="120" ry="18" fill="#4a7c59" fill-opacity="0.12"/>
+  <path d="M310 280 Q340 240 400 235 Q460 240 490 280 Q500 310 490 330 Q470 355 400 358 Q330 355 310 330 Q300 310 310 280 Z" fill="#fff" fill-opacity="0.7" stroke="#4a7c59" stroke-opacity="0.2" stroke-width="1"/>
+  <!-- Steam wisps -->
+  <g stroke="#4a7c59" stroke-opacity="0.25" stroke-width="1.5" fill="none" stroke-linecap="round">
+    <path d="M380 270 Q375 255 380 240 Q385 225 380 210"/>
+    <path d="M400 265 Q395 248 400 232 Q405 216 400 200"/>
+    <path d="M420 270 Q425 255 420 240 Q415 225 420 210"/>
+  </g>
+  <!-- Matcha swirl inside bowl -->
+  <circle cx="400" cy="308" r="38" fill="#4a7c59" fill-opacity="0.15"/>
+  <circle cx="400" cy="308" r="22" fill="#4a7c59" fill-opacity="0.12"/>
+  <!-- Name -->
+  <text x="400" y="155" font-family="'Helvetica Neue', Helvetica, sans-serif" font-size="54" font-weight="800" fill="#1a2a1a" text-anchor="middle" letter-spacing="-1">Matcha &amp; Co.</text>
+  <!-- Tagline -->
+  <text x="400" y="192" font-family="Helvetica, sans-serif" font-size="14" fill="#4a7c59" text-anchor="middle" letter-spacing="5">MINDFUL · PLANT · PURE</text>
+  <!-- Thin rule -->
+  <line x1="280" y1="205" x2="520" y2="205" stroke="#4a7c59" stroke-opacity="0.25" stroke-width="0.8"/>
+</svg>

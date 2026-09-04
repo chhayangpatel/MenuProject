@@ -1,0 +1,77 @@
+---
+import type { MenuItem } from '../schemas/restaurant.schema';
+import MenuItemCard from './MenuItemCard.astro';
+
+interface Props {
+  items: MenuItem[];
+  currencySymbol?: string;
+  showPrices?: boolean;
+}
+
+const { items, currencySymbol, showPrices } = Astro.props;
+---
+
+<section class="featured-section" aria-labelledby="featured-heading">
+  <div class="featured-header">
+    <div class="featured-label" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      Featured
+    </div>
+    <h2 class="featured-heading" id="featured-heading">Must-Try Dishes</h2>
+  </div>
+
+  <div class="featured-scroll-track" role="list" aria-label="Featured items carousel">
+    {items.map(item => (
+      <div class="featured-card-wrapper" role="listitem">
+        <MenuItemCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .featured-section {
+    padding: 2rem 0;
+    overflow: hidden;
+  }
+  .featured-header {
+    padding: 0 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .featured-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.35rem;
+  }
+  .featured-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 4vw, 1.75rem);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1.2;
+  }
+  .featured-scroll-track {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.875rem;
+    padding: 0.25rem 1.25rem 1rem;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .featured-scroll-track::-webkit-scrollbar { display: none; }
+  .featured-card-wrapper {
+    flex-shrink: 0;
+    width: min(320px, 80vw);
+    scroll-snap-align: start;
+  }
+</style>
