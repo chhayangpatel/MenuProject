@@ -36,12 +36,23 @@ lerna-debug.log*
 .env.*.local
 
 # ---- Editors (VS Code) ---------------------------------------------------------
-# Keep shared config; ignore personal/workspace-local state.
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
+# Ignore all VS Code files (personal/workspace-local state)
+.vscode/
+
+# ---- AI Assistant / Agent files --------------------------------------------------
+# Claude, Cursor, Windsurf, Augment, Codex, Factory, Goose, OpenCode, Roo, Cline
+.claude/
+.cursor/
+.cursorrules
+.windsurfrules
+.augmentrules/
+.codex/
+.factory/
+.goose/
+.opencode/
+.roo/
+.cline/
+.clinerules
 
 # ---- Other editors --------------------------------------------------------------
 .idea/
