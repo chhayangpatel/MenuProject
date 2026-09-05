@@ -11,6 +11,7 @@ const site = process.env.SITE_URL || 'https://chhayangpatel.github.io/MenuProjec
 // https://astro.build/config
 export default defineConfig({
   site,
+  base: '/MenuProject',
   output: 'static',
   integrations: [react(), sitemap()],
   vite: {
