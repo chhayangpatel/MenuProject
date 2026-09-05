@@ -84,3 +84,4 @@ scripts/fix-registry.mjs
 *.pem
 *.crt
 *.key
+.agents/
