@@ -1,18 +1,21 @@
 ---
-import { loadAllRestaurants } from '../lib/loadRestaurants';
-import '../styles/global.css';
+import { loadAllRestaurants } from "../lib/loadRestaurants";
+import { resolveCover, resolveLogo } from "../lib/assets";
+import { getTemplate } from "../lib/templates/registry";
+import "../styles/global.css";
 
 const restaurants = await loadAllRestaurants();
 
-// Build cover/logo URLs for each restaurant
-const cards = restaurants.map(r => ({
-  r,
-  coverUrl: r.coverImage
-    ? (r.coverImage.startsWith('http') ? r.coverImage : '/r/' + r.slug + '/assets/' + r.coverImage)
-    : null,
-  logoUrl: r.logo.startsWith('http') ? r.logo : '/r/' + r.slug + '/assets/' + r.logo,
-  href: '/r/' + r.slug + '/',
-}));
+const cards = restaurants.map((r) => {
+  const template = getTemplate(r.template, r.moodPreset);
+  return {
+    r,
+    template,
+    coverUrl: resolveCover(r),
+    logoUrl: resolveLogo(r),
+    href: "/r/" + r.slug + "/",
+  };
+});
 ---
 
 <html lang="en">
@@ -20,256 +23,524 @@ const cards = restaurants.map(r => ({
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Restaurant Directory | Digital Menus</title>
-    <meta name="description" content="Browse our partner restaurants and explore their digital menus." />
+    <meta
+      name="description"
+      content="Discover unique dining experiences. Browse our partner restaurants and explore their digital menus."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      *, *::before, *::after { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
     </style>
   </head>
 
   <body class="dir-body">
-    {/* Ambient blobs */}
-    <div class="blob blob-1" aria-hidden="true"></div>
-    <div class="blob blob-2" aria-hidden="true"></div>
+    {/* Subtle grain overlay */}
+    <div class="dir-grain" aria-hidden="true"></div>
 
     <div class="dir-container">
-      {/* Header */}
+      {/* Header — editorial, centered */}
       <header class="dir-header">
-        <div class="dir-header-pill">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-          </svg>
-          {restaurants.length} Restaurant{restaurants.length !== 1 ? 's' : ''}
-        </div>
+        <span class="dir-eyebrow">
+          <span class="dir-eyebrow-line" aria-hidden="true"></span>
+          The Collection
+          <span class="dir-eyebrow-line" aria-hidden="true"></span>
+        </span>
         <h1 class="dir-headline">
-          <span class="dir-headline-top">Discover</span>
-          <span class="dir-headline-bottom">Our Restaurants</span>
+          <span class="dir-headline-serif">Dining</span>
+          <span class="dir-headline-sans">Destinations</span>
         </h1>
-        <p class="dir-subheadline">Tap any restaurant to explore its full digital menu</p>
+        <p class="dir-subheadline">
+          Each restaurant is a unique experience. Tap to explore their full
+          digital menu.
+        </p>
+        <div class="dir-stats">
+          <span class="dir-stat"
+            ><strong>{restaurants.length}</strong> Restaurants</span
+          >
+          <span class="dir-stat-dot" aria-hidden="true">·</span>
+          <span class="dir-stat"
+            ><strong
+              >{
+                restaurants.reduce(
+                  (n, r) => n + r.menu.reduce((m, c) => m + c.items.length, 0),
+                  0,
+                )
+              }</strong
+            > Dishes</span
+          >
+          <span class="dir-stat-dot" aria-hidden="true">·</span>
+          <span class="dir-stat"
+            ><strong
+              >{
+                restaurants.filter((r) => r.cuisine?.includes("Italian")).length
+              }</strong
+            > Italian</span
+          >
+        </div>
       </header>
 
-      {/* Grid */}
+      {/* Search */}
+      <div class="dir-search-wrap">
+        <div class="dir-search">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8"></circle><line
+              x1="21"
+              y1="21"
+              x2="16.65"
+              y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="dir-search"
+            placeholder="Search restaurants, cuisines..."
+            autocomplete="off"
+          />
+        </div>
+        <div
+          class="dir-filters"
+          id="dir-filters"
+          role="group"
+          aria-label="Filters"
+        >
+          <button class="dir-filter active" data-filter="all">All</button>
+          <button class="dir-filter" data-filter="cuisine-Italian"
+            >Italian</button
+          >
+          <button class="dir-filter" data-filter="cuisine-Japanese"
+            >Japanese</button
+          >
+          <button class="dir-filter" data-filter="cuisine-Burgers"
+            >Burgers</button
+          >
+          <button class="dir-filter" data-filter="cuisine-Cafe">Cafe</button>
+          <button class="dir-filter" data-filter="cuisine-Street Food"
+            >Street Food</button
+          >
+        </div>
+      </div>
+
+      {/* Restaurant Grid */}
       <main class="dir-grid" id="restaurant-grid">
-        {cards.map(({ r, coverUrl, logoUrl, href }) => (
-          <a href={href} class="rcard" id={"rcard-" + r.slug} aria-label={"View " + r.name + " menu"}>
-            {/* Cover */}
-            <div class="rcard-cover">
-              {coverUrl ? (
-                <img src={coverUrl} alt="" class="rcard-cover-img" loading="lazy" decoding="async" />
-              ) : (
-                <div class="rcard-cover-placeholder" style={"background: " + r.theme.primaryColor + "22;"}></div>
-              )}
-              <div class="rcard-cover-scrim"></div>
+        {
+          cards.map(({ r, template, coverUrl, logoUrl, href }, index) => (
+            <a
+              href={href}
+              class="rcard"
+              id={"rcard-" + r.slug}
+              aria-label={"View " + r.name + " menu"}
+              style={
+                "--delay: " +
+                index * 100 +
+                "ms; --accent: " +
+                (template.colorDefaults.accentColor || "#D4AF37") +
+                ";"
+              }
+            >
+              {/* Cover */}
+              <div class="rcard-cover">
+                {coverUrl ? (
+                  <img
+                    src={coverUrl}
+                    alt=""
+                    class="rcard-cover-img"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div
+                    class="rcard-cover-placeholder"
+                    style={"background: " + r.theme.primaryColor + "22;"}
+                  />
+                )}
+                <div class="rcard-cover-scrim" />
 
-              {/* Mood badge */}
-              <span class="rcard-mood-badge">{r.moodPreset.replace('-', ' ')}</span>
-            </div>
+                {/* Template badge */}
+                <span
+                  class="rcard-template-badge"
+                  style={
+                    "background: " +
+                    (template.colorDefaults.accentColor || "#D4AF37")
+                  }
+                >
+                  {template.name}
+                </span>
 
-            {/* Body */}
-            <div class="rcard-body">
-              {/* Logo */}
-              <div class="rcard-logo-wrap">
-                <img src={logoUrl} alt="" class="rcard-logo" />
-              </div>
-
-              <div class="rcard-text">
-                <h2 class="rcard-name">{r.name}</h2>
-                {r.tagline && <p class="rcard-tagline">{r.tagline}</p>}
-              </div>
-
-              {/* CTA row */}
-              <div class="rcard-cta">
-                <span class="rcard-cta-text">View Menu</span>
-                <span class="rcard-cta-arrow" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                    <polyline points="12 5 19 12 12 19"/>
-                  </svg>
+                {/* Mood badge */}
+                <span class="rcard-mood-badge">
+                  {r.moodPreset.replace("-", " ")}
                 </span>
               </div>
-            </div>
-          </a>
-        ))}
 
-        {restaurants.length === 0 && (
-          <div class="dir-empty">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <p>No restaurants found.</p>
-            <p class="dir-empty-sub">Add a folder to the <code>restaurants/</code> directory.</p>
-          </div>
-        )}
+              {/* Body */}
+              <div class="rcard-body">
+                {/* Logo */}
+                <div class="rcard-logo-wrap">
+                  <img src={logoUrl} alt="" class="rcard-logo" />
+                </div>
+
+                <div class="rcard-text">
+                  <h2 class="rcard-name">{r.name}</h2>
+                  {r.tagline && <p class="rcard-tagline">{r.tagline}</p>}
+                </div>
+
+                {/* Meta */}
+                <div class="rcard-meta">
+                  {r.cuisine &&
+                    r.cuisine
+                      .slice(0, 3)
+                      .map((c) => <span class="rcard-meta-badge">{c}</span>)}
+                  {r.priceRange && (
+                    <span class="rcard-meta-badge">{r.priceRange}</span>
+                  )}
+                </div>
+
+                {/* CTA row */}
+                <div class="rcard-cta">
+                  <span class="rcard-cta-text">View Menu</span>
+                  <span class="rcard-cta-arrow" aria-hidden="true">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </a>
+          ))
+        }
+
+        {
+          restaurants.length === 0 && (
+            <div class="dir-empty">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <>
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </>
+              </svg>
+              <p>No restaurants found.</p>
+              <p class="dir-empty-sub">
+                Add a folder to the <code>restaurants/</code> directory.
+              </p>
+            </div>
+          )
+        }
       </main>
 
       <footer class="dir-footer">
         <p>© {new Date().getFullYear()} Digital Menu Platform</p>
       </footer>
     </div>
+
+    <script>
+      import { initDirectorySearch } from "../components/DirectorySearch.js";
+      document.addEventListener("astro:page-load", initDirectorySearch);
+    </script>
   </body>
 </html>
 
 <style>
   /* Reset & base */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   .dir-body {
     min-height: 100vh;
-    background: #0c0c0f;
-    color: #f0f0f0;
-    font-family: 'Inter', sans-serif;
+    background: #0b0b0d;
+    color: #f5f2ec;
+    font-family: "Plus Jakarta Sans", sans-serif;
     position: relative;
     overflow-x: hidden;
   }
 
-  /* Ambient blobs */
-  .blob {
+  /* Subtle grain texture */
+  .dir-grain {
     position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.18;
-    pointer-events: none;
+    inset: 0;
     z-index: 0;
-    animation: blobFloat 18s ease-in-out infinite;
-  }
-  .blob-1 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, #8b5cf6, #3b82f6);
-    top: -120px;
-    right: -100px;
-  }
-  .blob-2 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, #f59e0b, #ef4444);
-    bottom: -80px;
-    left: -80px;
-    animation-delay: -9s;
-  }
-  @keyframes blobFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33%       { transform: translate(20px, -20px) scale(1.05); }
-    66%       { transform: translate(-15px, 15px) scale(0.97); }
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
   }
 
   /* Container */
   .dir-container {
     position: relative;
     z-index: 1;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
 
-  /* Header */
+  /* Header — editorial */
   .dir-header {
     text-align: center;
-    padding: 5rem 1rem 3.5rem;
+    padding: 6rem 1rem 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
   }
-  .dir-header-pill {
+
+  .dir-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 999px;
-    background: rgba(251, 191, 36, 0.12);
-    border: 1px solid rgba(251, 191, 36, 0.25);
-    color: #fbbf24;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
+    gap: 1rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.4);
   }
+  .dir-eyebrow-line {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5));
+  }
+  .dir-eyebrow-line:last-child {
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.5), transparent);
+  }
+
   .dir-headline {
-    font-family: 'Outfit', sans-serif;
-    font-size: clamp(2.5rem, 7vw, 5rem);
-    font-weight: 900;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    line-height: 1.05;
   }
-  .dir-headline-top {
-    color: rgba(255,255,255,0.45);
-    font-weight: 400;
-    font-size: 0.55em;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+  .dir-headline-serif {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 500;
+    font-style: italic;
+    color: rgba(245, 242, 236, 0.35);
+    letter-spacing: -0.01em;
   }
-  .dir-headline-bottom {
-    background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5) 100%);
+  .dir-headline-sans {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(
+      135deg,
+      #fff 30%,
+      rgba(255, 255, 255, 0.5) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    margin-top: -0.15em;
   }
+
   .dir-subheadline {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.45);
-    max-width: 36ch;
-    line-height: 1.6;
+    font-size: 0.9375rem;
+    color: rgba(245, 242, 236, 0.4);
+    max-width: 40ch;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .dir-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .dir-stat {
+    font-size: 0.8125rem;
+    color: rgba(245, 242, 236, 0.35);
+    font-weight: 400;
+  }
+  .dir-stat strong {
+    color: #d4af37;
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+  .dir-stat-dot {
+    color: rgba(212, 175, 55, 0.4);
+    font-size: 0.75rem;
+  }
+
+  /* Search */
+  .dir-search-wrap {
+    max-width: 560px;
+    margin: 0 auto 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .dir-search {
+    position: relative;
+  }
+  .dir-search svg {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(245, 242, 236, 0.3);
+    pointer-events: none;
+  }
+  .dir-search input {
+    width: 100%;
+    padding: 1rem 1.25rem 1rem 3.25rem;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 242, 236, 0.08);
+    background: rgba(245, 242, 236, 0.03);
+    color: #f5f2ec;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.9375rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .dir-search input::placeholder {
+    color: rgba(245, 242, 236, 0.25);
+  }
+  .dir-search input:focus {
+    outline: none;
+    border-color: rgba(212, 175, 55, 0.4);
+    background: rgba(245, 242, 236, 0.05);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.08);
+  }
+
+  .dir-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .dir-filter {
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.4);
+    background: transparent;
+    border: 1px solid rgba(245, 242, 236, 0.08);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .dir-filter:hover {
+    color: #f5f2ec;
+    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.06);
+  }
+  .dir-filter.active {
+    color: #0b0b0d;
+    background: #d4af37;
+    border-color: #d4af37;
+    font-weight: 700;
   }
 
   /* Grid */
   .dir-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
     padding-bottom: 5rem;
   }
 
-  /* Restaurant card */
+  /* Restaurant Card — refined editorial */
   .rcard {
     display: flex;
     flex-direction: column;
     border-radius: 1.25rem;
     overflow: hidden;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(245, 242, 236, 0.02);
+    border: 1px solid rgba(245, 242, 236, 0.06);
     text-decoration: none;
     color: inherit;
-    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.2s ease;
-    animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s ease,
+      border-color 0.3s ease;
+    animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--delay);
     will-change: transform;
+    position: relative;
   }
-  .rcard:nth-child(1) { animation-delay: 0.05s; }
-  .rcard:nth-child(2) { animation-delay: 0.12s; }
-  .rcard:nth-child(3) { animation-delay: 0.19s; }
-  .rcard:nth-child(4) { animation-delay: 0.26s; }
-
   @keyframes cardIn {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .rcard:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 24px 60px -12px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-6px);
+    box-shadow:
+      0 24px 64px -16px rgba(0, 0, 0, 0.5),
+      0 0 0 1px var(--accent);
+    border-color: var(--accent);
   }
 
   /* Cover */
   .rcard-cover {
     position: relative;
-    height: 180px;
+    height: 200px;
     overflow: hidden;
-    background: #1a1a1f;
+    background: #141418;
   }
   .rcard-cover-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .rcard:hover .rcard-cover-img { transform: scale(1.06); }
+  .rcard:hover .rcard-cover-img {
+    transform: scale(1.06);
+  }
   .rcard-cover-placeholder {
     width: 100%;
     height: 100%;
@@ -277,7 +548,27 @@ const cards = restaurants.map(r => ({
   .rcard-cover-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.05) 100%);
+    background: linear-gradient(
+      to top,
+      rgba(11, 11, 13, 0.9) 0%,
+      rgba(11, 11, 13, 0.1) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Badges */
+  .rcard-template-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #0b0b0d;
+    z-index: 2;
   }
   .rcard-mood-badge {
     position: absolute;
@@ -285,14 +576,14 @@ const cards = restaurants.map(r => ({
     right: 12px;
     padding: 3px 10px;
     border-radius: 999px;
-    background: rgba(0,0,0,0.45);
+    background: rgba(11, 11, 13, 0.5);
     backdrop-filter: blur(8px);
-    color: rgba(255,255,255,0.8);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    color: rgba(245, 242, 236, 0.7);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(245, 242, 236, 0.1);
   }
 
   /* Body */
@@ -304,38 +595,61 @@ const cards = restaurants.map(r => ({
     flex: 1;
   }
   .rcard-logo-wrap {
-    margin-top: -2.5rem;
+    margin-top: -2.25rem;
     width: 52px;
     height: 52px;
     border-radius: 12px;
     overflow: hidden;
-    border: 2.5px solid rgba(255,255,255,0.12);
-    background: #1e1e26;
+    border: 2px solid rgba(245, 242, 236, 0.1);
+    background: #1a1a20;
     flex-shrink: 0;
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
   }
   .rcard-logo {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .rcard-text { flex: 1; }
+
+  .rcard-text {
+    flex: 1;
+  }
   .rcard-name {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 800;
-    font-size: 1.2rem;
-    color: #fff;
-    letter-spacing: -0.02em;
+    font-family: "Playfair Display", serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #f5f2ec;
+    letter-spacing: -0.01em;
     line-height: 1.2;
     margin-bottom: 0.25rem;
   }
   .rcard-tagline {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.45);
+    font-size: 0.8125rem;
+    color: rgba(245, 242, 236, 0.35);
     line-height: 1.5;
+    font-weight: 300;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .rcard-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .rcard-meta-badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.4);
+    background: rgba(245, 242, 236, 0.03);
+    border: 1px solid rgba(245, 242, 236, 0.06);
   }
 
   /* CTA row */
@@ -344,32 +658,36 @@ const cards = restaurants.map(r => ({
     align-items: center;
     justify-content: space-between;
     padding-top: 0.75rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(245, 242, 236, 0.05);
   }
   .rcard-cta-text {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: rgba(255,255,255,0.55);
-    transition: color 0.2s;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.4);
+    transition: color 0.3s;
   }
-  .rcard:hover .rcard-cta-text { color: #fbbf24; }
+  .rcard:hover .rcard-cta-text {
+    color: var(--accent);
+  }
   .rcard-cta-arrow {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(245, 242, 236, 0.04);
+    border: 1px solid rgba(245, 242, 236, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255,255,255,0.4);
-    transition: background 0.2s, color 0.2s, transform 0.25s;
+    color: rgba(245, 242, 236, 0.3);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .rcard:hover .rcard-cta-arrow {
-    background: #fbbf24;
-    color: #000;
-    border-color: #fbbf24;
-    transform: translateX(3px);
+    background: var(--accent);
+    color: #0b0b0d;
+    border-color: var(--accent);
+    transform: translateX(4px);
   }
 
   /* Empty state */
@@ -377,25 +695,44 @@ const cards = restaurants.map(r => ({
     grid-column: 1 / -1;
     text-align: center;
     padding: 5rem 2rem;
-    color: rgba(255,255,255,0.3);
+    color: rgba(245, 242, 236, 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
   }
-  .dir-empty code { font-size: 0.875em; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; }
-  .dir-empty-sub { font-size: 0.875rem; color: rgba(255,255,255,0.22); }
+  .dir-empty code {
+    font-size: 0.875em;
+    background: rgba(245, 242, 236, 0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .dir-empty-sub {
+    font-size: 0.875rem;
+    color: rgba(245, 242, 236, 0.2);
+  }
 
   /* Footer */
   .dir-footer {
     text-align: center;
-    padding: 1.5rem;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.2);
-    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 2rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.15);
+    border-top: 1px solid rgba(245, 242, 236, 0.04);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .blob, .rcard, .rcard-cover-img { animation: none; transition: none; }
+    .rcard,
+    .rcard-cover-img {
+      animation: none;
+      transition: none;
+    }
   }
 </style>
+
+<script>
+  import { initDirectorySearch } from "../components/DirectorySearch.js";
+  document.addEventListener("astro:page-load", initDirectorySearch);
+</script>

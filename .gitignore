@@ -1,24 +1,75 @@
-# build output
+# ---- Dependencies ---------------------------------------------------------
+node_modules/
+.pnp
+.pnp.*
+
+# ---- Astro build output ----------------------------------------------------
 dist/
-# generated types
 .astro/
 
-# dependencies
-node_modules/
+# ---- Testing / coverage ----------------------------------------------------
+coverage/
+.bundle/
+.nyc_output/
 
-# logs
+# ---- Caches -----------------------------------------------------------------
+.cache/
+.turbo/
+.parcel-cache/
+.vite/
+
+# ---- Logs --------------------------------------------------------------------
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-
-# environment variables
+# ---- Environment variables ---------------------------------------------------
+# Keep tracked: .env.example — add your own real .env files locally.
 .env
-.env.production
+.env.*
+!.env.example
+.env.local
+.env.*.local
 
-# macOS-specific files
-.DS_Store
+# ---- Editors (VS Code) ---------------------------------------------------------
+# Keep shared config; ignore personal/workspace-local state.
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 
-# jetbrains setting folder
+# ---- Other editors --------------------------------------------------------------
 .idea/
+*.iml
+*.swp
+*.swo
+
+# ---- OS -------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---- Generated assets (copied by scripts/copy-assets.mjs) -------------------
+# Restaurant assets are copied from restaurants/<slug>/assets/ to public/r/<slug>/assets/
+# during build. Do not commit the copies.
+public/r/
+
+# ---- Temporary scripts -----------------------------------------------------------
+# One-off scripts used for generation/cleanup. Remove when no longer needed.
+script.mjs
+scripts/cleanup-and-rebuild.mjs
+scripts/register-new-templates.mjs
+scripts/update-logos.mjs
+scripts/generate-templates.mjs
+scripts/create-distinct-templates.mjs
+scripts/fix-registry.mjs
+
+# ---- Misc ------------------------------------------------------------------------
+*.pem
+*.crt
+*.key

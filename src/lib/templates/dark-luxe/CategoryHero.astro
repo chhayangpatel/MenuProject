@@ -1,0 +1,18 @@
+---
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+import { resolveCategoryHeroImage } from '../../../lib/assets';
+interface Props { category: MenuCategory; slug: string; categoryIndex: number; restaurant: any; }
+const { category, categoryIndex, restaurant } = Astro.props;
+const imageUrl = resolveCategoryHeroImage(restaurant, category.heroImage);
+---
+<div class="dl-cat-header">
+  <span class="dl-cat-number">{String(categoryIndex + 1).padStart(2, '0')}</span>
+  <h2 class="dl-cat-title">{category.name}</h2>
+  {category.description && <p class="dl-cat-desc">{category.description}</p>}
+</div>
+<style>
+  .dl-cat-header { padding: 4rem 2rem 2rem; text-align: center; }
+  .dl-cat-number { font-family: var(--dl-font-heading); font-size: 0.75rem; letter-spacing: 0.3em; color: var(--dl-gold); display: block; margin-bottom: 1rem; }
+  .dl-cat-title { font-family: var(--dl-font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; margin-bottom: 0.75rem; }
+  .dl-cat-desc { font-family: var(--dl-font-body); font-size: 0.9375rem; color: rgba(255,255,255,0.5); max-width: 40ch; margin: 0 auto; line-height: 1.7; }
+</style>

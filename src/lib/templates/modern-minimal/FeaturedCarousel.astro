@@ -1,0 +1,14 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import MenuCard from './MenuCard.astro';
+interface Props { items: MenuItem[]; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { items, currencySymbol, showPrices, restaurant } = Astro.props;
+---
+<section class="mm-featured-carousel" aria-labelledby="mm-featured-heading">
+  <div style="padding:0 1.5rem;margin-bottom:1rem;">
+    <h2 class="mm-featured-heading" id="mm-featured-heading" style="font-family:var(--mm-font-heading);font-size:clamp(1.25rem,3vw,1.5rem);font-weight:700;color:var(--mm-primary);">Must-Try</h2>
+  </div>
+  <div class="mm-featured-track" role="list" aria-label="Featured items">
+    {items.map(item=>(<div class="mm-featured-card" role="listitem"><MenuCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} restaurant={restaurant}/></div>))}
+  </div>
+</section>

@@ -1,0 +1,25 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+<div class="ac-hero">
+  <div class="ac-hero-card">
+    <img src={logoUrl} alt={restaurant.name} class="ac-hero-logo" />
+    <h1 class="ac-hero-title">{restaurant.name}</h1>
+    {restaurant.tagline && <p class="ac-hero-tagline">"{restaurant.tagline}"</p>}
+  </div>
+  {hasCover && <img src={coverUrl} alt="" class="ac-hero-bg" />}
+</div>
+<style>
+  .ac-hero { position: relative; min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+  .ac-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.2; filter: sepia(0.3); }
+  .ac-hero-card { position: relative; z-index: 1; text-align: center; padding: 3rem; background: var(--ac-secondary); border: 2px solid var(--ac-primary); border-radius: 2px; box-shadow: 8px 8px 0 0 var(--ac-accent); max-width: 400px; }
+  .ac-hero-logo { width: 72px; height: 72px; border-radius: 2px; object-fit: cover; margin-bottom: 1.5rem; border: 1px solid var(--ac-primary); }
+  .ac-hero-title { font-family: var(--ac-font-heading); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600; color: var(--ac-primary); margin-bottom: 0.75rem; }
+  .ac-hero-tagline { font-family: var(--ac-font-body); font-size: 0.9375rem; color: rgba(0,0,0,0.5); font-style: italic; }
+</style>

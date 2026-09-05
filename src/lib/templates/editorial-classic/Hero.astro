@@ -1,0 +1,235 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+
+interface Props {
+  restaurant: Restaurant;
+}
+
+const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+
+<div class="ec-wrapper ec-hero-wrapper relative w-full overflow-hidden" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 75vh;' : 'padding: 6rem 1.5rem 4rem;'}>
+
+  {hasCover && heroStyle !== 'minimal' && (
+    <>
+      {/* Cover image */}
+      <img
+        src={coverUrl}
+        alt=""
+        class="ec-hero-bg absolute inset-0 w-full h-full object-cover"
+        loading="eager"
+        data-parallax="0.3"
+      />
+      {/* Multi-layer gradient scrim */}
+      <div class="absolute inset-0 ec-hero-scrim"></div>
+      {/* Subtle noise texture overlay */}
+      <div class="absolute inset-0 opacity-20 ec-noise-overlay" aria-hidden="true"></div>
+    </>
+  )}
+
+  {/* Main content */}
+  <div class="relative z-10 flex flex-col items-center text-center px-6 ec-hero-content">
+
+    {/* Logo with glow ring */}
+    <div class="ec-logo-ring mb-8">
+      <img
+        src={logoUrl}
+        alt={restaurant.name}
+        class="ec-logo-img"
+      />
+    </div>
+
+    {/* Name */}
+    <h1 class={"ec-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'text-white' : 'text-primary')}>
+      {restaurant.name}
+    </h1>
+
+    {/* Gold divider */}
+    <div class="ec-divider" aria-hidden="true"></div>
+
+    {/* Tagline */}
+    {restaurant.tagline && (
+      <p class={"ec-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'tagline-light' : 'tagline-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+
+    {/* Scroll cue */}
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="ec-scroll-cue mt-12">
+        <span class="ec-scroll-dot"></span>
+        <span class="ec-scroll-text">Scroll to explore</span>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .ec-hero-wrapper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .ec-hero-bg {
+    animation: ec-heroZoom 18s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  @keyframes ec-heroZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  .ec-hero-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(26, 22, 18, 0.92) 0%,
+      rgba(26, 22, 18, 0.4) 50%,
+      rgba(26, 22, 18, 0.08) 100%
+    );
+  }
+
+  .ec-hero-content {
+    padding-bottom: 4rem;
+    padding-top: 6rem;
+    animation: ec-contentUp 1s var(--ec-ease-out-expo) both;
+  }
+
+  @keyframes ec-contentUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Logo ring */
+  .ec-logo-ring {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--ec-gold), transparent 60%);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.15),
+      0 12px 48px rgba(0,0,0,0.4),
+      0 0 60px -12px color-mix(in srgb, var(--ec-gold) 40%, transparent);
+    animation: ec-logoPop 0.9s var(--ec-ease-spring) 0.2s both;
+  }
+
+  @keyframes ec-logoPop {
+    from { opacity: 0; transform: scale(0.65); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .ec-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--ec-secondary);
+  }
+
+  /* Title */
+  .ec-hero-title {
+    font-family: var(--ec-font-heading);
+    font-weight: 900;
+    font-size: var(--ec-text-hero);
+    line-height: var(--ec-leading-heading);
+    letter-spacing: var(--ec-tracking-heading);
+    margin-bottom: 0.75rem;
+    text-shadow: 0 4px 32px rgba(0,0,0,0.6);
+  }
+  .text-white { color: #fff; }
+  .text-primary { color: var(--ec-primary); }
+
+  /* Divider */
+  .ec-divider {
+    width: 80px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--ec-gold), transparent);
+    margin: 1.25rem auto 1.5rem;
+    animation: ec-dividerGrow 0.8s var(--ec-ease-out-expo) 0.6s both;
+  }
+  @keyframes ec-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 80px; opacity: 1; }
+  }
+
+  /* Tagline */
+  .ec-hero-tagline {
+    font-family: var(--ec-font-body);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    max-width: 38ch;
+    line-height: 1.75;
+    animation: ec-contentUp 1s var(--ec-ease-out-expo) 0.2s both;
+  }
+  .tagline-light { color: rgba(255,255,255,0.88); text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+  .tagline-dark  { color: var(--ec-primary); opacity: 0.75; }
+
+  /* Scroll cue */
+  .ec-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    animation: ec-contentUp 1s var(--ec-ease-out-expo) 1s both;
+  }
+  .ec-scroll-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ec-gold);
+    animation: ec-scrollBounce 2s ease-in-out infinite;
+    box-shadow: 0 0 12px var(--ec-gold);
+  }
+  .ec-scroll-text {
+    font-family: var(--ec-font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ec-gold);
+  }
+  @keyframes ec-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50%       { transform: translateY(12px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ec-hero-bg, .ec-hero-content, .ec-logo-ring, .ec-hero-tagline, .ec-divider {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .ec-hero-scrim { opacity: 1; }
+  }
+</style>
+
+<script>
+  // Parallax for hero background
+  document.addEventListener('astro:page-load', () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const heroBg = document.querySelector('.ec-hero-bg');
+    if (!heroBg) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrolled = window.scrollY;
+        const rate = scrolled * 0.3;
+        heroBg.style.transform = `translateY(${rate}px) scale(1.08)`;
+        ticking = false;
+      });
+    }, { passive: true });
+  });
+</script>

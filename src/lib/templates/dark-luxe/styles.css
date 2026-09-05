@@ -1,0 +1,9 @@
+:root {
+  --dl-primary: #0A0A0A;
+  --dl-secondary: #111111;
+  --dl-accent: #D4AF37;
+  --dl-gold: #D4AF37;
+  --dl-font-heading: "Cormorant Garamond", "Playfair Display", serif;
+  --dl-font-body: "Inter", sans-serif;
+}
+.dl-wrapper { font-family: var(--dl-font-body); color: #fff; background: var(--dl-primary); line-height: 1.6; -webkit-font-smoothing: antialiased; }

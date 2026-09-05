@@ -1,0 +1,23 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const { contact } = restaurant;
+const logoUrl = resolveLogo(restaurant);
+---
+<header class="wr-nav-bar">
+  <div class="wr-nav-inner">
+    <a href="/" class="wr-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;color:#5D4A3A;transition:all 0.2s;background:rgba(196,90,42,0.1);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>
+    <img src={logoUrl} alt={restaurant.name} class="wr-nav-logo" />
+    <span class="wr-nav-name">{restaurant.name}</span>
+    <nav class="wr-nav-actions" style="display:flex;gap:0.5rem;" aria-label="Contact">
+      {contact?.phone && <a href={"tel:"+contact.phone} class="wr-nav-action" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;color:#5D4A3A;transition:all 0.2s;background:rgba(196,90,42,0.1);" title="Call"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2"/></svg></a>}
+      {contact?.googleMapsUrl && <a href={contact.googleMapsUrl} target="_blank" rel="noopener" class="wr-nav-action" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;color:#5D4A3A;transition:all 0.2s;background:rgba(196,90,42,0.1);" title="Directions"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></a>}
+    </nav>
+  </div>
+</header>
+<style>
+  .wr-back-link:hover,.wr-nav-action:hover{color:var(--wr-accent);background:rgba(196,90,42,0.2);transform:scale(1.1);}
+  .wr-back-link:hover{transform:translateX(-3px);}
+</style>

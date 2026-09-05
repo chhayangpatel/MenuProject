@@ -1,0 +1,39 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
+const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
+const hasVariants = item.variants && item.variants.length > 0;
+---
+<div class="dl-item">
+  {hasImage && <div class="dl-item-img"><img src={imageUrl} alt={item.name} loading="lazy" /></div>}
+  <div class="dl-item-content">
+    <div class="dl-item-top">
+      <h3 class="dl-item-name">{item.name}</h3>
+      <span class="dl-item-price">{currencySymbol}{item.price.toFixed(2)}</span>
+    </div>
+    {item.description && <p class="dl-item-desc">{item.description}</p>}
+    <div class="dl-item-tags">
+      {isVeg && !isVegan && <span class="dl-tag">Vegetarian</span>}
+      {isVegan && <span class="dl-tag">Vegan</span>}
+      {isGF && <span class="dl-tag">GF</span>}
+      {item.spicyLevel>0 && <span class="dl-tag">{"🌶️".repeat(item.spicyLevel)}</span>}
+    </div>
+  </div>
+</div>
+<style>
+  .dl-item { display: flex; gap: 1.5rem; padding: 1.5rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.3s; }
+  .dl-item:hover { background: rgba(255,255,255,0.02); }
+  .dl-item-img { flex-shrink: 0; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; }
+  .dl-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .dl-item-content { flex: 1; min-width: 0; }
+  .dl-item-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.375rem; }
+  .dl-item-name { font-family: var(--dl-font-heading); font-size: 1.125rem; font-weight: 400; color: #fff; letter-spacing: 0.02em; }
+  .dl-item-price { font-family: var(--dl-font-body); font-size: 1rem; color: var(--dl-gold); white-space: nowrap; }
+  .dl-item-desc { font-family: var(--dl-font-body); font-size: 0.8125rem; color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 0.5rem; }
+  .dl-item-tags { display: flex; gap: 0.5rem; }
+  .dl-tag { font-size: 0.5625rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 999px; }
+</style>

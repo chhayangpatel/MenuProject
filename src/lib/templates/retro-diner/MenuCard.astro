@@ -1,0 +1,28 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
+const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
+const hasVariants = item.variants && item.variants.length > 0;
+---
+<div class="rd-item">
+  {hasImage && <div class="rd-item-img"><img src={imageUrl} alt={item.name} /></div>}
+  <div class="rd-item-info">
+    <h3 class="rd-item-name">{item.name}</h3>
+    {item.description && <p class="rd-item-desc">{item.description}</p>}
+    <span class="rd-item-price">{currencySymbol}{item.price.toFixed(2)}</span>
+  </div>
+</div>
+<style>
+  .rd-item { display: flex; gap: 1rem; padding: 1.25rem; margin: 0.75rem 1rem; background: var(--rd-secondary); border: 3px solid var(--rd-primary); border-radius: 1.5rem; transition: transform 0.3s, box-shadow 0.3s; }
+  .rd-item:hover { transform: rotate(-1deg) scale(1.02); box-shadow: 6px 6px 0 0 var(--rd-accent); }
+  .rd-item-img { flex-shrink: 0; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 3px solid var(--rd-accent); }
+  .rd-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .rd-item-info { flex: 1; min-width: 0; }
+  .rd-item-name { font-family: var(--rd-font-heading); font-size: 1.125rem; color: var(--rd-primary); margin-bottom: 0.25rem; }
+  .rd-item-desc { font-family: var(--rd-font-body); font-size: 0.8125rem; color: rgba(0,0,0,0.5); line-height: 1.5; margin-bottom: 0.5rem; }
+  .rd-item-price { font-family: var(--rd-font-heading); font-size: 1.125rem; color: var(--rd-accent); }
+</style>

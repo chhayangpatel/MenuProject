@@ -1,0 +1,25 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+<div class="zg-hero">
+  <div class="zg-hero-inner">
+    <span class="zg-hero-en">禅</span>
+    <h1 class="zg-hero-title">{restaurant.name}</h1>
+    {restaurant.tagline && <p class="zg-hero-tagline">{restaurant.tagline}</p>}
+  </div>
+  {hasCover && <div class="zg-hero-bg" style={"background-image: url(" + coverUrl + ")"}></div>}
+</div>
+<style>
+  .zg-hero { position: relative; min-height: 60vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .zg-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.15; filter: grayscale(0.5); }
+  .zg-hero-inner { position: relative; z-index: 1; text-align: center; padding: 4rem 2rem; }
+  .zg-hero-en { font-size: 3rem; color: var(--zg-accent); display: block; margin-bottom: 1rem; }
+  .zg-hero-title { font-family: var(--zg-font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: 0.3em; color: var(--zg-primary); margin-bottom: 1rem; }
+  .zg-hero-tagline { font-family: var(--zg-font-body); font-size: 0.9375rem; color: rgba(0,0,0,0.5); letter-spacing: 0.1em; }
+</style>

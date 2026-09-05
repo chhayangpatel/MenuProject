@@ -1,34 +1,122 @@
 ---
-import { ClientRouter } from 'astro:transitions';
-import type { Restaurant } from '../schemas/restaurant.schema';
-import { getThemeStyles } from '../lib/theme';
-import LoadingScreen from '../components/LoadingScreen.astro';
-import '../styles/global.css';
+import { ClientRouter } from "astro:transitions";
+import type { Restaurant } from "../schemas/restaurant.schema";
+import { getThemeStyles } from "../lib/theme";
+import { getTemplate, type Template } from "../lib/templates/registry";
+import { resolveCover, resolveLogo } from "../lib/assets";
+import LoadingScreen from "../components/LoadingScreen.astro";
+import "../styles/global.css";
 
 interface Props {
   restaurant: Restaurant;
+  /** Override the template resolved from the restaurant config (showcase/preview) */
+  templateOverride?: Template;
+  /** Mark page as noindex (template previews) */
+  noindex?: boolean;
 }
 
-const { restaurant } = Astro.props;
-const { theme, moodPreset } = restaurant;
+const { restaurant, templateOverride, noindex = false } = Astro.props;
+const template =
+  templateOverride ?? getTemplate(restaurant.template, restaurant.moodPreset);
+const themeHTML = getThemeStyles(restaurant.theme, template);
+const language = restaurant.settings?.language || "en";
 
-// Returns HTML string with <link> tags + <style>
-const themeHTML = getThemeStyles(theme, moodPreset);
+// ── SEO / social head (Phase 2.1) ──────────────────────────────────────────
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImageAbs = (() => {
+  const img = resolveCover(restaurant) || resolveLogo(restaurant);
+  if (!img) return undefined;
+  return img.startsWith("http") ? img : new URL(img, site).href;
+})();
+const ogDescription =
+  restaurant.description ||
+  restaurant.tagline ||
+  `Explore the menu at ${restaurant.name}.`;
 ---
-<html lang={restaurant.settings?.language || "en"}>
+
+<html lang={language}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{restaurant.name} | Menu</title>
-    <meta name="description" content={restaurant.description || (restaurant.name + " – Digital Menu")} />
+    <meta name="description" content={ogDescription} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph / social previews -->
+    <meta property="og:type" content="restaurant.menu" />
+    <meta property="og:title" content={restaurant.name} />
+    <meta property="og:description" content={ogDescription} />
+    {ogImageAbs && <meta property="og:image" content={ogImageAbs} />}
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={restaurant.name} />
+    <meta name="twitter:description" content={ogDescription} />
+    {ogImageAbs && <meta name="twitter:image" content={ogImageAbs} />}
+
+    <!-- Theme color follows the restaurant's page background -->
+    <meta
+      name="theme-color"
+      content={restaurant.theme?.secondaryColor || "#FDFBF7"}
+    />
+
+    <!-- Fonts: single source of truth = registry -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href={template.fonts} rel="stylesheet" />
+
+    <!-- Brand + motion tokens (from registry + restaurant config) -->
     <Fragment set:html={themeHTML} />
+
     <ClientRouter />
   </head>
-  <body class="bg-[var(--color-secondary)] text-[var(--color-primary)] antialiased">
-    <LoadingScreen moodPreset={moodPreset} restaurantName={restaurant.name} />
-    <div class="min-h-screen relative max-w-3xl mx-auto bg-[var(--color-secondary)]" style="box-shadow: 0 0 80px rgba(0,0,0,0.12);">
-      <slot />
-    </div>
+  <body class={`tpl-template-${template.id}`}>
+    <div id="top" style="position:absolute; top:0;"></div>
+    <LoadingScreen
+      moodPreset={restaurant.moodPreset}
+      restaurantName={restaurant.name}
+    />
+    <slot />
   </body>
 </html>
+
+<style is:global>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--brand-secondary, #fdfbf7);
+    color: var(--brand-primary, #1a1612);
+    font-family: var(--font-body, system-ui, sans-serif);
+    line-height: 1.6;
+  }
+
+  /* Branded text selection — a small detail with outsized polish */
+  ::selection {
+    background: var(--brand-accent);
+    color: var(--mr-on-accent, #fff);
+  }
+
+  /* Platform-wide focus ring: part of the design, not a browser default */
+  :focus-visible {
+    outline: 2px solid var(--brand-accent);
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion: global end-state guarantee (design doc §4.3) */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>

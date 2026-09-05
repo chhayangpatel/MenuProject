@@ -1,0 +1,22 @@
+---
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+interface Props { categories: MenuCategory[]; }
+const { categories } = Astro.props;
+---
+<nav class="rd-cat-nav">
+  {categories.map((cat,i)=>(<button class="rd-cat-btn" data-category={cat.id}>{cat.name}</button>))}
+</nav>
+<style>
+  .rd-cat-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 2rem; justify-content: center; }
+  .rd-cat-btn { padding: 0.75rem 1.5rem; border-radius: 999px; border: 3px solid var(--rd-accent); background: var(--rd-secondary); font-family: var(--rd-font-heading); font-size: 0.875rem; color: var(--rd-primary); cursor: pointer; transition: all 0.3s; }
+  .rd-cat-btn:hover, .rd-cat-btn.active { background: var(--rd-accent); color: var(--rd-primary); transform: scale(1.05) rotate(-2deg); }
+</style>
+<script>
+  document.addEventListener('astro:page-load', function() {
+    var btns = document.querySelectorAll('.rd-cat-btn');
+    var secs = document.querySelectorAll('section[id^="category-"]');
+    btns.forEach(function(b) { b.addEventListener('click', function() { var t = document.getElementById('category-' + b.dataset.category); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); });
+    var obs = new IntersectionObserver(function(entries) { entries.forEach(function(e) { if (e.isIntersecting) { var id = e.target.id.replace('category-', ''); btns.forEach(function(b) { b.classList.toggle('active', b.dataset.category === id); }); } }); }, { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 });
+    secs.forEach(function(s) { obs.observe(s); });
+  });
+</script>

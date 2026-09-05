@@ -5,14 +5,21 @@
   "description": "Family-run Italian trattoria serving handmade pasta and wood-fired pizza.",
   "logo": "logo.svg",
   "coverImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80",
-  "cuisine": ["Italian", "Pasta", "Pizza"],
+  "cuisine": [
+    "Italian",
+    "Pasta",
+    "Pizza"
+  ],
   "priceRange": "$$",
   "moodPreset": "fine-dining",
+  "template": "editorial-classic",
   "story": {
     "heading": "Our Story",
     "body": "Founded in 1985 by the Rossi family, Bella Italia still makes every pasta by hand, using a recipe passed down three generations."
   },
-  "hero": { "style": "fullbleed" },
+  "hero": {
+    "style": "fullbleed"
+  },
   "contact": {
     "phone": "+1-555-0100",
     "whatsapp": "+1-555-0100",
@@ -53,91 +60,675 @@
       "id": "antipasti",
       "name": "Antipasti",
       "description": "Traditional starters to share.",
-      "heroImage": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80",
-      "heroQuote": "\"Simplicity is the ultimate sophistication.\"",
       "items": [
         {
-          "id": "bruschetta",
+          "id": "bruschetta-al-pomodoro",
           "name": "Bruschetta al Pomodoro",
-          "description": "Grilled sourdough, heirloom tomatoes, fresh basil, aged balsamic",
-          "price": 12,
-          "image": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=400&q=80",
-          "tags": ["vegetarian"],
-          "available": true
+          "description": "Grilled sourdough, marinated San Marzano tomatoes, basil, Sicilian olive oil",
+          "price": 9,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
         },
         {
-          "id": "burrata",
-          "name": "Burrata & Prosciutto",
-          "description": "Creamy burrata, San Daniele prosciutto, arugula, pine nuts",
+          "id": "burrata-pugliese",
+          "name": "Burrata Pugliese",
+          "description": "Creamy burrata, heirloom tomatoes, aged balsamic, basil oil",
+          "price": 16,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "vitello-tonnato",
+          "name": "Vitello Tonnato",
+          "description": "Thin-sliced veal, tuna-caper cream, lemon, arugula",
+          "price": 17,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "carpaccio-di-manzo",
+          "name": "Carpaccio di Manzo",
+          "description": "Beef carpaccio, wild rocket, Parmigiano-Reggiano, truffle oil",
           "price": 18,
-          "image": "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=400&q=80",
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "arancini-ai-funghi",
+          "name": "Arancini ai Funghi",
+          "description": "Crispy saffron risotto spheres, porcini, taleggio center",
+          "price": 12,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "polpette-della-nonna",
+          "name": "Polpette della Nonna",
+          "description": "Slow-braised beef meatballs, San Marzano sugo, whipped ricotta",
+          "price": 14,
           "tags": [],
-          "available": true
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "calamari-fritti",
+          "name": "Calamari Fritti",
+          "description": "Lightly floured calamari, lemon aioli, marinara",
+          "price": 15,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "prosciutto-e-melone",
+          "name": "Prosciutto e Melone",
+          "description": "24-month Parma ham, cantaloupe, fig mostarda",
+          "price": 16,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "caprese-di-bufala",
+          "name": "Caprese di Bufala",
+          "description": "Buffalo mozzarella, vine tomatoes, basil, Ligurian oil",
+          "price": 14,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "gamberi-all-aglio",
+          "name": "Gamberi all'Aglio",
+          "description": "Sautéed prawns, garlic, white wine, chili, crostini",
+          "price": 17,
+          "tags": [],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
         }
       ]
     },
     {
-      "id": "pasta",
-      "name": "Pasta Fatta in Casa",
-      "description": "Handmade daily using our grandmother's recipe.",
+      "id": "insalate",
+      "name": "Insalate",
+      "description": "6 dishes, prepared to order",
       "items": [
         {
-          "id": "carbonara",
-          "name": "Spaghetti Carbonara",
-          "description": "Guanciale, pecorino romano, egg yolk, black pepper",
-          "price": 22,
-          "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400&q=80",
-          "pairsWith": "House Chianti Classico",
-          "tags": [],
+          "id": "cesare-classica",
+          "name": "Cesare Classica",
+          "description": "Baby gem, pecorino crisp, white anchovy, sourdough croutons",
+          "price": 13,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
           "available": true,
-          "featured": true,
-          "popularity": "most-ordered"
+          "featured": false
         },
         {
-          "id": "cacio-pepe",
-          "name": "Cacio e Pepe",
-          "description": "Tonnarelli, pecorino, black pepper, lemon zest",
-          "price": 19,
-          "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80",
-          "tags": ["vegetarian"],
-          "available": true
+          "id": "insalata-tricolore",
+          "name": "Insalata Tricolore",
+          "description": "Endive, radicchio, arugula, aged balsamic, shaved Parmigiano",
+          "price": 12,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         },
         {
-          "id": "ragù",
-          "name": "Tagliatelle al Ragù",
-          "description": "Slow-cooked beef and pork ragù, 8 hours on the stove",
-          "price": 21,
-          "image": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=400&q=80",
+          "id": "panzerotti-salad",
+          "name": "Panzerotti Salad",
+          "description": "Warm farro, roasted squash, kale, hazelnut, ricotta salata",
+          "price": 15,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "pollo-grigliato",
+          "name": "Pollo Grigliato",
+          "description": "Charred chicken breast, little gems, Caesar dressing, focaccia crumb",
+          "price": 17,
           "tags": [],
-          "available": true
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "gambero-e-avocado",
+          "name": "Gambero e Avocado",
+          "description": "Prawns, avocado, grapefruit, fennel, citrus dressing",
+          "price": 18,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "burrata-e-pesca",
+          "name": "Burrata e Pesca",
+          "description": "Burrata, grilled peach, prosciutto crisp, saba",
+          "price": 16,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "primi",
+      "name": "Primi",
+      "description": "12 dishes, prepared to order",
+      "items": [
+        {
+          "id": "tagliatelle-al-ragu-bolognese",
+          "name": "Tagliatelle al Ragù Bolognese",
+          "description": "Hand-cut egg pasta, 8-hour beef and pork ragù",
+          "price": 22,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "spaghetti-alle-vongole",
+          "name": "Spaghetti alle Vongole",
+          "description": "Clams, white wine, garlic, chili, parsley",
+          "price": 24,
+          "tags": [],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cacio-e-pepe",
+          "name": "Cacio e Pepe",
+          "description": "Bronze-cut tonnarelli, Pecorino Romano, cracked Sarawak pepper",
+          "price": 18,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "carbonara-romana",
+          "name": "Carbonara Romana",
+          "description": "Guanciale, egg yolk, Pecorino Romano, black pepper",
+          "price": 20,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "linguine-ai-frutti-di-mare",
+          "name": "Linguine ai Frutti di Mare",
+          "description": "Mussels, clams, prawns, calamari, cherry tomato",
+          "price": 28,
+          "tags": [],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "ravioli-di-ricotta-e-spinaci",
+          "name": "Ravioli di Ricotta e Spinaci",
+          "description": "Hand-folded ravioli, sage butter, Parmigiano",
+          "price": 19,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "gnocchi-al-tartufo",
+          "name": "Gnocchi al Tartufo",
+          "description": "Potato gnocchi, porcini cream, shaved black truffle",
+          "price": 24,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "risotto-ai-funghi-porcini",
+          "name": "Risotto ai Funghi Porcini",
+          "description": "Carnaroli rice, porcini, thyme, aged Parmigiano",
+          "price": 23,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "pappardelle-al-cinghiale",
+          "name": "Pappardelle al Cinghiale",
+          "description": "Wide ribbons, slow-braised wild boar, juniper",
+          "price": 26,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "lasagne-verde-al-forno",
+          "name": "Lasagne Verde al Forno",
+          "description": "Spinach pasta layers, ragù, besciamella, Parmigiano",
+          "price": 21,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "agnolotti-del-plin",
+          "name": "Agnolotti del Plin",
+          "description": "Piedmontese meat agnolotti, roast gravy, sage",
+          "price": 25,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "fettuccine-alfredo",
+          "name": "Fettuccine Alfredo",
+          "description": "Silk fettuccine, cultured butter, Parmigiano, cracked pepper",
+          "price": 19,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     },
     {
       "id": "pizza",
-      "name": "Pizza Napoletana",
+      "name": "Pizza",
       "description": "Wood-fired in our imported Vesuvio oven.",
-      "heroImage": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=1600&q=80",
       "items": [
         {
-          "id": "margherita",
-          "name": "Margherita DOP",
-          "description": "San Marzano tomatoes, mozzarella di bufala, fresh basil",
-          "price": 16,
-          "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80",
-          "tags": ["vegetarian"],
+          "id": "margherita-d-o-p",
+          "name": "Margherita D.O.P.",
+          "description": "San Marzano, fior di latte, basil, Sicilian olive oil",
+          "price": 14,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
           "available": true,
           "featured": true
         },
         {
+          "id": "marinara-verace",
+          "name": "Marinara Verace",
+          "description": "Tomato, garlic, oregano, olive oil — no cheese, the original",
+          "price": 12,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
           "id": "diavola",
           "name": "Diavola",
-          "description": "Spicy salami, mozzarella, chili honey",
-          "price": 18,
-          "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&q=80",
+          "description": "Spicy soppressata, tomato, fior di latte, calabrian chili honey",
+          "price": 17,
           "tags": [],
           "spicyLevel": 2,
-          "available": true
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "quattro-formaggi",
+          "name": "Quattro Formaggi",
+          "description": "Gorgonzola, taleggio, fontina, Parmigiano, walnut honey",
+          "price": 18,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "prosciutto-e-rucola",
+          "name": "Prosciutto e Rucola",
+          "description": "Parma ham, wild arugula, cherry tomato, shaved Parmigiano",
+          "price": 19,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "tartufo-nero",
+          "name": "Tartufo Nero",
+          "description": "Black truffle cream, fior di latte, wild mushrooms, thyme",
+          "price": 22,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "capricciosa",
+          "name": "Capricciosa",
+          "description": "Ham, artichoke, black olive, mushroom, egg",
+          "price": 18,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "ortolana",
+          "name": "Ortolana",
+          "description": "Grilled zucchini, eggplant, pepper, basil pesto",
+          "price": 17,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "salsiccia-e-friarielli",
+          "name": "Salsiccia e Friarielli",
+          "description": "Fennel sausage, broccoli rabe, smoked scamorza",
+          "price": 19,
+          "tags": [],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "burrata-e-pistacchio",
+          "name": "Burrata e Pistacchio",
+          "description": "Pistachio pesto, burrata, mortadella, lemon zest",
+          "price": 21,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "nduja-e-miele",
+          "name": "Nduja e Miele",
+          "description": "Spicy Calabrian 'nduja, hot honey, fior di latte",
+          "price": 18,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "margherita-gluten-free",
+          "name": "Margherita Gluten-Free",
+          "description": "Same soul, certified GF crust",
+          "price": 15,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "secondi",
+      "name": "Secondi",
+      "description": "10 dishes, prepared to order",
+      "items": [
+        {
+          "id": "branzino-al-forno",
+          "name": "Branzino al Forno",
+          "description": "Whole roasted sea bass, fennel, lemon, salmoriglio",
+          "price": 34,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "osso-buco-alla-milanese",
+          "name": "Osso Buco alla Milanese",
+          "description": "Braised veal shank, saffron risotto, gremolata",
+          "price": 38,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "bistecca-fiorentina",
+          "name": "Bistecca Fiorentina",
+          "description": "1kg dry-aged T-bone, rosemary, Tuscan salt — for two",
+          "price": 78,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "saltimbocca-alla-romana",
+          "name": "Saltimbocca alla Romana",
+          "description": "Veal, prosciutto, sage, white wine butter",
+          "price": 32,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "pollo-al-mattone",
+          "name": "Pollo al Mattone",
+          "description": "Brick-pressed chicken, charred lemon, rosemary jus",
+          "price": 28,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "branzino-in-crosta-di-sale",
+          "name": "Branzino in Crosta di Sale",
+          "description": "Salt-crusted sea bass, herb oil — carve at table",
+          "price": 36,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "melanzane-alla-parmigiana",
+          "name": "Melanzane alla Parmigiana",
+          "description": "Layered eggplant, tomato, basil, fior di latte",
+          "price": 22,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "dorado-alla-griglia",
+          "name": "Dorado alla Griglia",
+          "description": "Grilled sea bream, caponata, almond gremolata",
+          "price": 33,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "agnello-scottadito",
+          "name": "Agnello Scottadito",
+          "description": "Grilled lamb chops, salsa verde, burnt lemon",
+          "price": 36,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cotoletta-alla-milanese",
+          "name": "Cotoletta alla Milanese",
+          "description": "Butterflied veal cutlet, herb butter, fried sage",
+          "price": 31,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "contorni",
+      "name": "Contorni",
+      "description": "5 dishes, prepared to order",
+      "items": [
+        {
+          "id": "patate-al-rosmarino",
+          "name": "Patate al Rosmarino",
+          "description": "Crispy rosemary potatoes, sea salt",
+          "price": 8,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "friarielli-saltati",
+          "name": "Friarielli Saltati",
+          "description": "Sautéed broccoli rabe, garlic, chili",
+          "price": 9,
+          "tags": [
+            "vegan",
+            "gluten-free"
+          ],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "insalata-mista",
+          "name": "Insalata Mista",
+          "description": "Seasonal leaves, shaved vegetables, red wine vinaigrette",
+          "price": 7,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "zucchine-alla-scapece",
+          "name": "Zucchine alla Scapece",
+          "description": "Marinated fried zucchini, mint, vinegar",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "funghi-trifolati",
+          "name": "Funghi Trifolati",
+          "description": "Wild mushrooms, garlic, parsley",
+          "price": 10,
+          "tags": [
+            "vegan",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     },
@@ -147,14 +738,218 @@
       "description": "Homemade Italian desserts.",
       "items": [
         {
-          "id": "tiramisu",
-          "name": "Classic Tiramisu",
-          "description": "Mascarpone, espresso-soaked savoiardi, cocoa",
-          "price": 10,
-          "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&q=80",
-          "tags": ["vegetarian"],
+          "id": "tiramisu-classico",
+          "name": "Tiramisù Classico",
+          "description": "Savoiardi, mascarpone, espresso, Valrhona cocoa",
+          "price": 11,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
           "available": true,
           "featured": true
+        },
+        {
+          "id": "panna-cotta-al-vaniglia",
+          "name": "Panna Cotta al Vaniglia",
+          "description": "Tahitian vanilla, macerated berries",
+          "price": 10,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cannoli-siciliani",
+          "name": "Cannoli Siciliani",
+          "description": "Ricotta, candied orange, pistachio, chocolate",
+          "price": 10,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "affogato-al-caffe",
+          "name": "Affogato al Caffè",
+          "description": "Fior di latte gelato drowned in double espresso",
+          "price": 9,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "torta-della-nonna",
+          "name": "Torta della Nonna",
+          "description": "Custard tart, pine nuts, lemon",
+          "price": 10,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "gelato-artigianale",
+          "name": "Gelato Artigianale",
+          "description": "Three scoops — ask for today's flavors",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "zabaglione-con-frutti-di-bosco",
+          "name": "Zabaglione con Frutti di Bosco",
+          "description": "Warm sabayon, wild berries",
+          "price": 11,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "bomboloni",
+          "name": "Bomboloni",
+          "description": "Sugar-dusted doughnuts, pastry cream",
+          "price": 9,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "bevande",
+      "name": "Bevande",
+      "description": "9 dishes, prepared to order",
+      "items": [
+        {
+          "id": "espresso",
+          "name": "Espresso",
+          "description": "Single-origin, roasted in Torino",
+          "price": 3.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cappuccino",
+          "name": "Cappuccino",
+          "description": "Velvet-steamed milk, cocoa dust",
+          "price": 5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "limonata-della-casa",
+          "name": "Limonata della Casa",
+          "description": "Amalfi lemon, mint, sparkling",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "aranciata-rossa",
+          "name": "Aranciata Rossa",
+          "description": "Blood orange, lightly sparkling",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "san-pellegrino-750ml",
+          "name": "San Pellegrino 750ml",
+          "description": "Sparkling mineral water",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "chino",
+          "name": "Chinò",
+          "description": "The classic Italian cola, over ice",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "espresso-martini",
+          "name": "Espresso Martini",
+          "description": "Vodka, espresso, coffee liqueur",
+          "price": 14,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "negroni-sbagliato",
+          "name": "Negroni Sbagliato",
+          "description": "Campari, sweet vermouth, prosecco",
+          "price": 14,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "aperol-spritz",
+          "name": "Aperol Spritz",
+          "description": "Aperol, prosecco, soda, olives",
+          "price": 13,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     }

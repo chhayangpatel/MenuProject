@@ -1,0 +1,274 @@
+---
+import type { MenuItem } from "../../../schemas/restaurant.schema";
+import { resolveMenuItemImage } from "../../../lib/assets";
+
+interface Props {
+  item: MenuItem;
+  currencySymbol?: string;
+  showPrices?: boolean;
+  restaurant: any;
+}
+
+const {
+  item,
+  currencySymbol = "$",
+  showPrices = true,
+  restaurant,
+} = Astro.props;
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : "";
+const isVegetarian = item.tags.includes("vegetarian");
+const isVegan = item.tags.includes("vegan");
+const isGlutenFree = item.tags.includes("gluten-free");
+const hasVariants = item.variants && item.variants.length > 0;
+---
+
+<!--
+  Editorial Classic item — formatted like a printed fine-dining menu:
+  name ········ price, description below in relaxed serif.
+  No box, no borders — the page is the menu paper.
+-->
+<article
+  class:list={[
+    "ec-row",
+    !item.available && "ec-row--unavailable",
+    item.featured && "ec-row--featured",
+  ]}
+  data-item-id={item.id}
+  role="button"
+  tabindex="0"
+  aria-label={"View details for " + item.name}
+>
+  <div class="ec-row__top">
+    <h3 class="ec-row-name">{item.name}</h3>
+    <span class="ec-row__leader" aria-hidden="true"></span>
+    {
+      showPrices && (
+        <span
+          class="ec-row-price"
+          aria-label={currencySymbol + item.price.toFixed(2)}
+        >
+          {hasVariants && <span class="ec-row-price-from">from </span>}
+          {currencySymbol}
+          {item.price.toFixed(2)}
+        </span>
+      )
+    }
+  </div>
+
+  {item.description && <p class="ec-row-desc">{item.description}</p>}
+
+  {/* Dietary + meta markers */}
+  <div class="ec-row-meta">
+    {
+      item.featured && (
+        <span class="ec-row-tag ec-row-tag--gold">Chef's Pick</span>
+      )
+    }
+    {
+      item.popularity === "most-ordered" && (
+        <span class="ec-row-tag ec-row-tag--gold">Most Ordered</span>
+      )
+    }
+    {
+      item.popularity === "staff-favorite" && (
+        <span class="ec-row-tag ec-row-tag--gold">Staff Pick</span>
+      )
+    }
+    {
+      item.popularity === "new" && (
+        <span class="ec-row-tag ec-row-tag--gold">New</span>
+      )
+    }
+    {
+      item.popularity === "trending" && (
+        <span class="ec-row-tag ec-row-tag--gold">Trending</span>
+      )
+    }
+
+    {
+      !item.available && (
+        <span class="ec-row-tag ec-row-tag--sold">Sold Out</span>
+      )
+    }
+
+    {
+      isVegetarian && !isVegan && (
+        <span class="ec-row-tag ec-row-tag--green">Vegetarian</span>
+      )
+    }
+    {isVegan && <span class="ec-row-tag ec-row-tag--green">Vegan</span>}
+    {
+      isGlutenFree && (
+        <span class="ec-row-tag ec-row-tag--amber">Gluten-Free</span>
+      )
+    }
+    {
+      item.spicyLevel > 0 && (
+        <span class="ec-row-tag ec-row-tag--red">
+          {"🌶️".repeat(item.spicyLevel)}
+        </span>
+      )
+    }
+    {
+      item.portionSize && (
+        <span class="ec-row-tag ec-row-tag--muted">{item.portionSize}</span>
+      )
+    }
+    {
+      item.prepTime && (
+        <span class="ec-row-tag ec-row-tag--muted">⏱ {item.prepTime}min</span>
+      )
+    }
+    {hasImage && <span class="ec-row-tag ec-row-tag--muted">photo</span>}
+  </div>
+</article>
+
+<style>
+  /* ── Dotted leader row (the fine-dining signature) ────────────────── */
+  .ec-row {
+    --row-gap: 0.75rem;
+    display: block;
+    padding: 1.1rem 0.25rem;
+    cursor: pointer;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--ec-primary) 7%, transparent);
+    transition: background 0.25s var(--ec-ease-out-expo);
+  }
+  .ec-row:hover {
+    background: color-mix(in srgb, var(--ec-gold) 5%, transparent);
+  }
+
+  .ec-row__top {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .ec-row-name {
+    font-family: var(--ec-font-heading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    color: var(--ec-primary);
+    flex-shrink: 1;
+    min-width: 0;
+    transition: color 0.25s ease;
+  }
+  .ec-row:hover .ec-row-name {
+    color: var(--ec-gold);
+  }
+
+  /* Dotted leader only on wide-enough screens; phones just space */
+  .ec-row__leader {
+    flex: 1 1 auto;
+    min-width: 1.5rem;
+    border-bottom: 1px dotted
+      color-mix(in srgb, var(--ec-primary) 25%, transparent);
+    transform: translateY(-4px);
+  }
+  @media (max-width: 479px) {
+    .ec-row__leader {
+      display: none;
+    }
+  }
+
+  .ec-row-price {
+    font-family: var(--ec-font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ec-accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .ec-row-price-from {
+    font-size: 0.75em;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--ec-accent) 75%, transparent);
+  }
+
+  .ec-row-desc {
+    font-family: var(--ec-font-body);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--ec-primary) 58%, transparent);
+    max-width: 60ch;
+    margin-bottom: 0.5rem;
+  }
+
+  .ec-row-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .ec-row-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .ec-row-tag--gold {
+    background: color-mix(in srgb, var(--ec-gold) 18%, transparent);
+    color: color-mix(in srgb, var(--ec-gold) 85%, #7a5c10);
+  }
+  .ec-row-tag--green {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  .ec-row-tag--amber {
+    background: #fef3c7;
+    color: #b45309;
+  }
+  .ec-row-tag--red {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  .ec-row-tag--muted {
+    background: color-mix(in srgb, var(--ec-primary) 6%, transparent);
+    color: color-mix(in srgb, var(--ec-primary) 50%, transparent);
+  }
+  .ec-row-tag--sold {
+    background: color-mix(in srgb, var(--ec-primary) 12%, transparent);
+    color: var(--ec-primary);
+    text-decoration: line-through;
+  }
+
+  .ec-row--unavailable {
+    opacity: 0.5;
+    filter: grayscale(0.3);
+    pointer-events: none;
+  }
+  .ec-row--featured .ec-row-name {
+    color: color-mix(in srgb, var(--ec-gold) 40%, var(--ec-primary));
+  }
+
+  @media (min-width: 760px) {
+    .ec-row {
+      padding: 1.25rem 0.5rem;
+    }
+    .ec-row-name {
+      font-size: 1.125rem;
+    }
+    .ec-row-desc {
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* Reduced motion: keep rows calm */
+  @media (prefers-reduced-motion: reduce) {
+    .ec-row {
+      transition: none;
+    }
+    .ec-row:hover {
+      background: transparent;
+    }
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const { hours, contact } = restaurant;
+const hourEntries = hours?.regular ? Object.entries(hours.regular) : [];
+---
+<footer class="zg-footer">
+  <p class="zg-footer-name">{restaurant.name}</p>
+  {restaurant.tagline && <p class="zg-footer-tagline">{restaurant.tagline}</p>}
+  <div class="zg-footer-divider">一</div>
+  {contact?.address && <p class="zg-footer-address">{contact.address}</p>}
+  {contact?.phone && <p class="zg-footer-phone">{contact.phone}</p>}
+  <p class="zg-footer-copy">© {new Date().getFullYear()}</p>
+</footer>
+<style>
+  .zg-footer { padding: 4rem 2rem; text-align: center; }
+  .zg-footer-name { font-family: var(--zg-font-heading); font-size: 1.25rem; letter-spacing: 0.2em; color: var(--zg-primary); }
+  .zg-footer-tagline { font-size: 0.8125rem; color: rgba(0,0,0,0.4); margin: 0.5rem 0 2rem; }
+  .zg-footer-divider { font-size: 1.5rem; color: var(--zg-accent); margin-bottom: 2rem; }
+  .zg-footer-address, .zg-footer-phone { font-size: 0.8125rem; color: rgba(0,0,0,0.5); margin-bottom: 0.25rem; }
+  .zg-footer-copy { font-size: 0.6875rem; color: rgba(0,0,0,0.2); margin-top: 2rem; }
+</style>

@@ -1,0 +1,23 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import MenuCard from './MenuCard.astro';
+interface Props { items: MenuItem[]; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { items, currencySymbol, showPrices, restaurant } = Astro.props;
+---
+<section class="dl-featured">
+  <h2 class="dl-featured-title">Chef's Selection</h2>
+  <div class="dl-featured-track">
+    {items.map(item => (
+      <div class="dl-featured-card">
+        <MenuCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} restaurant={restaurant} />
+      </div>
+    ))}
+  </div>
+</section>
+<style>
+  .dl-featured { padding: 4rem 0; }
+  .dl-featured-title { font-family: var(--dl-font-heading); font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dl-gold); text-align: center; margin-bottom: 2rem; }
+  .dl-featured-track { display: flex; gap: 0; overflow-x: auto; padding: 0 2rem; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .dl-featured-track::-webkit-scrollbar { display: none; }
+  .dl-featured-card { flex-shrink: 0; width: 320px; scroll-snap-align: start; }
+</style>

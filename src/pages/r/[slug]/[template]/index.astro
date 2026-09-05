@@ -1,0 +1,264 @@
+---
+/**
+ * Template preview route: /r/<slug>/<template-id>/
+ * Renders a restaurant through a different template — noindex, for
+ * evaluating template switches from the UI (Phase 1.4).
+ * A small floating switcher bar links all template variants.
+ */
+import { loadAllRestaurants } from "../../../../lib/loadRestaurants";
+import RestaurantLayout from "../../../../layouts/RestaurantLayout.astro";
+import ItemDetailSheet from "../../../../components/ItemDetailSheet";
+import SearchFilterBar from "../../../../components/SearchFilterBar";
+import TemplateStyleManager from "../../../../components/TemplateStyleManager.astro";
+import { getTemplate, templates } from "../../../../lib/templates/registry";
+import { templateComponents } from "../../../../lib/templates/components";
+import { resolveMenuItemImage } from "../../../../lib/assets";
+import type { Restaurant } from "../../../../schemas/restaurant.schema";
+
+export async function getStaticPaths() {
+    const restaurants = await loadAllRestaurants();
+    return restaurants.flatMap((restaurant) =>
+        Object.keys(templates)
+            .filter((templateId) => templateId !== restaurant.template)
+            .map((templateId) => ({
+                params: { slug: restaurant.slug, template: templateId },
+                props: { restaurant, templateId },
+            })),
+    );
+}
+
+interface Props {
+    restaurant: Restaurant;
+    templateId: string;
+}
+
+const { restaurant, templateId } = Astro.props;
+const { menu, settings, story } = restaurant;
+
+const template = getTemplate(templateId, restaurant.moodPreset);
+const components = templateComponents[template.id];
+const {
+    Hero: TemplateHero,
+    Header: TemplateHeader,
+    CategoryNav: TemplateCategoryNav,
+    CategoryHero: TemplateCategoryHero,
+    MenuCard: TemplateMenuCard,
+    FeaturedCarousel: TemplateFeaturedCarousel,
+    Footer: TemplateFooter,
+} = components;
+
+const enableScramble = template.effects.includes("scramble");
+const featuredItems = menu
+    .flatMap((cat) => cat.items)
+    .filter((item) => item.featured);
+const totalItems = menu.reduce((n, c) => n + c.items.length, 0);
+const flatItems = menu
+    .flatMap((c) => c.items)
+    .map((item) => ({
+        ...item,
+        image: item.image
+            ? resolveMenuItemImage(restaurant, item.image)
+            : undefined,
+        gallery: item.gallery?.map((img) =>
+            resolveMenuItemImage(restaurant, img),
+        ),
+    }));
+
+const switcherLinks = Object.values(templates).map((t) => ({
+    id: t.id,
+    name: t.name,
+    href:
+        t.id === restaurant.template
+            ? `/r/${restaurant.slug}/`
+            : `/r/${restaurant.slug}/${t.id}/`,
+    active: t.id === template.id,
+}));
+---
+
+<RestaurantLayout restaurant={restaurant} templateOverride={template} noindex>
+    <TemplateStyleManager restaurant={restaurant} templateId={template.id} />
+
+    <TemplateHero restaurant={restaurant} />
+    <TemplateHeader restaurant={restaurant} />
+
+    {
+        story && (
+            <section class="mr-story">
+                <p class="mr-story-eyebrow">{story.heading || "Our Story"}</p>
+                <p class="mr-story-body">{story.body}</p>
+            </section>
+        )
+    }
+
+    {
+        featuredItems.length > 0 && (
+            <TemplateFeaturedCarousel
+                items={featuredItems}
+                currencySymbol={settings?.currencySymbol}
+                showPrices={settings?.showPrices}
+                restaurant={restaurant}
+            />
+        )
+    }
+
+    <SearchFilterBar
+        client:load
+        enabled={settings?.enableSearch ?? true}
+        enableDietaryFilters={settings?.enableDietaryFilters ?? true}
+    />
+
+    <TemplateCategoryNav categories={menu} />
+
+    <main class="mr-menu" id="menu-body">
+        <p class="mr-menu-overview">
+            {totalItems} dishes across {menu.length} categories
+        </p>
+        {
+            menu.map((category, index) => (
+                <section
+                    id={"category-" + category.id}
+                    class="mr-category"
+                    aria-labelledby={"cat-h-" + category.id}
+                >
+                    <header class="mr-cat-head">
+                        <span class="mr-cat-eyebrow">
+                            {String(index + 1).padStart(2, "0")}
+                            <span
+                                class="mr-cat-eyebrow-rule"
+                                aria-hidden="true"
+                            />
+                            {category.items.length}{" "}
+                            {category.items.length === 1 ? "dish" : "dishes"}
+                        </span>
+                        <h2
+                            id={"cat-h-" + category.id}
+                            class="mr-cat-name"
+                            data-scramble={enableScramble ? "" : undefined}
+                        >
+                            {category.name}
+                        </h2>
+                        {category.description && (
+                            <p class="mr-cat-desc">{category.description}</p>
+                        )}
+                    </header>
+
+                    {category.heroImage ? (
+                        <TemplateCategoryHero
+                            category={category}
+                            slug={restaurant.slug}
+                            categoryIndex={index}
+                            restaurant={restaurant}
+                        />
+                    ) : null}
+
+                    <div class="mr-items-grid" data-stagger-container>
+                        {category.items.map((item) => (
+                            <div class="mr-reveal">
+                                <TemplateMenuCard
+                                    item={item}
+                                    currencySymbol={settings?.currencySymbol}
+                                    showPrices={settings?.showPrices}
+                                    restaurant={restaurant}
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    {index < menu.length - 1 && (
+                        <div class="mr-divider" aria-hidden="true">
+                            <span />
+                            <span />
+                        </div>
+                    )}
+                </section>
+            ))
+        }
+    </main>
+
+    <TemplateFooter restaurant={restaurant} />
+
+    <ItemDetailSheet
+        client:load
+        currencySymbol={settings?.currencySymbol ?? "$"}
+    />
+</RestaurantLayout>
+
+<!-- Template switcher bar (preview affordance) -->
+<nav class="tpl-switcher" aria-label="Template preview switcher">
+    <span class="tpl-switcher-label">Preview:</span>
+    {
+        switcherLinks.map((link) => (
+            <a
+                href={link.href}
+                class:list={["tpl-switcher-link", { active: link.active }]}
+            >
+                {link.name}
+            </a>
+        ))
+    }
+    <a href={`/r/${restaurant.slug}/`} class="tpl-switcher-exit"
+        >✕ Exit preview</a
+    >
+</nav>
+
+<script define:vars={{ flatItems }}>
+    window.__RESTAURANT_ITEMS__ = flatItems;
+</script>
+
+<script>
+    import { initPageEffects } from "../../../../lib/client/effects";
+</script>
+
+<style is:global>
+    .tpl-switcher {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        padding: 0.5rem 1rem;
+        background: #111;
+        color: #fff;
+        font-family: system-ui, sans-serif;
+        font-size: 0.75rem;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3);
+    }
+    .tpl-switcher-label {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.6;
+    }
+    .tpl-switcher-link {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.375rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        min-height: 32px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .tpl-switcher-link.active {
+        background: #fff;
+        color: #111;
+        border-color: #fff;
+        font-weight: 700;
+    }
+    .tpl-switcher-exit {
+        margin-left: auto;
+        color: #ff8a80;
+        text-decoration: none;
+        font-weight: 700;
+        padding: 0.375rem 0.5rem;
+    }
+    @media (max-width: 640px) {
+        .tpl-switcher-exit {
+            margin-left: 0;
+        }
+    }
+</style>

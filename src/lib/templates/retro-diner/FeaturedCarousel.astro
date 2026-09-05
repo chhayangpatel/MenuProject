@@ -1,0 +1,19 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import MenuCard from './MenuCard.astro';
+interface Props { items: MenuItem[]; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { items, currencySymbol, showPrices, restaurant } = Astro.props;
+---
+<section class="rd-featured">
+  <h2 class="rd-featured-title">★ SPECIALS ★</h2>
+  <div class="rd-featured-grid">
+    {items.map(item => (
+      <MenuCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} restaurant={restaurant} />
+    ))}
+  </div>
+</section>
+<style>
+  .rd-featured { padding: 3rem 0; }
+  .rd-featured-title { font-family: var(--rd-font-heading); font-size: 1.5rem; color: var(--rd-accent); text-align: center; margin-bottom: 2rem; }
+  .rd-featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0; padding: 0 1rem; }
+</style>

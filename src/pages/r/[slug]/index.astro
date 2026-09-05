@@ -1,17 +1,13 @@
 ---
-import { loadAllRestaurants } from '../../../lib/loadRestaurants';
-import RestaurantLayout from '../../../layouts/RestaurantLayout.astro';
-import Hero from '../../../components/Hero.astro';
-import Header from '../../../components/Header.astro';
-import CategoryNav from '../../../components/CategoryNav.astro';
-import MenuItemCard from '../../../components/MenuItemCard.astro';
-import FeaturedCarousel from '../../../components/FeaturedCarousel.astro';
-import StorySection from '../../../components/StorySection.astro';
-import Footer from '../../../components/Footer.astro';
-import SectionDivider from '../../../components/SectionDivider.astro';
-import CategoryHero from '../../../components/CategoryHero.astro';
-import ItemDetailSheet from '../../../components/ItemDetailSheet';
-import SearchFilterBar from '../../../components/SearchFilterBar';
+import { loadAllRestaurants } from "../../../lib/loadRestaurants";
+import RestaurantLayout from "../../../layouts/RestaurantLayout.astro";
+import ItemDetailSheet from "../../../components/ItemDetailSheet";
+import SearchFilterBar from "../../../components/SearchFilterBar";
+import TemplateStyleManager from "../../../components/TemplateStyleManager.astro";
+import { getTemplate, templates } from "../../../lib/templates/registry";
+import { templateComponents } from "../../../lib/templates/components";
+import { resolveMenuItemImage } from "../../../lib/assets";
+import type { Restaurant } from "../../../schemas/restaurant.schema";
 
 export async function getStaticPaths() {
   const restaurants = await loadAllRestaurants();
@@ -21,300 +17,336 @@ export async function getStaticPaths() {
   }));
 }
 
+interface Props {
+  restaurant: Restaurant;
+}
+
 const { restaurant } = Astro.props;
 const { menu, settings, story } = restaurant;
 
-// Extract featured items
-const featuredItems = menu.flatMap(cat => cat.items).filter(item => item.featured);
-// Flatten all items for the client data store
-const flatItems = menu.flatMap(c => c.items);
+// Template resolution: registry is the single source of truth
+const template = getTemplate(restaurant.template, restaurant.moodPreset);
+const components = templateComponents[template.id];
+const {
+  Hero: TemplateHero,
+  Header: TemplateHeader,
+  CategoryNav: TemplateCategoryNav,
+  CategoryHero: TemplateCategoryHero,
+  MenuCard: TemplateMenuCard,
+  FeaturedCarousel: TemplateFeaturedCarousel,
+  Footer: TemplateFooter,
+} = components;
+
+// Narrative effects are template-owned (registry.effects)
+const enableScramble = template.effects.includes("scramble");
+
+// Featured items + total for the menu overview strip
+const featuredItems = menu
+  .flatMap((cat) => cat.items)
+  .filter((item) => item.featured);
+const totalItems = menu.reduce((n, c) => n + c.items.length, 0);
+const flatItems = menu
+  .flatMap((c) => c.items)
+  .map((item) => ({
+    ...item,
+    image: item.image
+      ? resolveMenuItemImage(restaurant, item.image)
+      : undefined,
+    gallery: item.gallery?.map((img) => resolveMenuItemImage(restaurant, img)),
+  }));
 ---
 
 <RestaurantLayout restaurant={restaurant}>
-  <Hero restaurant={restaurant} />
-  <Header restaurant={restaurant} />
+  <TemplateStyleManager restaurant={restaurant} templateId={template.id} />
 
-  {story && <StorySection story={story} />}
+  <TemplateHero restaurant={restaurant} />
+  <TemplateHeader restaurant={restaurant} />
 
-  {featuredItems.length > 0 && (
-    <FeaturedCarousel
-      items={featuredItems}
-      currencySymbol={settings?.currencySymbol}
-      showPrices={settings?.showPrices}
-    />
-  )}
-
-  <SearchFilterBar
-    client:load
-    enabled={settings?.enableSearch ?? true}
-    enableDietaryFilters={settings?.enableDietaryFilters ?? true}
-  />
-
-  <CategoryNav categories={menu} />
-
-  <div class="menu-body px-4 py-8 max-w-3xl mx-auto" id="menu-body">
-    {menu.map((category, index) => (
-      <section id={"category-" + category.id} class="mb-14 scroll-mt-28">
-        {/* Immersive CategoryHero if heroImage exists, otherwise standard header */}
-        {category.heroImage ? (
-          <CategoryHero
-            name={category.name}
-            description={category.description}
-            heroImage={category.heroImage}
-            heroQuote={category.heroQuote}
-            slug={restaurant.slug}
-            categoryId={category.id}
-            categoryIndex={index}
-          />
-        ) : (
-          <div class="category-header">
-            <h2 class="category-name" data-scramble>{category.name}</h2>
-            {category.description && (
-              <p class="category-desc">{category.description}</p>
-            )}
-          </div>
-        )}
-
-        {/* Items grid */}
-        <div class="items-grid">
-          {category.items.map((item, itemIndex) => (
-            <div data-reveal style={`transition-delay: ${itemIndex * 100}ms`}>
-              <MenuItemCard
-                item={{ ...item, restaurantSlug: restaurant.slug }}
-                currencySymbol={settings?.currencySymbol}
-                showPrices={settings?.showPrices}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Divider between categories */}
-        {index < menu.length - 1 && (
-          <SectionDivider presetName={restaurant.moodPreset} />
-        )}
+  {
+    story && (
+      <section class="mr-story">
+        <p class="mr-story-eyebrow">{story.heading || "Our Story"}</p>
+        <p class="mr-story-body">{story.body}</p>
       </section>
-    ))}
-  </div>
+    )
+  }
 
-  <Footer restaurant={restaurant} />
+  {
+    featuredItems.length > 0 && (
+      <TemplateFeaturedCarousel
+        items={featuredItems}
+        currencySymbol={settings?.currencySymbol}
+        showPrices={settings?.showPrices}
+        restaurant={restaurant}
+      />
+    )
+  }
+
+  {/* Sticky controls: search + filters, then category tabs (template-owned) */}
+  <div class="mr-controls">
+    <SearchFilterBar
+      client:load
+      enabled={settings?.enableSearch ?? true}
+      enableDietaryFilters={settings?.enableDietaryFilters ?? true}
+    />
+  </div>
+  <TemplateCategoryNav categories={menu} />
+
+  {/* Menu body — centered, responsive, scannable */}
+  <main class="mr-menu" id="menu-body">
+    <p class="mr-menu-overview">
+      {totalItems} dishes across {menu.length} categories
+      <span class="mr-menu-overview-dot" aria-hidden="true">·</span>
+      <a href="#top">back to top</a>
+    </p>
+
+    {
+      menu.map((category, index) => (
+        <section
+          id={"category-" + category.id}
+          class="mr-category"
+          aria-labelledby={"cat-h-" + category.id}
+        >
+          <header class="mr-cat-head">
+            <span class="mr-cat-eyebrow">
+              {String(index + 1).padStart(2, "0")}
+              <span class="mr-cat-eyebrow-rule" aria-hidden="true" />
+              {category.items.length}{" "}
+              {category.items.length === 1 ? "dish" : "dishes"}
+            </span>
+            <h2
+              id={"cat-h-" + category.id}
+              class="mr-cat-name"
+              data-scramble={enableScramble ? "" : undefined}
+            >
+              {category.name}
+            </h2>
+            {category.description && (
+              <p class="mr-cat-desc">{category.description}</p>
+            )}
+          </header>
+
+          {category.heroImage ? (
+            <TemplateCategoryHero
+              category={category}
+              slug={restaurant.slug}
+              categoryIndex={index}
+              restaurant={restaurant}
+            />
+          ) : null}
+
+          <div class="mr-items-grid" data-stagger-container>
+            {category.items.map((item) => (
+              <div class="mr-reveal">
+                <TemplateMenuCard
+                  item={item}
+                  currencySymbol={settings?.currencySymbol}
+                  showPrices={settings?.showPrices}
+                  restaurant={restaurant}
+                />
+              </div>
+            ))}
+          </div>
+
+          {index < menu.length - 1 && (
+            <div class="mr-divider" aria-hidden="true">
+              <span />
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4" />
+              </svg>
+              <span />
+            </div>
+          )}
+        </section>
+      ))
+    }
+  </main>
+
+  <TemplateFooter restaurant={restaurant} />
+
+  {/* Floating back-to-top (appears after scrolling) */}
+  <button class="mr-top-btn" id="mr-top-btn" aria-label="Back to top">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
 
   {/* React island for item detail bottom sheet */}
   <ItemDetailSheet
     client:load
-    currencySymbol={settings?.currencySymbol ?? '$'}
+    currencySymbol={settings?.currencySymbol ?? "$"}
   />
 </RestaurantLayout>
 
-{/* Inject menu data for the client-side item detail sheet */}
+<!-- Inject menu data for the client-side item detail sheet -->
 <script define:vars={{ flatItems }}>
   window.__RESTAURANT_ITEMS__ = flatItems;
-
-  function setupCardListeners() {
-    document.querySelectorAll('[data-item-id]').forEach(card => {
-      if (card.dataset.listenerAttached) return;
-      card.dataset.listenerAttached = 'true';
-      card.addEventListener('click', () => {
-        const id = card.getAttribute('data-item-id');
-        const item = (window.__RESTAURANT_ITEMS__ || []).find(i => i.id === id);
-        if (item) {
-          window.dispatchEvent(new CustomEvent('open-item-detail', { detail: item }));
-        }
-      });
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', setupCardListeners);
-  setupCardListeners();
-
-  // ScrollReveal: IntersectionObserver for staggered fade-in
-  function setupScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: '0px 0px -60px 0px', threshold: 0.1 });
-
-    document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
-  }
-
-  document.addEventListener('astro:page-load', setupScrollReveal);
-  setupScrollReveal();
-
-  // Text Scramble on category headings
-  function setupTextScramble() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    document.querySelectorAll('[data-scramble]').forEach(el => {
-      const finalText = el.textContent || '';
-      let frame = 0;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            observer.unobserve(entry.target);
-            // Start scramble effect
-            const scramble = () => {
-              let output = '';
-              for (let i = 0; i < finalText.length; i++) {
-                if (frame >= finalText.length + 10) {
-                  output += finalText[i];
-                } else if (frame > i) {
-                  output += finalText[i];
-                } else {
-                  output += CHARS[Math.floor(Math.random() * CHARS.length)];
-                }
-              }
-              el.textContent = output;
-              frame++;
-              if (frame <= finalText.length + 15) {
-                requestAnimationFrame(scramble);
-              } else {
-                el.textContent = finalText;
-              }
-            };
-            requestAnimationFrame(scramble);
-          }
-        });
-      }, { threshold: 0.5 });
-
-      observer.observe(el);
-    });
-  }
-
-  document.addEventListener('astro:page-load', setupTextScramble);
-  setupTextScramble();
-
-  // Mobile swipe navigation between categories
-  function setupSwipeNav() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (!('ontouchstart' in window)) return;
-
-    const sections = document.querySelectorAll('section[id^="category-"]');
-    if (sections.length < 2) return;
-
-    let startX = 0, startY = 0, startTime = 0;
-
-    document.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      startTime = Date.now();
-    }, { passive: true });
-
-    document.addEventListener('touchend', (e) => {
-      const dx = e.changedTouches[0].clientX - startX;
-      const dy = e.changedTouches[0].clientY - startY;
-      const dt = Date.now() - startTime;
-      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) || dt > 500) return;
-
-      const currentIndex = Array.from(sections).findIndex(s => {
-        const rect = s.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom > 100;
-      });
-      if (currentIndex === -1) return;
-
-      if (dx < 0 && currentIndex < sections.length - 1) {
-        sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else if (dx > 0 && currentIndex > 0) {
-        sections[currentIndex - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, { passive: true });
-  }
-
-  document.addEventListener('astro:page-load', setupSwipeNav);
-  setupSwipeNav();
-
-  // 3D Card tilt on hover
-  function setupCardTilt() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    document.querySelectorAll('[data-item-id]').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-3px)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', setupCardTilt);
-  setupCardTilt();
 </script>
 
-<style>
-  .menu-body {}
+<!-- Shared effect bootstrapping + back-to-top -->
+<script>
+  import { initPageEffects } from "../../../lib/client/effects";
 
-  /* Scroll reveal animation */
-  [data-reveal] {
-    opacity: 0;
-    transform: translateY(16px);
-    filter: blur(4px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
+  function setupTopButton() {
+    const btn = document.getElementById("mr-top-btn");
+    if (!btn || btn.dataset.topAttached) return;
+    btn.dataset.topAttached = "true";
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    let ticking = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          btn.classList.toggle("visible", window.scrollY > 600);
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
   }
-  [data-reveal].revealed {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
+
+  document.addEventListener("astro:page-load", setupTopButton);
+  if (document.readyState !== "loading") setupTopButton();
+</script>
+
+<!-- Template Switcher Bar -->
+<nav class="tpl-switcher" aria-label="Template switcher">
+  <span class="tpl-switcher-label">Templates</span>
+  {
+    Object.values(templates).map((t) => (
+      <a
+        href={
+          t.id === restaurant.template
+            ? `/r/${restaurant.slug}/`
+            : `/r/${restaurant.slug}/${t.id}/`
+        }
+        class:list={["tpl-switcher-link", { active: t.id === template.id }]}
+        aria-current={t.id === template.id ? "page" : undefined}
+      >
+        <span
+          class="tpl-switcher-dot"
+          style={"background: " + (t.colorDefaults.accentColor || "#D4AF37")}
+        />
+        {t.name}
+      </a>
+    ))
   }
-  @media (prefers-reduced-motion: reduce) {
-    [data-reveal] {
+</nav>
+
+<style is:global>
+  .tpl-switcher {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    background: rgba(11, 11, 13, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(245, 242, 236, 0.08);
+    border-radius: 999px;
+    box-shadow:
+      0 16px 48px -8px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(245, 242, 236, 0.05);
+    max-width: calc(100vw - 2rem);
+    animation: tplSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes tplSlideUp {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
       opacity: 1;
-      transform: none;
-      filter: none;
-      transition: none;
+      transform: translateX(-50%) translateY(0);
     }
   }
-
-  .category-header {
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.875rem;
-    border-bottom: 2px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  .tpl-switcher-label {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.35);
+    margin-right: 0.25rem;
+    white-space: nowrap;
   }
-  .category-name {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    color: var(--color-primary);
-    letter-spacing: -0.02em;
-    line-height: 1.15;
+  .tpl-switcher-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(245, 242, 236, 0.5);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
   }
-  .category-desc {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    color: color-mix(in srgb, var(--color-primary) 60%, transparent);
-    margin-top: 0.35rem;
-    line-height: 1.55;
-    max-width: 46ch;
+  .tpl-switcher-link:hover {
+    color: #f5f2ec;
+    background: rgba(245, 242, 236, 0.06);
+    border-color: rgba(245, 242, 236, 0.1);
   }
-
-  .items-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  .tpl-switcher-link.active {
+    color: #0b0b0d;
+    background: #d4af37;
+    border-color: #d4af37;
+    font-weight: 700;
   }
-  @media (min-width: 520px) {
-    .items-grid { grid-template-columns: 1fr 1fr; }
+  .tpl-switcher-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
-
-  /* 3D tilt on cards */
-  [data-item-id] {
-    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-    will-change: transform;
+  @media (max-width: 640px) {
+    .tpl-switcher {
+      bottom: 0.5rem;
+      padding: 0.375rem 0.5rem;
+      gap: 0.25rem;
+      border-radius: 1.5rem 1.5rem 0 0;
+      width: 100%;
+      max-width: 100%;
+    }
+    .tpl-switcher-label {
+      display: none;
+    }
+    .tpl-switcher-link {
+      padding: 0.375rem 0.5rem;
+      font-size: 0.625rem;
+    }
   }
 </style>
+
+<!-- Shared mr-* styles live in src/styles/global.css (imported by the layout) -->

@@ -1,0 +1,31 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+
+<div class="mm-wrapper mm-hero-wrapper">
+  {hasCover && (
+    <>
+      <img src={coverUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--mm-secondary)]/90 via-[var(--mm-secondary)]/40 to-transparent"></div>
+    </>
+  )}
+  <div class="relative z-10 w-full">
+    <div class="mm-logo-ring mb-6 mx-auto" style="width:80px;height:80px;border-radius:50%;padding:3px;background:linear-gradient(135deg,var(--mm-accent),transparent 60%);box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 8px 32px rgba(0,0,0,0.08);">
+      <img src={logoUrl} alt={restaurant.name} style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--mm-secondary);" />
+    </div>
+    <h1 class="mm-hero-title">{restaurant.name}</h1>
+    {restaurant.tagline && <p class="mm-hero-tagline">{restaurant.tagline}</p>}
+  </div>
+</div>
+
+<style>
+  .mm-logo-ring { animation: mm-pop 0.7s var(--mm-ease-spring) 0.2s both; }
+  @keyframes mm-pop { from { opacity:0; transform:scale(0.7); } to { opacity:1; transform:scale(1); } }
+</style>

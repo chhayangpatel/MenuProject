@@ -21,9 +21,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - run: npm ci
-      - run: npm run validate:configs
-      - run: npm run build
+      - name: Validate configs
+        run: npm run validate:configs
+      - name: Check contrast
+        run: npm run check:contrast
+      - name: Build site
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist

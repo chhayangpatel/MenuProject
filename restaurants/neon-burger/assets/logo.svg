@@ -1,11 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <rect width="200" height="200" fill="#111111"/>
-  <!-- Neon circle ring -->
-  <circle cx="100" cy="100" r="80" fill="none" stroke="#FF0055" stroke-width="3" stroke-opacity="0.7"/>
-  <!-- Burger icon stylized -->
-  <rect x="60" y="76" width="80" height="12" rx="6" fill="#FAFAFA"/>
-  <rect x="60" y="94" width="80" height="12" rx="0" fill="#FF0055"/>
-  <rect x="60" y="112" width="80" height="12" rx="6" fill="#FAFAFA"/>
-  <!-- NB monogram below -->
-  <text x="100" y="145" font-family="Arial Black, sans-serif" font-size="13" font-weight="900" fill="#FAFAFA" fill-opacity="0.5" text-anchor="middle" letter-spacing="4">NB</text>
+  <defs>
+    <linearGradient id="neonbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="100%" stop-color="#1A1A1A"/>
+    </linearGradient>
+    <filter id="neonglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="200" height="200" fill="url(#neonbg)"/>
+  <circle cx="100" cy="100" r="82" fill="none" stroke="#FF1744" stroke-width="2" stroke-opacity="0.4"/>
+  <circle cx="100" cy="100" r="78" fill="none" stroke="#FF1744" stroke-width="0.5" stroke-opacity="0.2"/>
+  <rect x="58" y="72" width="84" height="14" rx="7" fill="#FAFAFA" filter="url(#neonglow)"/>
+  <rect x="58" y="92" width="84" height="14" rx="7" fill="#FF1744" filter="url(#neonglow)"/>
+  <rect x="58" y="112" width="84" height="14" rx="7" fill="#FAFAFA" filter="url(#neonglow)"/>
+  <rect x="58" y="92" width="12" height="14" rx="0" fill="#FF1744" fill-opacity="0.4" filter="url(#neonglow)"/>
+  <text x="100" y="154" font-family="Arial Black, sans-serif" font-size="14" font-weight="900" fill="#FAFAFA" fill-opacity="0.6" text-anchor="middle" letter-spacing="6">NB</text>
 </svg>

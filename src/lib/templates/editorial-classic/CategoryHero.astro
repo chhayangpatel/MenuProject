@@ -1,0 +1,40 @@
+---
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+import { resolveCategoryHeroImage } from '../../../lib/assets';
+
+interface Props {
+  category: MenuCategory;
+  slug: string;
+  categoryIndex: number;
+  restaurant: any; // Full restaurant for asset resolution
+}
+
+const { category, slug, categoryIndex, restaurant } = Astro.props;
+const imageUrl = resolveCategoryHeroImage(restaurant, category.heroImage);
+---
+
+<div class="ec-category-hero" data-category-hero={category.id}>
+  {imageUrl && (
+    <div class="ec-category-hero-image-wrap">
+      <img src={imageUrl} alt="" class="ec-category-hero-image" loading="lazy" decoding="async" />
+      <div class="ec-category-hero-scrim"></div>
+    </div>
+  )}
+  <div class="ec-category-hero-content">
+    <span class="ec-eyebrow">
+      <span class="ec-category-number">0{categoryIndex + 1}</span>
+      {category.name}
+    </span>
+    <h2 class="ec-category-hero-title">{category.name}</h2>
+    {category.heroQuote && (
+      <p class="ec-category-hero-quote">{category.heroQuote}</p>
+    )}
+    {category.description && !category.heroQuote && (
+      <p class="ec-category-hero-quote">{category.description}</p>
+    )}
+  </div>
+</div>
+
+<style>
+  /* Styles in editorial-classic/styles.css */
+</style>

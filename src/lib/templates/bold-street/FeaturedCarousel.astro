@@ -1,0 +1,12 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import MenuCard from './MenuCard.astro';
+interface Props { items: MenuItem[]; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { items, currencySymbol, showPrices, restaurant } = Astro.props;
+---
+<section class="bs-featured-carousel" aria-labelledby="bs-featured-heading">
+  <h2 class="bs-featured-heading" id="bs-featured-heading" style="font-family:var(--bs-font-heading);font-size:clamp(1.5rem,4vw,2rem);font-weight:900;color:var(--bs-primary);margin-bottom:1rem;padding:0 1.5rem;">MUST TRY</h2>
+  <div class="bs-featured-track" role="list" aria-label="Featured items">
+    {items.map(item=>(<div class="bs-featured-card" role="listitem"><MenuCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} restaurant={restaurant}/></div>))}
+  </div>
+</section>

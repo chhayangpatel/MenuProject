@@ -1,0 +1,23 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const logoUrl = resolveLogo(restaurant);
+---
+<nav class="sc-nav">
+  <a href="/" class="sc-nav-back">← Back</a>
+  <div class="sc-nav-center">
+    <img src={logoUrl} alt="" class="sc-nav-logo" />
+    <span class="sc-nav-name">{restaurant.name}</span>
+  </div>
+  <a href="#menu" class="sc-nav-link">Menu</a>
+</nav>
+<style>
+  .sc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(27,58,75,0.95); backdrop-filter: blur(12px); }
+  .sc-nav-back { font-size: 0.8125rem; color: rgba(255,255,255,0.6); text-decoration: none; }
+  .sc-nav-center { display: flex; align-items: center; gap: 0.625rem; }
+  .sc-nav-logo { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  .sc-nav-name { font-family: var(--sc-font-heading); font-size: 0.875rem; color: #fff; }
+  .sc-nav-link { font-size: 0.8125rem; color: var(--sc-accent); text-decoration: none; border-bottom: 1px solid var(--sc-accent); padding-bottom: 2px; }
+</style>

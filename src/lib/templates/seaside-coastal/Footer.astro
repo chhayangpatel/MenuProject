@@ -1,0 +1,39 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const { hours, contact } = restaurant;
+const hourEntries = hours?.regular ? Object.entries(hours.regular) : [];
+---
+<footer class="sc-footer">
+  <svg class="sc-footer-wave" viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,100 L0,100 Z" fill="var(--sc-primary)"/></svg>
+  <div class="sc-footer-inner">
+    <p class="sc-footer-name">{restaurant.name}</p>
+    {restaurant.tagline && <p class="sc-footer-tagline">{restaurant.tagline}</p>}
+    <div class="sc-footer-info">
+      {hourEntries.length > 0 && (
+        <div class="sc-footer-col">
+          <h4>Hours</h4>
+          {hourEntries.map(([d,t]) => <p><span>{d}</span> {t}</p>)}
+        </div>
+      )}
+      <div class="sc-footer-col">
+        <h4>Visit</h4>
+        {contact?.address && <p>{contact.address}</p>}
+        {contact?.phone && <p>{contact.phone}</p>}
+      </div>
+    </div>
+    <p class="sc-footer-copy">© {new Date().getFullYear()} {restaurant.name}</p>
+  </div>
+</footer>
+<style>
+  .sc-footer { position: relative; padding: 4rem 2rem 2rem; background: var(--sc-primary); text-align: center; }
+  .sc-footer-wave { position: absolute; top: -60px; left: 0; right: 0; height: 60px; }
+  .sc-footer-name { font-family: var(--sc-font-heading); font-size: 1.5rem; color: #fff; }
+  .sc-footer-tagline { color: rgba(255,255,255,0.5); margin: 0.5rem 0 1.5rem; }
+  .sc-footer-info { display: flex; justify-content: center; gap: 4rem; margin-bottom: 2rem; }
+  .sc-footer-col h4 { font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sc-accent); margin-bottom: 0.5rem; }
+  .sc-footer-col p { font-size: 0.8125rem; color: rgba(255,255,255,0.6); }
+  .sc-footer-col p span { color: rgba(255,255,255,0.8); text-transform: capitalize; }
+  .sc-footer-copy { font-size: 0.6875rem; color: rgba(255,255,255,0.3); }
+</style>

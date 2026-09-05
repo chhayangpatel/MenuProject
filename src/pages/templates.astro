@@ -1,0 +1,308 @@
+---
+/**
+ * /templates — Premium template gallery showcasing all 5 design languages.
+ * Each template is rendered with the same demo data for fair comparison.
+ */
+import { templates } from "../lib/templates/registry";
+import { loadAllRestaurants } from "../lib/loadRestaurants";
+import { resolveLogo, resolveCover } from "../lib/assets";
+
+const restaurants = await loadAllRestaurants();
+const demo = restaurants[0];
+const allTemplates = Object.values(templates);
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL("/templates/", site).href;
+
+const paletteFor = (t) =>
+    `${t.colorDefaults.primaryColor} · ${t.colorDefaults.secondaryColor} · ${t.colorDefaults.accentColor}`;
+
+const motionFor = (t) =>
+    `${t.motion.intensity}/10 · ${t.motion.entryDuration}ms entry · ${t.motion.staggerDelay}ms stagger`;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Templates | MenuProject</title>
+        <meta
+            name="description"
+            content="Five complete design languages for restaurant menus — every template is a fully distinct experience, switchable per restaurant."
+        />
+        <link rel="canonical" href={canonical} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+        <style>
+            :root {
+                --ink: #1a1612;
+                --paper: #fdfbf7;
+                --accent: #c9a227;
+                --ink-60: rgba(26, 22, 18, 0.6);
+                --ink-40: rgba(26, 22, 18, 0.4);
+                --surface: rgba(26, 22, 18, 0.04);
+                --border: rgba(26, 22, 18, 0.08);
+            }
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                background: var(--paper);
+                color: var(--ink);
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+            }
+            .wrap { max-width: 1200px; margin: 0 auto; padding: 4rem 1.5rem; }
+
+            /* Header */
+            header { text-align: center; margin-bottom: 4rem; }
+            .eyebrow {
+                font-size: 0.6875rem;
+                font-weight: 700;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 1rem;
+            }
+            h1 {
+                font-family: 'Playfair Display', serif;
+                font-size: clamp(2.5rem, 6vw, 4rem);
+                font-weight: 700;
+                line-height: 1.05;
+                letter-spacing: -0.02em;
+                margin-bottom: 1rem;
+            }
+            h1 span { font-style: italic; font-weight: 500; color: var(--ink-60); }
+            .lede {
+                color: var(--ink-60);
+                max-width: 56ch;
+                margin: 0 auto;
+                font-size: 1.0625rem;
+                line-height: 1.7;
+            }
+
+            /* Grid */
+            .grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            @media (min-width: 760px) {
+                .grid { grid-template-columns: 1fr 1fr; }
+            }
+            @media (min-width: 1024px) {
+                .grid { grid-template-columns: repeat(3, 1fr); }
+            }
+
+            /* Card */
+            .card {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 1.25rem;
+                overflow: hidden;
+                transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+                animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+            }
+            .card:nth-child(1) { animation-delay: 0ms; }
+            .card:nth-child(2) { animation-delay: 100ms; }
+            .card:nth-child(3) { animation-delay: 200ms; }
+            .card:nth-child(4) { animation-delay: 300ms; }
+            .card:nth-child(5) { animation-delay: 400ms; }
+            @keyframes cardIn {
+                from { opacity: 0; transform: translateY(24px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 24px 64px -16px rgba(26, 22, 18, 0.15);
+            }
+
+            /* Swatch */
+            .swatch {
+                height: 100px;
+                display: flex;
+                position: relative;
+                overflow: hidden;
+            }
+            .swatch span { flex: 1; transition: flex 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+            .card:hover .swatch span:first-child { flex: 1.5; }
+            .swatch::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top, rgba(0,0,0,0.1) 0%, transparent 50%);
+                pointer-events: none;
+            }
+
+            /* Card body */
+            .card-body { padding: 1.5rem; }
+            .card-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 0.75rem;
+            }
+            .card h2 {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.25rem;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+            .card-badge {
+                font-size: 0.5625rem;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                padding: 3px 8px;
+                border-radius: 999px;
+                background: var(--surface);
+                color: var(--ink-60);
+            }
+            .card .desc {
+                font-size: 0.875rem;
+                color: var(--ink-60);
+                margin-bottom: 1rem;
+                line-height: 1.6;
+            }
+            .meta {
+                display: flex;
+                flex-direction: column;
+                gap: 0.375rem;
+                font-size: 0.75rem;
+                color: var(--ink-60);
+                margin-bottom: 1.25rem;
+            }
+            .meta b { color: var(--ink); font-weight: 600; }
+
+            /* Links */
+            .links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                min-height: 40px;
+                padding: 0.5rem 1rem;
+                border-radius: 999px;
+                font-size: 0.8125rem;
+                font-weight: 700;
+                text-decoration: none;
+                border: 1px solid var(--border);
+                color: var(--ink);
+                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .btn:hover {
+                border-color: var(--ink);
+                background: var(--surface);
+                transform: translateY(-2px);
+            }
+            .btn.primary {
+                background: var(--ink);
+                color: #fff;
+                border-color: var(--ink);
+            }
+            .btn.primary:hover {
+                background: var(--accent);
+                border-color: var(--accent);
+            }
+
+            /* Footer */
+            footer {
+                text-align: center;
+                padding: 4rem 1.5rem 2rem;
+                color: var(--ink-40);
+                font-size: 0.875rem;
+            }
+            footer a { color: var(--ink); }
+
+            :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+            @media (prefers-reduced-motion: reduce) {
+                .card { animation: none; transition: none; }
+                .card:hover { transform: none; }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="wrap">
+            <header>
+                <span class="eyebrow">The Collection</span>
+                <h1>Five design languages.<br /><span>One config file.</span></h1>
+                <p class="lede">
+                    Every template is a complete design system — its own typography,
+                    layout grammar, decorative motifs, and motion personality. Your
+                    colors, logo, and photos flow through whichever you choose.
+                </p>
+            </header>
+
+            <div class="grid">
+                {
+                    allTemplates.map((t) => (
+                        <article class="card">
+                            <div class="swatch" aria-hidden="true">
+                                <span style={`background:${t.colorDefaults.primaryColor}`} />
+                                <span style={`background:${t.colorDefaults.secondaryColor}`} />
+                                <span style={`background:${t.colorDefaults.accentColor}`} />
+                            </div>
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <h2>{t.name}</h2>
+                                    <span class="card-badge">{t.layout}</span>
+                                </div>
+                                <p class="desc">{t.description}</p>
+                                <div class="meta">
+                                    <span>
+                                        <b>Palette:</b> {paletteFor(t)}
+                                    </span>
+                                    <span>
+                                        <b>Motion:</b> {motionFor(t)}
+                                    </span>
+                                    <span>
+                                        <b>Signature:</b>{" "}
+                                        {t.effects.join(", ") || "subtle reveal choreography"}
+                                    </span>
+                                </div>
+                                {demo && (
+                                    <div class="links">
+                                        {t.id === demo.template ? (
+                                            <a
+                                                class="btn primary"
+                                                href={`/r/${demo.slug}/`}
+                                            >
+                                                Live demo
+                                            </a>
+                                        ) : (
+                                            <a
+                                                class="btn primary"
+                                                href={`/r/${demo.slug}/${t.id}/`}
+                                            >
+                                                Preview
+                                            </a>
+                                        )}
+                                        <a
+                                            class="btn"
+                                            href={`/r/${demo.slug}/${t.id}/`}
+                                        >
+                                            Compare
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+        </main>
+        <footer>
+            {
+                demo ? (
+                    <p>
+                        Demo restaurant:{" "}
+                        <a href={`/r/${demo.slug}/`}>{demo.name}</a> — every
+                        template renders the same config data.
+                    </p>
+                ) : (
+                    <p>Add a restaurant to see live demos.</p>
+                )
+            }
+        </footer>
+    </body>
+</html>

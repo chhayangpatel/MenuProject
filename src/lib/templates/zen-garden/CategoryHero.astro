@@ -1,0 +1,16 @@
+---
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+import { resolveCategoryHeroImage } from '../../../lib/assets';
+interface Props { category: MenuCategory; slug: string; categoryIndex: number; restaurant: any; }
+const { category, categoryIndex, restaurant } = Astro.props;
+const imageUrl = resolveCategoryHeroImage(restaurant, category.heroImage);
+---
+<div class="zg-cat-header">
+  <span class="zg-cat-num">{String(categoryIndex + 1).padStart(2, '0')}</span>
+  <h2 class="zg-cat-title">{category.name}</h2>
+</div>
+<style>
+  .zg-cat-header { padding: 4rem 2rem 2rem; }
+  .zg-cat-num { font-family: var(--zg-font-heading); font-size: 0.625rem; letter-spacing: 0.3em; color: var(--zg-accent); display: block; margin-bottom: 0.75rem; }
+  .zg-cat-title { font-family: var(--zg-font-heading); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 300; letter-spacing: 0.2em; color: var(--zg-primary); }
+</style>

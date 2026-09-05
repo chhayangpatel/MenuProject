@@ -1,0 +1,43 @@
+---
+/**
+ * Loads the active template's stylesheet — statically imported at build so
+ * Vite bundles (and code-splits) it per page. Registry is the source of truth.
+ */
+import type { Restaurant } from "../schemas/restaurant.schema";
+import { getTemplate } from "../lib/templates/registry";
+import editorialCSS from "../lib/templates/editorial-classic/styles.css?raw";
+import minimalCSS from "../lib/templates/modern-minimal/styles.css?raw";
+import boldCSS from "../lib/templates/bold-street/styles.css?raw";
+import rusticCSS from "../lib/templates/warm-rustic/styles.css?raw";
+import playfulCSS from "../lib/templates/vibrant-playful/styles.css?raw";
+import dlCSS from "../lib/templates/dark-luxe/styles.css?raw";
+import scCSS from "../lib/templates/seaside-coastal/styles.css?raw";
+import zgCSS from "../lib/templates/zen-garden/styles.css?raw";
+import rdCSS from "../lib/templates/retro-diner/styles.css?raw";
+import acCSS from "../lib/templates/artisan-craft/styles.css?raw";
+
+interface Props {
+  restaurant: Restaurant;
+  /** Optional template override (showcase/preview pages) */
+  templateId?: string;
+}
+
+const { restaurant, templateId } = Astro.props;
+const template = getTemplate(
+  templateId ?? restaurant.template,
+  restaurant.moodPreset,
+);
+
+const cssByTemplate: Record<string, string> = {
+  "editorial-classic": editorialCSS,
+  "modern-minimal": minimalCSS,
+  "bold-street": boldCSS,
+  "warm-rustic": rusticCSS,
+  "vibrant-playful": playfulCSS,
+
+};
+
+const templateCSS = cssByTemplate[template.id] ?? editorialCSS;
+---
+
+<Fragment set:html={"<style>" + templateCSS + "</style>"} />

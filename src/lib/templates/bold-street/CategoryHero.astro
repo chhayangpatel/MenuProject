@@ -1,0 +1,15 @@
+---
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+import { resolveCategoryHeroImage } from '../../../lib/assets';
+interface Props { category: MenuCategory; slug: string; categoryIndex: number; restaurant: any; }
+const { category, slug, categoryIndex, restaurant } = Astro.props;
+const imageUrl = resolveCategoryHeroImage(restaurant, category.heroImage);
+---
+<div class="bs-category-hero" data-category-hero={category.id}>
+  {imageUrl && <img src={imageUrl} alt="" loading="lazy" />}
+  <div class="bs-category-hero-content">
+    <h2 class="bs-category-hero-title">{category.name}</h2>
+    {category.heroQuote && <p class="bs-category-hero-quote">{category.heroQuote}</p>}
+    {category.description && !category.heroQuote && <p class="bs-category-hero-quote">{category.description}</p>}
+  </div>
+</div>

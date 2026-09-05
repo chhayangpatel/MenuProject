@@ -1,0 +1,8 @@
+:root {
+  --sc-primary: #1B3A4B;
+  --sc-secondary: #F0F7F9;
+  --sc-accent: #00A896;
+  --sc-font-heading: "DM Serif Display", serif;
+  --sc-font-body: "DM Sans", sans-serif;
+}
+.sc-wrapper { font-family: var(--sc-font-body); color: var(--sc-primary); background: var(--sc-secondary); line-height: 1.6; -webkit-font-smoothing: antialiased; }

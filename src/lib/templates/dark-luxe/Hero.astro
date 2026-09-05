@@ -1,0 +1,44 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+<div class="dl-hero">
+  {hasCover && (
+    <>
+      <div class="dl-hero-bg" style={"background-image: url(" + coverUrl + ")"}></div>
+      <div class="dl-hero-overlay"></div>
+    </>
+  )}
+  <div class="dl-hero-content">
+    <div class="dl-hero-logo">
+      <img src={logoUrl} alt={restaurant.name} />
+    </div>
+    <h1 class="dl-hero-title">{restaurant.name}</h1>
+    {restaurant.tagline && <p class="dl-hero-tagline">— {restaurant.tagline} —</p>}
+    <div class="dl-hero-scroll-cue">
+      <span>Scroll</span>
+      <div class="dl-scroll-line"></div>
+    </div>
+  </div>
+</div>
+<style>
+  .dl-hero { position: relative; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .dl-hero-bg { position: absolute; inset: -50px; background-size: cover; background-position: center; filter: brightness(0.4) saturate(0.8); animation: dl-kenburns 20s ease-in-out infinite alternate; }
+  @keyframes dl-kenburns { from { transform: scale(1); } to { transform: scale(1.1); } }
+  .dl-hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.6) 100%); }
+  .dl-hero-content { position: relative; z-index: 1; text-align: center; padding: 2rem; }
+  .dl-hero-logo { width: 100px; height: 100px; margin: 0 auto 2rem; border-radius: 50%; overflow: hidden; border: 2px solid var(--dl-gold); padding: 3px; animation: dl-fadeUp 1s ease-out 0.3s both; }
+  .dl-hero-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .dl-hero-title { font-family: var(--dl-font-heading); font-size: clamp(3rem, 8vw, 6rem); font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; margin-bottom: 1rem; animation: dl-fadeUp 1s ease-out 0.5s both; }
+  .dl-hero-tagline { font-family: var(--dl-font-body); font-size: clamp(0.875rem, 2vw, 1.125rem); color: var(--dl-gold); letter-spacing: 0.3em; text-transform: uppercase; animation: dl-fadeUp 1s ease-out 0.7s both; }
+  .dl-hero-scroll-cue { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; animation: dl-fadeUp 1s ease-out 1s both; }
+  .dl-hero-scroll-cue span { font-size: 0.625rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .dl-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--dl-gold), transparent); animation: dl-scrollPulse 2s ease-in-out infinite; }
+  @keyframes dl-fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes dl-scrollPulse { 0%, 100% { opacity: 0.3; height: 40px; } 50% { opacity: 1; height: 60px; } }
+</style>

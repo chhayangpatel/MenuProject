@@ -1,0 +1,95 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+
+interface Props {
+  restaurant: Restaurant;
+}
+
+const { restaurant } = Astro.props;
+const { hours, contact } = restaurant;
+const hourEntries = hours?.regular ? Object.entries(hours.regular) : (hours && !hours.regular ? Object.entries(hours as Record<string, string>) : []);
+---
+
+<footer class="ec-footer" role="contentinfo">
+  <div class="ec-footer-body">
+
+    {/* Restaurant identity */}
+    <div class="ec-footer-brand">
+      <p class="ec-footer-name">{restaurant.name}</p>
+      {restaurant.tagline && <p class="ec-footer-tagline">{restaurant.tagline}</p>}
+    </div>
+
+    <div class="ec-footer-grid">
+      {/* Hours */}
+      {hourEntries.length > 0 && (
+        <div class="ec-footer-col">
+          <h3 class="ec-footer-col-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Hours
+          </h3>
+          <ul class="ec-hours-list">
+            {hourEntries.map(([day, time]) => (
+              <li class="ec-hours-row">
+                <span class="ec-hours-day">{day}</span>
+                <span class="ec-hours-time">{time}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Location & Contact */}
+      <div class="ec-footer-col">
+        <h3 class="ec-footer-col-heading">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Location
+        </h3>
+        {contact?.address && (
+          <p class="ec-address">{contact.address}</p>
+        )}
+        {contact?.googleMapsUrl && (
+          <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" class="ec-footer-link ec-footer-map">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+            Get Directions
+          </a>
+        )}
+        {contact?.phone && (
+          <a href={"tel:" + contact.phone} class="ec-footer-link">
+            {contact.phone}
+          </a>
+        )}
+        {contact?.email && (
+          <a href={"mailto:" + contact.email} class="ec-footer-link">
+            {contact.email}
+          </a>
+        )}
+
+        {/* Social links */}
+        {contact?.socials && Object.keys(contact.socials).length > 0 && (
+          <div class="ec-social-row">
+            {Object.entries(contact.socials).map(([platform, url]) => (
+              <a href={url} target="_blank" rel="noopener noreferrer" class="ec-social-link" title={platform}>
+                {platform}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="ec-footer-bottom">
+      <span>© {new Date().getFullYear()} {restaurant.name}</span>
+      <span class="ec-footer-powered">Digital Menu Platform</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Styles in editorial-classic/styles.css */
+</style>

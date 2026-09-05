@@ -1,0 +1,305 @@
+/*
+  Restaurant Template System - Modern Minimal
+  Clean café aesthetic
+
+  Design System:
+  - Typography: Space Grotesk + Plus Jakarta Sans
+  - Motion: Clean, functional (800ms entries)
+  - Colors: Off-white (#FAFAF8), Charcoal (#1A1A1A), Sage (#4A7C59)
+*/
+
+:root {
+  /* Color Palette */
+  --mm-primary: #1A1A1A;
+  --mm-secondary: #FAFAF8;
+  --mm-accent: #4A7C59;
+  --mm-accent-light: #6BA37A;
+  --mm-warm-grey: #6B6B6B;
+
+  /* Typography */
+  --mm-font-heading: "Space Grotesk", sans-serif;
+  --mm-font-body: "Plus Jakarta Sans", sans-serif;
+
+  /* Motion Curves */
+  --mm-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --mm-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Scale */
+  --mm-text-hero: clamp(2.5rem, 6vw, 4rem);
+  --mm-text-section: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* Base */
+.mm-wrapper {
+  font-family: var(--mm-font-body);
+  color: var(--mm-primary);
+  background: var(--mm-secondary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.mm-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.mm-hero-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--mm-accent), transparent 60%);
+  margin-bottom: 1.5rem;
+  animation: mm-pop 0.7s var(--mm-ease-spring) 0.2s both;
+}
+
+.mm-hero-title {
+  font-family: var(--mm-font-heading);
+  font-weight: 700;
+  font-size: var(--mm-text-hero);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--mm-primary);
+  margin-bottom: 1rem;
+}
+
+.mm-hero-tagline {
+  font-family: var(--mm-font-body);
+  font-size: 1.125rem;
+  color: var(--mm-warm-grey);
+  max-width: 36ch;
+  line-height: 1.6;
+}
+
+/* Navigation */
+.mm-nav {
+  position: sticky;
+  top: 1rem;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+}
+
+.mm-nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(250, 250, 248, 0.9);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.06);
+}
+
+.mm-nav-name {
+  font-family: var(--mm-font-heading);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--mm-primary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Category Nav */
+.mm-category-nav {
+  position: sticky;
+  top: 5rem;
+  z-index: 40;
+  background: rgba(250, 250, 248, 0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+}
+
+.mm-category-nav-inner {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  scroll-snap-type: x mandatory;
+}
+
+.mm-category-btn {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  padding: 0.375rem 1rem;
+  border-radius: 999px;
+  font-family: var(--mm-font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mm-warm-grey);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.mm-category-btn:hover {
+  color: var(--mm-primary);
+  background: rgba(26, 26, 26, 0.04);
+}
+
+.mm-category-btn.active {
+  color: var(--mm-accent);
+  border-color: var(--mm-accent);
+  background: rgba(74, 124, 89, 0.1);
+}
+
+/* Cards */
+.mm-card {
+  background: #fff;
+  border: 1px solid rgba(26, 26, 26, 0.06);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: transform 0.3s var(--mm-ease-out-expo), box-shadow 0.3s var(--mm-ease-out-expo);
+}
+
+.mm-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.08);
+}
+
+.mm-card-body {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.mm-card-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.mm-item-name {
+  font-family: var(--mm-font-heading);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--mm-primary);
+  margin-bottom: 0.375rem;
+}
+
+.mm-item-desc {
+  font-family: var(--mm-font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mm-warm-grey);
+  margin-bottom: 0.5rem;
+}
+
+.mm-item-price {
+  font-family: var(--mm-font-body);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--mm-primary);
+}
+
+.mm-card-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(26, 26, 26, 0.03);
+}
+
+/* Footer */
+.mm-footer {
+  margin-top: 3rem;
+  padding: 3rem 1.5rem 1.5rem;
+  background: rgba(26, 26, 26, 0.02);
+  border-top: 1px solid rgba(26, 26, 26, 0.06);
+  text-align: center;
+}
+
+/* Featured Carousel */
+.mm-featured {
+  padding: 2rem 0;
+}
+
+.mm-featured-track {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.75rem;
+  padding: 0.25rem 1.5rem 1rem;
+  scroll-snap-type: x mandatory;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.mm-featured-card {
+  flex-shrink: 0;
+  width: min(300px, 85vw);
+  scroll-snap-align: start;
+}
+
+/* Animations */
+@keyframes mm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scroll Reveal */
+.mm-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s var(--mm-ease-out-expo), transform 0.8s var(--mm-ease-out-expo);
+  will-change: transform, opacity;
+}
+
+.mm-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .mm-reveal,
+  .mm-card,
+  .mm-hero-logo {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .mm-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .mm-nav-name {
+    max-width: 80px;
+  }
+
+  .mm-hero {
+    min-height: 50vh;
+    padding: 3rem 1rem;
+  }
+
+  .mm-card-body {
+    flex-direction: column;
+  }
+
+  .mm-card-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+  }
+}

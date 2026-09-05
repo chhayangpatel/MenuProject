@@ -1,0 +1,33 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+<div class="sc-hero">
+  <div class="sc-hero-left">
+    <img src={logoUrl} alt={restaurant.name} class="sc-hero-logo" />
+    <h1 class="sc-hero-title">{restaurant.name}</h1>
+    {restaurant.tagline && <p class="sc-hero-tagline">{restaurant.tagline}</p>}
+  </div>
+  {hasCover && (
+    <div class="sc-hero-right">
+      <img src={coverUrl} alt="" />
+    </div>
+  )}
+  <svg class="sc-wave" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,30 1440,60 L1440,120 L0,120 Z" fill="var(--sc-secondary)"/></svg>
+</div>
+<style>
+  .sc-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 80vh; position: relative; }
+  .sc-hero-left { display: flex; flex-direction: column; justify-content: center; padding: 4rem; background: var(--sc-primary); }
+  .sc-hero-logo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 2rem; }
+  .sc-hero-title { font-family: var(--sc-font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; color: #fff; line-height: 1.1; margin-bottom: 1rem; }
+  .sc-hero-tagline { font-family: var(--sc-font-body); font-size: 1.125rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .sc-hero-right { overflow: hidden; }
+  .sc-hero-right img { width: 100%; height: 100%; object-fit: cover; }
+  .sc-wave { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; }
+  @media (max-width: 768px) { .sc-hero { grid-template-columns: 1fr; } .sc-hero-right { display: none; } }
+</style>

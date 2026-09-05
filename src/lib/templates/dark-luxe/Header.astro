@@ -1,0 +1,27 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const logoUrl = resolveLogo(restaurant);
+---
+<nav class="dl-nav">
+  <a href="/" class="dl-nav-back">← Back</a>
+  <div class="dl-nav-center">
+    <img src={logoUrl} alt="" class="dl-nav-logo" />
+    <span class="dl-nav-name">{restaurant.name}</span>
+  </div>
+  <div class="dl-nav-actions">
+    <a href="#menu" class="dl-nav-menu-btn">Menu</a>
+  </div>
+</nav>
+<style>
+  .dl-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%); }
+  .dl-nav-back { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.3s; }
+  .dl-nav-back:hover { color: var(--dl-gold); }
+  .dl-nav-center { display: flex; align-items: center; gap: 0.75rem; }
+  .dl-nav-logo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--dl-gold); }
+  .dl-nav-name { font-family: var(--dl-font-heading); font-size: 0.875rem; letter-spacing: 0.2em; text-transform: uppercase; color: #fff; }
+  .dl-nav-menu-btn { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dl-gold); text-decoration: none; border: 1px solid var(--dl-gold); padding: 0.5rem 1rem; border-radius: 999px; transition: all 0.3s; }
+  .dl-nav-menu-btn:hover { background: var(--dl-gold); color: #000; }
+</style>

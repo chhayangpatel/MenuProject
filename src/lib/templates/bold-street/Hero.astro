@@ -1,0 +1,40 @@
+---
+import type { Restaurant } from "../../../schemas/restaurant.schema";
+import { resolveCover, resolveLogo } from "../../../lib/assets";
+interface Props {
+  restaurant: Restaurant;
+}
+const { restaurant } = Astro.props;
+const hasCover = !!restaurant.coverImage;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+---
+
+<div class="bs-wrapper bs-hero-wrapper">
+  <div class="bs-hero-media">
+    {hasCover && <img src={coverUrl} alt="" loading="eager" />}
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-[var(--bs-primary)]/90 to-transparent"
+    >
+    </div>
+  </div>
+  <div class="bs-hero-content">
+    <span class="bs-hero-tag">{restaurant.tagline || "EST. 2024"}</span>
+    <h1 class="bs-hero-title">{restaurant.name}</h1>
+    <p class="bs-hero-desc">
+      {restaurant.description || restaurant.tagline || "Late night done right."}
+    </p>
+    <a href="#menu" class="bs-btn bs-btn-primary"
+      >View Menu <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        ><line x1="5" y1="12" x2="19" y2="12"></line><polyline
+          points="12 5 19 12 12 19"></polyline></svg
+      ></a
+    >
+  </div>
+</div>

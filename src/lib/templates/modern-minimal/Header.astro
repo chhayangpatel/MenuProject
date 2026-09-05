@@ -1,0 +1,39 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveLogo } from '../../../lib/assets';
+
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const { contact } = restaurant;
+const logoUrl = resolveLogo(restaurant);
+---
+
+<header class="mm-nav-pill">
+  <div class="mm-nav-pill-inner" id="mm-nav-pill">
+    <a href="/" class="mm-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:rgba(26,26,26,0.5);transition:all 0.2s;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </a>
+    <img src={logoUrl} alt={restaurant.name} class="mm-nav-logo" />
+    <span class="mm-nav-name">{restaurant.name}</span>
+    <div class="mm-nav-divider" style="width:1px;height:20px;background:rgba(26,26,26,0.08);"></div>
+    <nav class="mm-nav-actions" aria-label="Contact">
+      {contact?.phone && <a href={"tel:"+contact.phone} class="mm-nav-action" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:rgba(26,26,26,0.5);transition:all 0.2s;" title="Call"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2"/></svg></a>}
+      {contact?.googleMapsUrl && <a href={contact.googleMapsUrl} target="_blank" rel="noopener" class="mm-nav-action" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:rgba(26,26,26,0.5);transition:all 0.2s;" title="Directions"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></a>}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .mm-back-link:hover,.mm-nav-action:hover{color:var(--mm-accent);background:rgba(74,124,89,0.1);transform:scale(1.1);}
+  .mm-back-link:hover{transform:translateX(-3px);}
+</style>
+
+<script>
+  document.addEventListener('astro:page-load',()=>{
+    const pill=document.getElementById('mm-nav-pill');
+    if(!pill)return;
+    window.addEventListener('scroll',()=>{
+      pill.classList.toggle('compact',window.scrollY>120);
+    },{passive:true});
+  });
+</script>

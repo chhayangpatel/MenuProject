@@ -1,0 +1,24 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const logoUrl = resolveLogo(restaurant);
+---
+<nav class="ac-nav">
+  <a href="/" class="ac-nav-back">← Back</a>
+  <div class="ac-nav-center">
+    <img src={logoUrl} alt="" class="ac-nav-logo" />
+    <span class="ac-nav-name">{restaurant.name}</span>
+  </div>
+  <a href="#menu" class="ac-nav-link">Menu</a>
+</nav>
+<style>
+  .ac-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: var(--ac-secondary); border-bottom: 2px solid var(--ac-primary); }
+  .ac-nav-back { font-family: var(--ac-font-body); font-size: 0.8125rem; color: var(--ac-primary); text-decoration: none; }
+  .ac-nav-center { display: flex; align-items: center; gap: 0.625rem; }
+  .ac-nav-logo { width: 28px; height: 28px; border-radius: 2px; object-fit: cover; }
+  .ac-nav-name { font-family: var(--ac-font-heading); font-size: 0.875rem; color: var(--ac-primary); }
+  .ac-nav-link { font-family: var(--ac-font-body); font-size: 0.8125rem; color: var(--ac-primary); text-decoration: none; border: 1px solid var(--ac-primary); padding: 0.375rem 1rem; border-radius: 2px; transition: all 0.3s; }
+  .ac-nav-link:hover { background: var(--ac-primary); color: var(--ac-secondary); }
+</style>

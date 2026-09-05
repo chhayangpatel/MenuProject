@@ -4,10 +4,17 @@
   "tagline": "Smash burgers & street vibes",
   "logo": "logo.svg",
   "coverImage": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600&q=80",
-  "cuisine": ["Burgers", "Street Food", "American"],
+  "cuisine": [
+    "Burgers",
+    "Street Food",
+    "American"
+  ],
   "priceRange": "$",
   "moodPreset": "bold-street",
-  "hero": { "style": "split" },
+  "template": "bold-street",
+  "hero": {
+    "style": "split"
+  },
   "contact": {
     "phone": "+1-555-9999",
     "address": "456 Urban Ave, Downtown"
@@ -42,91 +49,693 @@
   },
   "menu": [
     {
-      "id": "burgers",
-      "name": "Smash Burgers",
-      "description": "Smashed thin, caramelized edges, american cheese.",
-      "heroImage": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600&q=80",
-      "heroQuote": "\"Grease is flavor.\"",
+      "id": "signature-burgers",
+      "name": "Signature Burgers",
+      "description": "16 dishes, prepared to order",
       "items": [
         {
-          "id": "classic-smash",
-          "name": "Classic Smash",
-          "description": "Double patty, american cheese, house sauce, pickles, diced onion",
-          "price": 12,
-          "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+          "id": "the-og-smash",
+          "name": "The OG Smash",
+          "description": "Double smashed patties, American cheese, pickles, house sauce, potato bun",
+          "price": 13,
           "tags": [],
+          "spicyLevel": 0,
           "available": true,
-          "featured": true,
-          "popularity": "most-ordered"
+          "featured": true
         },
         {
-          "id": "double-trouble",
-          "name": "Double Trouble",
-          "description": "Triple patty, double cheese, bacon, special sauce",
+          "id": "nuclear-nacho",
+          "name": "Nuclear Nacho",
+          "description": "Double patty, queso, jalapeño relish, corn chips, chipotle mayo",
+          "price": 15,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "truffle-shuffle",
+          "name": "Truffle Shuffle",
+          "description": "6oz patty, truffle mayo, aged cheddar, caramelized onion, rocket",
+          "price": 17,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "hot-honey-bird",
+          "name": "Hot Honey Bird",
+          "description": "Buttermilk fried chicken, hot honey, slaw, pickles",
+          "price": 15,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "blue-collar",
+          "name": "Blue Collar",
+          "description": "Double patty, blue cheese, bacon jam, crispy onions",
           "price": 16,
-          "image": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80",
           "tags": [],
+          "spicyLevel": 0,
           "available": true,
-          "popularity": "trending"
+          "featured": false
         },
         {
-          "id": "spicy-chicken",
-          "name": "Spicy Chicken Sando",
-          "description": "Crispy fried chicken, Nashville hot oil, slaw, pickles",
+          "id": "mushroom-melt",
+          "name": "Mushroom Melt",
+          "description": "Portobello, swiss, garlic aioli, fried shallots",
           "price": 14,
-          "image": "https://images.unsplash.com/photo-1606755962770-8a8e0e0a1b44?w=400&q=80",
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "the-vegan-vigilante",
+          "name": "The Vegan Vigilante",
+          "description": "Beyond patty, vegan cheddar, lettuce, tomato, vegan secret sauce",
+          "price": 15,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "ghost-pepper-challenge",
+          "name": "Ghost Pepper Challenge",
+          "description": "Double patty, ghost pepper jack, habanero relish — sign the waiver",
+          "price": 17,
           "tags": [],
           "spicyLevel": 3,
           "available": true,
+          "featured": false
+        },
+        {
+          "id": "breakfast-all-night",
+          "name": "Breakfast All Night",
+          "description": "Patty, fried egg, bacon, maple aioli, hashbrown stack",
+          "price": 15,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "korean-street",
+          "name": "Korean Street",
+          "description": "Gochujang glaze, kimchi slaw, sesame mayo, scallion",
+          "price": 16,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "patty-melt-deluxe",
+          "name": "Patty Melt Deluxe",
+          "description": "Rye bread, swiss, thousand island, griddled onions",
+          "price": 14,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "buffalo-blue",
+          "name": "Buffalo Blue",
+          "description": "Fried chicken, buffalo sauce, blue cheese ranch, celery slaw",
+          "price": 15,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "the-big-neon",
+          "name": "The Big Neon",
+          "description": "Triple patty, triple cheese, double sauce — the photo op",
+          "price": 19,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
           "featured": true
+        },
+        {
+          "id": "surf-smash",
+          "name": "Surf & Smash",
+          "description": "Patty, crispy shrimp, tiger sauce, lettuce",
+          "price": 18,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "el-fuego",
+          "name": "El Fuego",
+          "description": "Chorizo-blend patty, pepper jack, salsa verde, crispy jalapeños",
+          "price": 16,
+          "tags": [],
+          "spicyLevel": 3,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "classic-cheese",
+          "name": "Classic Cheese",
+          "description": "Single patty, American, pickles, onion, mustard",
+          "price": 9,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     },
     {
-      "id": "sides",
-      "name": "Sides",
+      "id": "loaded-sides",
+      "name": "Loaded Sides",
+      "description": "10 dishes, prepared to order",
       "items": [
         {
-          "id": "fries",
-          "name": "Crinkle Cut Fries",
-          "description": "Seasoned salt, house ketchup",
+          "id": "neon-fries",
+          "name": "Neon Fries",
+          "description": "Double-fried, smoked salt, house seasoning",
           "price": 5,
-          "image": "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80",
-          "tags": ["vegan", "gluten-free"],
-          "available": true
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
         },
         {
-          "id": "onion-rings",
-          "name": "Beer-Battered Onion Rings",
-          "description": "Ranch dipping sauce",
+          "id": "cheese-fries",
+          "name": "Cheese Fries",
+          "description": "Fries, queso, scallion",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "truffle-parm-fries",
+          "name": "Truffle Parm Fries",
+          "description": "Truffle oil, Parmigiano, chive",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "chili-cheese-fries",
+          "name": "Chili Cheese Fries",
+          "description": "Beef chili, queso, pickled jalapeño",
+          "price": 9,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "loaded-nachos",
+          "name": "Loaded Nachos",
+          "description": "Queso, pico, guac, sour cream, jalapeño",
+          "price": 11,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "onion-blossom",
+          "name": "Onion Blossom",
+          "description": "Hand-battered onion rings, burger sauce",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "mac-cheese-bites",
+          "name": "Mac & Cheese Bites",
+          "description": "Crumbed cheddar mac, ranch dip",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "sweet-potato-fries",
+          "name": "Sweet Potato Fries",
+          "description": "Cinnamon dust, maple dip",
           "price": 6,
-          "image": "https://images.unsplash.com/photo-1639024471283-03518883590d?w=400&q=80",
-          "tags": ["vegetarian"],
-          "available": true
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "coleslaw",
+          "name": "Coleslaw",
+          "description": "Napa cabbage, buttermilk dressing",
+          "price": 4,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "pickle-chips",
+          "name": "Pickle Chips",
+          "description": "Beer-battered dill chips, ranch",
+          "price": 6,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     },
     {
-      "id": "shakes",
-      "name": "Thick Shakes",
+      "id": "wings",
+      "name": "Wings",
+      "description": "6 dishes, prepared to order",
       "items": [
         {
-          "id": "vanilla-shake",
-          "name": "Vanilla Bean",
-          "description": "Real vanilla bean, whole milk, whipped cream",
-          "price": 7,
-          "image": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80",
-          "tags": ["vegetarian"],
-          "available": true
+          "id": "classic-buffalo",
+          "name": "Classic Buffalo",
+          "description": "Six wings, buffalo, blue cheese dip",
+          "price": 12,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": true
         },
         {
-          "id": "chocolate-shake",
+          "id": "korean-gochujang",
+          "name": "Korean Gochujang",
+          "description": "Sticky-sweet, sesame, scallion",
+          "price": 13,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "lemon-pepper-dry-rub",
+          "name": "Lemon Pepper Dry Rub",
+          "description": "Dry-rubbed, no sauce, all crunch",
+          "price": 12,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "honey-garlic",
+          "name": "Honey Garlic",
+          "description": "Sticky honey-garlic glaze, sesame",
+          "price": 12,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "nuclear-wings",
+          "name": "Nuclear Wings",
+          "description": "Carolina reaper sauce — six wings of regret",
+          "price": 14,
+          "tags": [],
+          "spicyLevel": 3,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "bbq-bourbon",
+          "name": "BBQ Bourbon",
+          "description": "Smoky bourbon BBQ, pickles",
+          "price": 13,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "shakes-floats",
+      "name": "Shakes & Floats",
+      "description": "8 dishes, prepared to order",
+      "items": [
+        {
+          "id": "classic-vanilla-bean",
+          "name": "Classic Vanilla Bean",
+          "description": "Madagascar vanilla, malted crumble",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "salted-caramel",
+          "name": "Salted Caramel",
+          "description": "House caramel, flaked salt, whipped cream",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "dark-chocolate",
           "name": "Dark Chocolate",
-          "description": "70% cacao, chocolate syrup, chocolate shavings",
-          "price": 7.5,
-          "image": "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?w=400&q=80",
-          "tags": ["vegetarian"],
-          "available": true
+          "description": "70% chocolate, chocolate shavings",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "strawberry-cheesecake",
+          "name": "Strawberry Cheesecake",
+          "description": "Fresh strawberry, cheesecake chunks",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "oreo-overload",
+          "name": "Oreo Overload",
+          "description": "Cookies, cookie crumble rim",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "espresso-buzz",
+          "name": "Espresso Buzz",
+          "description": "Double shot, coffee ice cream",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-machine",
+          "name": "Matcha Machine",
+          "description": "Ceremonial matcha, vanilla soft serve",
+          "price": 9,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "root-beer-float",
+          "name": "Root Beer Float",
+          "description": "Craft root beer, vanilla ice cream",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "drinks",
+      "name": "Drinks",
+      "description": "9 dishes, prepared to order",
+      "items": [
+        {
+          "id": "fountain-soda",
+          "name": "Fountain Soda",
+          "description": "Free refills",
+          "price": 3,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "fresh-lemonade",
+          "name": "Fresh Lemonade",
+          "description": "Hand-pressed, mint",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "craft-cola",
+          "name": "Craft Cola",
+          "description": "Small-batch cola, cane sugar",
+          "price": 4,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cherry-limeade",
+          "name": "Cherry Limeade",
+          "description": "Fresh lime, maraschino",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "iced-tea",
+          "name": "Iced Tea",
+          "description": "Peach or unsweetened",
+          "price": 3.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "bottled-water",
+          "name": "Bottled Water",
+          "description": "Still or sparkling",
+          "price": 3,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "milk",
+          "name": "Milk",
+          "description": "Whole or oat",
+          "price": 3,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cold-brew",
+          "name": "Cold Brew",
+          "description": "16-hour steep",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "house-lemonade-slush",
+          "name": "House Lemonade Slush",
+          "description": "Frozen, extra sour",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "combos",
+      "name": "Combos",
+      "description": "6 dishes, prepared to order",
+      "items": [
+        {
+          "id": "smash-combo",
+          "name": "Smash Combo",
+          "description": "The OG Smash + fries + drink",
+          "price": 18,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "chicken-combo",
+          "name": "Chicken Combo",
+          "description": "Hot Honey Bird + fries + drink",
+          "price": 20,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "wing-night",
+          "name": "Wing Night",
+          "description": "12 wings + fries + two drinks",
+          "price": 29,
+          "tags": [],
+          "spicyLevel": 2,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "date-night",
+          "name": "Date Night",
+          "description": "Two burgers + loaded fries + two shakes",
+          "price": 42,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "solo-street",
+          "name": "Solo Street",
+          "description": "Any burger + slaw + fountain",
+          "price": 16,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "family-feast",
+          "name": "Family Feast",
+          "description": "4 burgers + 2 fries + onion rings + 4 drinks",
+          "price": 59,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "desserts",
+      "name": "Desserts",
+      "description": "3 dishes, prepared to order",
+      "items": [
+        {
+          "id": "warm-cookie-skillet",
+          "name": "Warm Cookie Skillet",
+          "description": "Chocolate chip, vanilla soft serve",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "fried-apple-pie",
+          "name": "Fried Apple Pie",
+          "description": "Cinnamon sugar, salted caramel",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "churros",
+          "name": "Churros",
+          "description": "Cinnamon sugar, chocolate dip",
+          "price": 6,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     }

@@ -1,0 +1,35 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const { hours, contact } = restaurant;
+const hourEntries = hours?.regular ? Object.entries(hours.regular) : [];
+---
+<footer class="ac-footer">
+  <p class="ac-footer-name">{restaurant.name}</p>
+  {restaurant.tagline && <p class="ac-footer-tagline">{restaurant.tagline}</p>}
+  <div class="ac-footer-info">
+    {hourEntries.length > 0 && (
+      <div class="ac-footer-col">
+        <h4>Hours</h4>
+        {hourEntries.map(([d,t]) => <p><span>{d}</span> {t}</p>)}
+      </div>
+    )}
+    <div class="ac-footer-col">
+      <h4>Visit</h4>
+      {contact?.address && <p>{contact.address}</p>}
+      {contact?.phone && <p>{contact.phone}</p>}
+    </div>
+  </div>
+  <p class="ac-footer-copy">© {new Date().getFullYear()} {restaurant.name}</p>
+</footer>
+<style>
+  .ac-footer { padding: 3rem 2rem 2rem; background: var(--ac-primary); text-align: center; }
+  .ac-footer-name { font-family: var(--ac-font-heading); font-size: 1.25rem; color: #fff; }
+  .ac-footer-tagline { color: rgba(255,255,255,0.5); margin: 0.5rem 0 1.5rem; font-style: italic; }
+  .ac-footer-info { display: flex; justify-content: center; gap: 4rem; margin-bottom: 2rem; }
+  .ac-footer-col h4 { font-family: var(--ac-font-heading); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ac-accent); margin-bottom: 0.5rem; }
+  .ac-footer-col p { font-family: var(--ac-font-body); font-size: 0.8125rem; color: rgba(255,255,255,0.6); }
+  .ac-footer-col p span { color: rgba(255,255,255,0.8); text-transform: capitalize; }
+  .ac-footer-copy { font-size: 0.6875rem; color: rgba(255,255,255,0.3); }
+</style>

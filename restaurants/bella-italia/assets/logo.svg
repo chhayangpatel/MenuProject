@@ -1,20 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#7a0000"/>
+      <stop offset="0%" stop-color="#5c1a00"/>
+      <stop offset="50%" stop-color="#7a0000"/>
       <stop offset="100%" stop-color="#8B0000"/>
     </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C56A"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8962F"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="42%" r="50%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#8B0000" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   <rect width="200" height="200" fill="url(#bg)"/>
-  <!-- Wreath circle -->
-  <circle cx="100" cy="100" r="70" fill="none" stroke="#D4AF37" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4 3"/>
-  <circle cx="100" cy="100" r="60" fill="none" stroke="#D4AF37" stroke-opacity="0.3" stroke-width="0.5"/>
-  <!-- BI monogram -->
-  <text x="100" y="115" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#F5F0E6" text-anchor="middle">BI</text>
-  <!-- Est. text -->
-  <text x="100" y="138" font-family="Georgia, serif" font-size="9" fill="#D4AF37" fill-opacity="0.8" text-anchor="middle" letter-spacing="3">EST. 1985</text>
-  <!-- Bottom star -->
-  <g transform="translate(88,148)">
-    <polygon points="12,0 14,8 22,8 16,12 18,20 12,16 6,20 8,12 2,8 10,8" fill="#D4AF37" fill-opacity="0.45" transform="scale(0.55)"/>
-  </g>
+  <rect width="200" height="200" fill="url(#halo)"/>
+  <rect x="8" y="8" width="184" height="184" rx="2" fill="none" stroke="url(#gold)" stroke-opacity="0.5" stroke-width="1"/>
+  <rect x="12" y="12" width="176" height="176" rx="1" fill="none" stroke="#D4AF37" stroke-opacity="0.15" stroke-width="0.5"/>
+  <circle cx="100" cy="88" r="42" fill="none" stroke="url(#gold)" stroke-opacity="0.4" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="100" y="92" font-family="Georgia, serif" font-size="36" font-weight="700" fill="#F5F0E6" text-anchor="middle">BI</text>
+  <line x1="60" y1="112" x2="140" y2="112" stroke="url(#gold)" stroke-opacity="0.5" stroke-width="0.75"/>
+  <text x="100" y="126" font-family="Georgia, serif" font-size="8" fill="#E8C56A" fill-opacity="0.8" text-anchor="middle" letter-spacing="3">RISTORANTE</text>
+  <text x="100" y="140" font-family="Georgia, serif" font-size="7" fill="#D4AF37" fill-opacity="0.5" text-anchor="middle" letter-spacing="4">EST. 1985</text>
 </svg>

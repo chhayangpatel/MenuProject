@@ -6,22 +6,27 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "predev": "node scripts/copy-assets.mjs",
     "dev": "astro dev",
-    "build": "astro build",
+    "prebuild": "node scripts/copy-assets.mjs",
+    "build": "astro build && node scripts/generate-qr.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "new-restaurant": "node scripts/new-restaurant.mjs",
     "validate:configs": "node scripts/validate-configs.mjs",
-    "check:contrast": "node scripts/check-contrast.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "generate:qr": "node scripts/generate-qr.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.4",
+    "@astrojs/sitemap": "^3.6.4",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "astro": "^7.2.9",
     "framer-motion": "^13.1.1",
     "lucide-react": "^1.37.0",
+    "qrcode": "^1.5.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3",

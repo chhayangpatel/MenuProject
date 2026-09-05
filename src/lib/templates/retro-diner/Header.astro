@@ -1,0 +1,24 @@
+---
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveLogo } from '../../../lib/assets';
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+const logoUrl = resolveLogo(restaurant);
+---
+<nav class="rd-nav">
+  <a href="/" class="rd-nav-back">← Back</a>
+  <div class="rd-nav-center">
+    <img src={logoUrl} alt="" class="rd-nav-logo" />
+    <span class="rd-nav-name">{restaurant.name}</span>
+  </div>
+  <a href="#menu" class="rd-nav-link">Menu</a>
+</nav>
+<style>
+  .rd-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: var(--rd-primary); border-bottom: 3px solid var(--rd-accent); }
+  .rd-nav-back { font-family: var(--rd-font-body); font-size: 0.8125rem; color: var(--rd-accent); text-decoration: none; }
+  .rd-nav-center { display: flex; align-items: center; gap: 0.625rem; }
+  .rd-nav-logo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--rd-accent); }
+  .rd-nav-name { font-family: var(--rd-font-heading); font-size: 1rem; color: #fff; }
+  .rd-nav-link { font-family: var(--rd-font-heading); font-size: 0.875rem; color: var(--rd-accent); text-decoration: none; border: 2px solid var(--rd-accent); padding: 0.375rem 1rem; border-radius: 999px; transition: all 0.3s; }
+  .rd-nav-link:hover { background: var(--rd-accent); color: var(--rd-primary); }
+</style>

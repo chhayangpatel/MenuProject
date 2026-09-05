@@ -1,0 +1,19 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import MenuCard from './MenuCard.astro';
+interface Props { items: MenuItem[]; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { items, currencySymbol, showPrices, restaurant } = Astro.props;
+---
+<section class="ac-featured">
+  <h2 class="ac-featured-title">House Favorites</h2>
+  <div class="ac-featured-grid">
+    {items.map(item => (
+      <MenuCard item={item} currencySymbol={currencySymbol} showPrices={showPrices} restaurant={restaurant} />
+    ))}
+  </div>
+</section>
+<style>
+  .ac-featured { padding: 3rem 0; }
+  .ac-featured-title { font-family: var(--ac-font-heading); font-size: 1.25rem; font-weight: 600; color: var(--ac-primary); text-align: center; margin-bottom: 2rem; }
+  .ac-featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; padding: 0 1.5rem; }
+</style>

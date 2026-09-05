@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Search, X } from "lucide-react";
 
 interface Props {
   enabled: boolean;
@@ -7,24 +7,27 @@ interface Props {
 }
 
 const TAG_LABELS: Record<string, string> = {
-  'vegetarian': '🌿 Vegetarian',
-  'vegan': '🌱 Vegan',
-  'gluten-free': 'GF',
-  'dairy-free': 'DF',
-  'nut-free': 'NF',
-  'halal': 'Halal',
-  'kosher': 'Kosher',
-  'organic': 'Organic',
-  'spicy': '🌶️ Spicy',
+  vegetarian: "Vegetarian",
+  vegan: "Vegan",
+  "gluten-free": "Gluten-Free",
+  "dairy-free": "Dairy-Free",
+  "nut-free": "Nut-Free",
+  halal: "Halal",
+  kosher: "Kosher",
+  organic: "Organic",
+  "house-made": "House-Made",
+  seasonal: "Seasonal",
+  spicy: "Spicy",
 };
 
-export default function SearchFilterBar({ enabled, enableDietaryFilters = true }: Props) {
-  const [query, setQuery] = useState('');
+export default function SearchFilterBar({
+  enabled,
+  enableDietaryFilters = true,
+}: Props) {
+  const [query, setQuery] = useState("");
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
   const [totalItems, setTotalItems] = useState(0);
   const [visibleItems, setVisibleItems] = useState(0);
-
-  // Extract unique tags from menu items (SSR-safe)
   const [availableTags, setAvailableTags] = useState<string[]>([]);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function SearchFilterBar({ enabled, enableDietaryFilters = true }
     const tagSet = new Set<string>();
     items.forEach((item: any) => {
       (item.tags || []).forEach((tag: string) => tagSet.add(tag));
-      if ((item.spicyLevel || 0) > 0) tagSet.add('spicy');
+      if ((item.spicyLevel || 0) > 0) tagSet.add("spicy");
     });
     setAvailableTags(Array.from(tagSet).sort());
   }, []);
@@ -40,47 +43,51 @@ export default function SearchFilterBar({ enabled, enableDietaryFilters = true }
   useEffect(() => {
     if (!enabled) return;
 
-    const items = document.querySelectorAll('[data-item-id]');
+    const items = document.querySelectorAll<HTMLElement>("[data-item-id]");
     setTotalItems(items.length);
 
+    const storeItems = (window as any).__RESTAURANT_ITEMS__ || [];
+    const q = query.trim().toLowerCase();
     let visible = 0;
-    items.forEach(el => {
-      const name = (el.querySelector('h3')?.textContent || '').toLowerCase();
-      const desc = (el.querySelector('p')?.textContent || '').toLowerCase();
-      const q = query.toLowerCase();
 
-      // Get this item's tags from the data store
-      const id = el.getAttribute('data-item-id');
-      const storeItems = (window as any).__RESTAURANT_ITEMS__ || [];
+    items.forEach((el) => {
+      const id = el.getAttribute("data-item-id");
       const storeItem = storeItems.find((i: any) => i.id === id);
-      const itemTags = storeItem?.tags || [];
+      const itemTags: string[] = storeItem?.tags || [];
       const isSpicy = (storeItem?.spicyLevel || 0) > 0;
 
+      const name = (el.querySelector("h3")?.textContent || "").toLowerCase();
+      const desc = (el.querySelector("p")?.textContent || "").toLowerCase();
       const matchesSearch = !q || name.includes(q) || desc.includes(q);
-      const matchesTags = activeTags.size === 0 || Array.from(activeTags).every(tag => {
-        if (tag === 'spicy') return isSpicy;
-        return itemTags.includes(tag);
-      });
 
-      if (matchesSearch && matchesTags) {
-        (el as HTMLElement).style.display = '';
-        visible++;
-      } else {
-        (el as HTMLElement).style.display = 'none';
-      }
+      const matchesTags =
+        activeTags.size === 0 ||
+        Array.from(activeTags).every((tag) => {
+          if (tag === "spicy") return isSpicy;
+          return itemTags.includes(tag);
+        });
+
+      const show = matchesSearch && matchesTags;
+      el.hidden = !show;
+      if (show) visible++;
     });
 
     setVisibleItems(visible);
 
-    // Hide empty categories
-    document.querySelectorAll('section[id^="category-"]').forEach(cat => {
-      const visibleInCat = cat.querySelectorAll('[data-item-id]:not([style*="display: none"])');
-      (cat as HTMLElement).style.display = (visibleInCat.length === 0 && (query.length > 0 || activeTags.size > 0)) ? 'none' : '';
-    });
+    // Hide empty categories only while filtering
+    const isFiltering = q.length > 0 || activeTags.size > 0;
+    document
+      .querySelectorAll<HTMLElement>('section[id^="category-"]')
+      .forEach((cat) => {
+        const anyVisible = Array.from(
+          cat.querySelectorAll<HTMLElement>("[data-item-id]")
+        ).some((el) => !el.hidden);
+        cat.hidden = isFiltering && !anyVisible;
+      });
   }, [query, activeTags, enabled]);
 
   const toggleTag = (tag: string) => {
-    setActiveTags(prev => {
+    setActiveTags((prev) => {
       const next = new Set(prev);
       if (next.has(tag)) next.delete(tag);
       else next.add(tag);
@@ -91,23 +98,24 @@ export default function SearchFilterBar({ enabled, enableDietaryFilters = true }
   if (!enabled) return null;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-4">
+    <div className="mr-search">
       {/* Search input */}
-      <div className="relative max-w-md mx-auto mb-3">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--color-primary)]/50">
+      <div className="mr-search-field">
+        <span className="mr-search-icon" aria-hidden="true">
           <Search size={18} />
-        </div>
+        </span>
         <input
           type="text"
-          placeholder="Search menu..."
+          placeholder="Search menu…"
           value={query}
-          onChange={e => setQuery(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2.5 border border-[var(--color-primary)]/10 rounded-full bg-[var(--color-secondary)] text-[var(--color-primary)] placeholder-[var(--color-primary)]/40 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent font-body shadow-inner transition-all duration-300"
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label="Search menu"
         />
         {query && (
           <button
-            onClick={() => setQuery('')}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-[var(--color-primary)]/40 hover:text-[var(--color-primary)] transition-colors"
+            onClick={() => setQuery("")}
+            className="mr-search-clear"
+            aria-label="Clear search"
           >
             <X size={16} />
           </button>
@@ -116,16 +124,13 @@ export default function SearchFilterBar({ enabled, enableDietaryFilters = true }
 
       {/* Dietary filter chips */}
       {enableDietaryFilters && availableTags.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-2 mb-2">
-          {availableTags.map(tag => (
+        <div className="mr-search-chips" role="group" aria-label="Dietary filters">
+          {availableTags.map((tag) => (
             <button
               key={tag}
+              type="button"
+              data-active={activeTags.has(tag) || undefined}
               onClick={() => toggleTag(tag)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
-                activeTags.has(tag)
-                  ? 'bg-[var(--color-accent)] text-white scale-105 shadow-md'
-                  : 'bg-[var(--color-primary)]/5 text-[var(--color-primary)]/60 hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)]'
-              }`}
             >
               {TAG_LABELS[tag] || tag}
             </button>
@@ -135,10 +140,12 @@ export default function SearchFilterBar({ enabled, enableDietaryFilters = true }
 
       {/* Result count */}
       {(query || activeTags.size > 0) && (
-        <p className="text-center text-xs text-[var(--color-primary)]/40 mt-2 font-body">
-          Showing {visibleItems} of {totalItems} items
+        <p className="mr-search-count">
+          Showing <b>{visibleItems}</b> of {totalItems}
           {visibleItems === 0 && (
-            <span className="block mt-1 italic">No items match your filters</span>
+            <span className="mr-search-none">
+              — nothing matches. Try a different search or clear the filters.
+            </span>
           )}
         </p>
       )}

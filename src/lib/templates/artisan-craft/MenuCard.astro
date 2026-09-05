@@ -1,0 +1,28 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
+const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
+const hasVariants = item.variants && item.variants.length > 0;
+---
+<div class="ac-item">
+  {hasImage && <div class="ac-item-img"><img src={imageUrl} alt={item.name} /></div>}
+  <div class="ac-item-info">
+    <h3 class="ac-item-name">{item.name}</h3>
+    {item.description && <p class="ac-item-desc">{item.description}</p>}
+    <span class="ac-item-price">{currencySymbol}{item.price.toFixed(2)}</span>
+  </div>
+</div>
+<style>
+  .ac-item { display: flex; gap: 1rem; padding: 1.25rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 2px; background: #fff; transition: box-shadow 0.3s; }
+  .ac-item:hover { box-shadow: 4px 4px 0 0 var(--ac-accent); }
+  .ac-item-img { flex-shrink: 0; width: 72px; height: 72px; border-radius: 2px; overflow: hidden; }
+  .ac-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .ac-item-info { flex: 1; min-width: 0; }
+  .ac-item-name { font-family: var(--ac-font-heading); font-size: 1rem; font-weight: 600; color: var(--ac-primary); margin-bottom: 0.25rem; }
+  .ac-item-desc { font-family: var(--ac-font-body); font-size: 0.8125rem; color: rgba(0,0,0,0.5); line-height: 1.6; margin-bottom: 0.5rem; }
+  .ac-item-price { font-family: var(--ac-font-body); font-weight: 700; font-size: 0.9375rem; color: var(--ac-accent); }
+</style>

@@ -1,3 +1,361 @@
 @import "tailwindcss";
 
-/* Custom utility classes or overrides can go here */
+/* ─────────────────────────────────────────────────────────────────────────
+   Shared platform styles (mr-*)
+   Consumed by /r/[slug]/ and /r/[slug]/[template]/ pages.
+   Motion values come from registry tokens (--mr-*) emitted by theme.ts.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Menu shell: centered, generous, mobile-first ─────────────────────── */
+.mr-menu {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 1rem clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+.mr-menu-overview {
+    text-align: center;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mr-ink-40, rgba(0, 0, 0, 0.4));
+    margin-bottom: 0.5rem;
+}
+
+.mr-menu-overview a {
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.mr-menu-overview-dot {
+    margin: 0 0.5rem;
+}
+
+/* ── Category header: numbered, editorial, left-set ────────────────── */
+.mr-category {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    scroll-margin-top: 8.5rem;
+}
+
+.mr-cat-head {
+    max-width: 46rem;
+    margin: 0 auto 1.75rem;
+    text-align: left;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--mr-surface-border, rgba(0, 0, 0, 0.08));
+}
+
+.mr-cat-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-accent);
+    margin-bottom: 0.5rem;
+}
+
+.mr-cat-eyebrow-rule {
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+}
+
+.mr-cat-name {
+    font-family: var(--font-heading, inherit);
+    font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--brand-primary);
+    text-wrap: balance;
+}
+
+.mr-cat-desc {
+    margin-top: 0.375rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--mr-ink-60, rgba(0, 0, 0, 0.6));
+    max-width: 52ch;
+}
+
+/* ── Items grid: 1 column on phones, 2 columns ≥ 760px ─────────────── */
+.mr-items-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    max-width: 68rem;
+}
+
+@media (min-width: 760px) {
+    .mr-items-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* ── Divider: fine rule + centered ornament ────────────────────────── */
+.mr-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    max-width: 46rem;
+    margin: 3.5rem auto 0;
+    color: var(--brand-accent);
+    opacity: 0.55;
+}
+
+.mr-divider span {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right,
+            transparent,
+            var(--mr-surface-border, rgba(0, 0, 0, 0.15)));
+}
+
+.mr-divider span:last-child {
+    background: linear-gradient(to left,
+            transparent,
+            var(--mr-surface-border, rgba(0, 0, 0, 0.15)));
+}
+
+/* ── Story: quiet editorial interlude ──────────────────────────────── */
+.mr-story {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4rem) 1.25rem;
+    text-align: center;
+}
+
+.mr-story-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-accent);
+    margin-bottom: 0.75rem;
+}
+
+.mr-story-body {
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    line-height: 1.8;
+    color: var(--mr-ink-60, rgba(0, 0, 0, 0.6));
+    text-wrap: balance;
+}
+
+/* ── Controls wrapper under hero ───────────────────────────────────── */
+.mr-controls {
+    max-width: 46rem;
+    margin: 0 auto 1rem;
+    padding: 0 1.25rem;
+}
+
+/* ── Back to top button ────────────────────────────────────────────── */
+.mr-top-btn {
+    position: fixed;
+    right: 1rem;
+    bottom: 1.25rem;
+    z-index: 80;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--mr-surface-border, rgba(0, 0, 0, 0.1));
+    background: var(--brand-secondary, #fff);
+    color: var(--brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition:
+        opacity 0.25s var(--mr-ease-out-expo, ease-out),
+        transform 0.25s var(--mr-ease-out-expo, ease-out),
+        background 0.2s;
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.25);
+}
+
+.mr-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mr-top-btn:hover {
+    background: var(--brand-accent);
+    color: var(--mr-on-accent, #fff);
+    border-color: var(--brand-accent);
+}
+
+/* ── Shared reveal (motion from registry tokens) ───────────────────── */
+.mr-reveal {
+    animation: mrReveal var(--mr-entry-duration, 800ms) var(--mr-ease-out-expo, ease-out) both;
+}
+
+@keyframes mrReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mr-reveal.revealed {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mr-reveal {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ══ Search & filter bar (deterministic, no Tailwind-arbitrary) ════ */
+.mr-search {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 1rem 0 0.25rem;
+}
+
+.mr-search-field {
+    position: relative;
+    width: min(100%, 24rem);
+}
+
+.mr-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--mr-ink-40, rgba(0, 0, 0, 0.4));
+    pointer-events: none;
+    display: flex;
+}
+
+.mr-search-field input {
+    width: 100%;
+    padding: 0.7rem 2.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--mr-surface-border, rgba(0, 0, 0, 0.12));
+    background: var(--brand-secondary, #fff);
+    color: var(--brand-primary);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mr-search-field input::placeholder {
+    color: var(--mr-ink-40, rgba(0, 0, 0, 0.35));
+}
+
+.mr-search-field input:focus {
+    outline: none;
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 18%, transparent);
+}
+
+.mr-search-clear {
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--mr-ink-40, rgba(0, 0, 0, 0.4));
+    cursor: pointer;
+}
+
+.mr-search-clear:hover {
+    color: var(--brand-primary);
+    background: color-mix(in srgb, var(--brand-primary) 6%, transparent);
+}
+
+.mr-search-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.mr-search-chips button {
+    min-height: 36px;
+    padding: 0.375rem 0.875rem;
+    border-radius: 999px;
+    border: 1px solid var(--mr-surface-border, rgba(0, 0, 0, 0.12));
+    background: transparent;
+    color: var(--mr-ink-60, rgba(0, 0, 0, 0.55));
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s var(--mr-ease-spring, ease);
+}
+
+.mr-search-chips button:hover {
+    color: var(--brand-primary);
+    border-color: color-mix(in srgb, var(--brand-primary) 30%, transparent);
+}
+
+.mr-search-chips button[data-active] {
+    background: var(--brand-accent);
+    color: var(--mr-on-accent, #fff);
+    border-color: var(--brand-accent);
+}
+
+.mr-search-count {
+    font-size: 0.8125rem;
+    color: var(--mr-ink-60, rgba(0, 0, 0, 0.55));
+}
+
+.mr-search-count b {
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.mr-search-none {
+    display: block;
+    font-style: italic;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mr-search-chips button {
+        transition: none;
+    }
+
+    .mr-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}

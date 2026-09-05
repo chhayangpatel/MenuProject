@@ -1,0 +1,30 @@
+---
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
+const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
+const hasVariants = item.variants && item.variants.length > 0;
+---
+<article class="wr-card-outer" data-item-id={item.id} role="button" tabindex="0" aria-label={"View "+item.name}>
+  <div class="wr-card">
+    <div class="wr-card-body">
+      <div class="wr-card-text">
+        <div style="display:flex;justify-content:space-between;gap:1rem;margin-bottom:0.5rem;">
+          <h3 class="wr-item-name">{item.name}</h3>
+          {showPrices && <span class="wr-item-price">{hasVariants?'From ':''}{currencySymbol}{item.price.toFixed(2)}</span>}
+        </div>
+        {item.description && <p class="wr-item-desc">{item.description}</p>}
+        <div style="display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.5rem;">
+          {isVeg && !isVegan && <span style="background:#e8f5e9;color:#2E7D32;padding:2px 8px;border-radius:999px;font-size:0.625rem;font-weight:700;">🌿 Veg</span>}
+          {isVegan && <span style="background:#e8f5e9;color:#2E7D32;padding:2px 8px;border-radius:999px;font-size:0.625rem;font-weight:700;">🌱 Vegan</span>}
+          {isGF && <span style="background:#fff8e1;color:#F57F17;padding:2px 8px;border-radius:999px;font-size:0.625rem;font-weight:700;">GF</span>}
+          {item.spicyLevel>0 && <span style="background:#fbe9e7;color:#BF360C;padding:2px 8px;border-radius:999px;font-size:0.625rem;font-weight:700;">{"🌶️".repeat(item.spicyLevel)}</span>}
+        </div>
+      </div>
+      {hasImage && <div class="wr-card-img-wrap"><img src={resolveMenuItemImage(restaurant, item.image)} alt={item.name} class="wr-card-img" loading="lazy" /></div>}
+    </div>
+  </div>
+</article>

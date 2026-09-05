@@ -1,0 +1,35 @@
+---
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+interface Props { categories: MenuCategory[]; }
+const { categories } = Astro.props;
+---
+<nav class="bs-category-chips" aria-label="Menu categories" id="bs-cat-nav">
+  {categories.map((cat,i)=>(<button class="bs-chip" data-category={cat.id} role="tab" aria-selected={i===0}>{cat.name}</button>))}
+</nav>
+<script>
+  document.addEventListener('astro:page-load', function() {
+    const nav = document.getElementById('bs-cat-nav');
+    if (!nav) return;
+    const btns = nav.querySelectorAll('.bs-chip');
+    const secs = document.querySelectorAll('section[id^="category-"]');
+    btns.forEach(function(b) {
+      b.addEventListener('click', function() {
+        const t = document.getElementById('category-' + b.dataset.category);
+        if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    const obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          const id = e.target.id.replace('category-', '');
+          btns.forEach(function(b) {
+            const a = b.dataset.category === id;
+            b.classList.toggle('active', a);
+            b.setAttribute('aria-selected', String(a));
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 });
+    secs.forEach(function(s) { obs.observe(s); });
+  });
+</script>

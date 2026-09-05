@@ -102,6 +102,14 @@ export const RestaurantSchema = z.object({
     "playful-casual",
     "bold-street",
   ]).default("fine-dining"),
+  // Template system - complete design personality (layout, typography, motion, components)
+  template: z.enum([
+    "editorial-classic",
+    "modern-minimal",
+    "bold-street",
+    "warm-rustic",
+    "vibrant-playful",
+  ]).optional().default("editorial-classic"),
   story: z.object({
     heading: z.string().optional(),
     body: z.string(),

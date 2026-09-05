@@ -4,6 +4,12 @@ on:
   pull_request:
     paths:
       - "restaurants/**"
+      - "src/**"
+      - "scripts/**"
+      - "package.json"
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -13,6 +19,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - run: npm ci
-      - run: npm run validate:configs
-      - run: npm run check:contrast
+      - name: Validate configs (schema + assets + slugs + item IDs)
+        run: npm run validate:configs
+      - name: Check WCAG contrast on every restaurant palette
+        run: npm run check:contrast
+      - name: Build (catches template/schema errors at build time)
+        run: npm run build

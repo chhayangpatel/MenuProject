@@ -5,14 +5,21 @@
   "description": "A serene Japanese-inspired café focused on clean, plant-forward food and premium matcha drinks.",
   "logo": "logo.svg",
   "coverImage": "https://images.unsplash.com/photo-1515823064-d6e0c04616ea?w=1600&q=80",
-  "cuisine": ["Japanese", "Café", "Plant-Based"],
+  "cuisine": [
+    "Japanese",
+    "Café",
+    "Plant-Based"
+  ],
   "priceRange": "$$",
   "moodPreset": "modern-minimal",
+  "template": "modern-minimal",
   "story": {
     "heading": "A Place for Stillness",
     "body": "Born from a trip to Uji, Japan, Matcha & Co. brings the meditative ritual of tea to everyday dining. Every dish is crafted to be as nourishing as it is beautiful."
   },
-  "hero": { "style": "fullbleed" },
+  "hero": {
+    "style": "fullbleed"
+  },
   "contact": {
     "phone": "+1-555-0234",
     "email": "hello@matchaco.example",
@@ -48,103 +55,744 @@
   },
   "menu": [
     {
-      "id": "drinks",
-      "name": "Matcha Drinks",
-      "description": "Ceremonial-grade matcha sourced from Uji, Kyoto.",
-      "heroImage": "https://images.unsplash.com/photo-1515823064-d6e0c04616ea?w=1600&q=80",
-      "heroQuote": "\"Every cup is a small ritual.\"",
+      "id": "signature-matcha",
+      "name": "Signature Matcha",
+      "description": "12 dishes, prepared to order",
       "items": [
         {
-          "id": "classic-matcha-latte",
-          "name": "Classic Matcha Latte",
-          "description": "Whisked ceremonial matcha, oat milk, light sweetness",
-          "price": 7.5,
-          "image": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&q=80",
-          "tags": ["vegan"],
-          "available": true,
-          "featured": true,
-          "popularity": "most-ordered"
-        },
-        {
-          "id": "iced-hojicha",
-          "name": "Iced Hōjicha",
-          "description": "Roasted green tea over ice, smooth and caramel-like",
+          "id": "ceremonial-iced-matcha",
+          "name": "Ceremonial Iced Matcha",
+          "description": "First-harvest Uji matcha, spring water, no sweetener",
           "price": 6.5,
-          "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
-          "tags": ["vegan"],
-          "available": true
-        },
-        {
-          "id": "matcha-espresso",
-          "name": "Matcha Espresso Tonic",
-          "description": "Ceremonial matcha, espresso shot, tonic water, citrus",
-          "price": 8,
-          "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400&q=80",
-          "tags": ["vegan"],
-          "available": true,
-          "popularity": "staff-favorite"
-        }
-      ]
-    },
-    {
-      "id": "bowls",
-      "name": "Nourish Bowls",
-      "description": "Balanced, seasonal, plant-forward.",
-      "heroImage": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1600&q=80",
-      "items": [
-        {
-          "id": "green-goddess",
-          "name": "Green Goddess Bowl",
-          "description": "Brown rice, edamame, avocado, pickled cucumber, sesame dressing",
-          "price": 16,
-          "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
-          "tags": ["vegan", "gluten-free"],
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
           "available": true,
           "featured": true
         },
         {
-          "id": "miso-tofu",
-          "name": "Miso Glazed Tofu",
-          "description": "Silken tofu, white miso glaze, bok choy, black sesame",
-          "price": 15,
-          "image": "https://images.unsplash.com/photo-1615937461627-bf3f0f8b3b94?w=400&q=80",
-          "tags": ["vegetarian", "gluten-free"],
-          "available": true
-        },
-        {
-          "id": "shiso-salmon",
-          "name": "Shiso Salmon Bowl",
-          "description": "Miso-cured salmon, shiso leaf, pickled ginger, scallions",
-          "price": 19,
-          "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=80",
-          "tags": ["gluten-free"],
-          "available": true,
-          "popularity": "trending"
-        }
-      ]
-    },
-    {
-      "id": "sweets",
-      "name": "Sweets",
-      "items": [
-        {
-          "id": "matcha-roll",
-          "name": "Matcha Swiss Roll",
-          "description": "Light sponge, matcha cream, ceremonial matcha dust",
-          "price": 8.5,
-          "image": "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=400&q=80",
-          "tags": ["vegetarian"],
+          "id": "matcha-latte",
+          "name": "Matcha Latte",
+          "description": "Stone-milled matcha, your choice of milk, lightly sweet",
+          "price": 6,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
           "available": true,
           "featured": true
         },
         {
-          "id": "mochi",
-          "name": "Matcha Mochi Ice Cream",
-          "description": "Three pieces: classic, black sesame, yuzu",
+          "id": "strawberry-matcha-cloud",
+          "name": "Strawberry Matcha Cloud",
+          "description": "Fresh strawberry puree, oat milk, ceremonial matcha",
+          "price": 7.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "hojicha-roast-latte",
+          "name": "Hojicha Roast Latte",
+          "description": "Roasted green tea, caramel notes, steamed milk",
+          "price": 6,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-espresso-fusion",
+          "name": "Matcha Espresso Fusion",
+          "description": "Dirty matcha — ceremonial matcha under a double shot",
           "price": 7,
-          "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80",
-          "tags": ["vegetarian", "gluten-free"],
-          "available": true
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "coconut-matcha-cooler",
+          "name": "Coconut Matcha Cooler",
+          "description": "Coconut water, lime, matcha, mint",
+          "price": 7,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-affogato",
+          "name": "Matcha Affogato",
+          "description": "Vanilla soft serve, matcha shot, mochi",
+          "price": 8,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "genmaicha-latte",
+          "name": "Genmaicha Latte",
+          "description": "Poppy roasted rice tea, oat milk",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-fizz",
+          "name": "Matcha Fizz",
+          "description": "Yuzu, sparkling water, matcha foam",
+          "price": 7,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "brown-sugar-matcha",
+          "name": "Brown Sugar Matcha",
+          "description": "Caramelized brown sugar, milk, matcha",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "iced-sencha",
+          "name": "Iced Sencha",
+          "description": "Cold-brewed spring sencha, clean and grassy",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-cream-top",
+          "name": "Matcha Cream Top",
+          "description": "Cold brew coffee crowned with sweet matcha cream",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "coffee-bar",
+      "name": "Coffee Bar",
+      "description": "8 dishes, prepared to order",
+      "items": [
+        {
+          "id": "espresso",
+          "name": "Espresso",
+          "description": "Seasonal single origin",
+          "price": 3.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "flat-white",
+          "name": "Flat White",
+          "description": "Velvet micro-foam, double ristretto",
+          "price": 5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cortado",
+          "name": "Cortado",
+          "description": "Equal parts espresso and warm milk",
+          "price": 4.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "pour-over-v60",
+          "name": "Pour Over V60",
+          "description": "Single-origin, rotating roast",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "oat-latte",
+          "name": "Oat Latte",
+          "description": "Barista oat milk, double shot",
+          "price": 5.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "honey-lavender-latte",
+          "name": "Honey Lavender Latte",
+          "description": "House lavender syrup, local honey",
+          "price": 6.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "cold-brew",
+          "name": "Cold Brew",
+          "description": "16-hour slow steep, chocolatey",
+          "price": 5.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "mocha-noir",
+          "name": "Mocha Noir",
+          "description": "70% dark chocolate, espresso, milk",
+          "price": 6,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "tea-house",
+      "name": "Tea House",
+      "description": "6 dishes, prepared to order",
+      "items": [
+        {
+          "id": "gyokuro",
+          "name": "Gyokuro",
+          "description": "Shade-grown jewel of Japanese tea",
+          "price": 9,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "sencha",
+          "name": "Sencha",
+          "description": "Steamed, grassy, classic",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "jasmine-pearl",
+          "name": "Jasmine Pearl",
+          "description": "Hand-rolled, delicately perfumed",
+          "price": 6,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "oolong-tieguanyin",
+          "name": "Oolong Tieguanyin",
+          "description": "Floral, creamy, multiple infusions",
+          "price": 7,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "yuzu-herbal",
+          "name": "Yuzu Herbal",
+          "description": "Caffeine-free citrus calm",
+          "price": 5.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "roasted-barley-mugicha",
+          "name": "Roasted Barley (Mugicha)",
+          "description": "Nutty, served cold",
+          "price": 4.5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "bakery",
+      "name": "Bakery",
+      "description": "10 dishes, prepared to order",
+      "items": [
+        {
+          "id": "matcha-basque-cheesecake",
+          "name": "Matcha Basque Cheesecake",
+          "description": "Burnt top, molten center",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "yuzu-tart",
+          "name": "Yuzu Tart",
+          "description": "Citrus curd, torched meringue",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "hoji-cheesecake-jar",
+          "name": "Hoji cheesecake Jar",
+          "description": "Roasted-tea cheesecake, biscuit crumb",
+          "price": 7.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-roll-cake",
+          "name": "Matcha Roll Cake",
+          "description": "Sponge, whipped matcha cream",
+          "price": 7,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "black-sesame-croissant",
+          "name": "Black Sesame Croissant",
+          "description": "Laminated, sesame frangipane",
+          "price": 5.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "mochi-muffin",
+          "name": "Mochi Muffin",
+          "description": "Chewy rice flour, black sesame",
+          "price": 4.5,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "butter-mochi-loaf-slice",
+          "name": "Butter Mochi Loaf Slice",
+          "description": "Coconut, golden edges",
+          "price": 4,
+          "tags": [
+            "vegetarian",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "melonpan",
+          "name": "Melonpan",
+          "description": "Cookie-crust brioche",
+          "price": 4.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "anko-danish",
+          "name": "Anko Danish",
+          "description": "Red bean, laminated pastry",
+          "price": 5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-cookie",
+          "name": "Matcha Cookie",
+          "description": "White chocolate chunks, sea salt",
+          "price": 3.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "all-day-brunch",
+      "name": "All-Day Brunch",
+      "description": "10 dishes, prepared to order",
+      "items": [
+        {
+          "id": "matcha-pancake-stack",
+          "name": "Matcha Pancake Stack",
+          "description": "Three buttermilk pancakes, matcha cream, berries",
+          "price": 14,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": "shokupan-toast",
+          "name": "Shokupan Toast",
+          "description": "Thick-cut milk bread, whipped butter, honey",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "tamago-sando",
+          "name": "Tamago Sando",
+          "description": "Japanese egg salad, milk bread, chive",
+          "price": 10,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "katsu-sando",
+          "name": "Katsu Sando",
+          "description": "Panko pork cutlet, tonkatsu sauce, cabbage",
+          "price": 14,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "smoked-salmon-toast",
+          "name": "Smoked Salmon Toast",
+          "description": "Sourdough, cream cheese, cucumber, dill",
+          "price": 13,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "avocado-rice-bowl",
+          "name": "Avocado Rice Bowl",
+          "description": "Brown rice, avocado, edamame, sesame",
+          "price": 12,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "miso-mushroom-bowl",
+          "name": "Miso Mushroom Bowl",
+          "description": "Grilled mushrooms, miso butter, rice, egg",
+          "price": 13,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "chia-parfait",
+          "name": "Chia Parfait",
+          "description": "Matcha chia, coconut yogurt, granola",
+          "price": 9,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "onigiri-duo",
+          "name": "Onigiri Duo",
+          "description": "Two rice triangles — salmon or umeboshi",
+          "price": 8,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "soft-serve-duo",
+          "name": "Soft Serve Duo",
+          "description": "Matcha + hojicha twist, mochi topping",
+          "price": 6.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "nourish-bowls",
+      "name": "Nourish Bowls",
+      "description": "6 dishes, prepared to order",
+      "items": [
+        {
+          "id": "salmon-poke-bowl",
+          "name": "Salmon Poke Bowl",
+          "description": "Soy-sesame salmon, sushi rice, edamame, avocado",
+          "price": 17,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "tofu-teriyaki-bowl",
+          "name": "Tofu Teriyaki Bowl",
+          "description": "Crispy tofu, teriyaki, pickles, rice",
+          "price": 14,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "chicken-katsu-bowl",
+          "name": "Chicken Katsu Bowl",
+          "description": "Panko chicken, curry drizzle, slaw",
+          "price": 16,
+          "tags": [],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "veggie-rainbow-bowl",
+          "name": "Veggie Rainbow Bowl",
+          "description": "Six vegetables, tahini-ginger dressing",
+          "price": 13,
+          "tags": [
+            "vegan",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "beef-bulgogi-bowl",
+          "name": "Beef Bulgogi Bowl",
+          "description": "Marinated ribeye, kimchi, fried egg",
+          "price": 18,
+          "tags": [],
+          "spicyLevel": 1,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "tuna-tataki-bowl",
+          "name": "Tuna Tataki Bowl",
+          "description": "Seared tuna, ponzu, wakame, radish",
+          "price": 19,
+          "tags": [
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "something-sweet",
+      "name": "Something Sweet",
+      "description": "6 dishes, prepared to order",
+      "items": [
+        {
+          "id": "matcha-soft-serve",
+          "name": "Matcha Soft Serve",
+          "description": "Single swirl, waffle crisp",
+          "price": 5.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "warabi-mochi",
+          "name": "Warabi Mochi",
+          "description": "Bracken-starch jelly, roasted soybean flour",
+          "price": 6,
+          "tags": [
+            "vegan",
+            "gluten-free"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "dorayaki",
+          "name": "Dorayaki",
+          "description": "Fluffy pancake sandwich, red bean",
+          "price": 5.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "matcha-tiramisu",
+          "name": "Matcha Tiramisu",
+          "description": "Layered, lightly bitter, cream",
+          "price": 8,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "yuzu-sorbet",
+          "name": "Yuzu Sorbet",
+          "description": "Dairy-free, intensely citrus",
+          "price": 5,
+          "tags": [
+            "vegan"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
+        },
+        {
+          "id": "mille-crepe-slice",
+          "name": "Mille Crepe Slice",
+          "description": "Twenty layers, matcha cream",
+          "price": 7.5,
+          "tags": [
+            "vegetarian"
+          ],
+          "spicyLevel": 0,
+          "available": true,
+          "featured": false
         }
       ]
     }
