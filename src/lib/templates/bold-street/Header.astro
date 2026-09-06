@@ -1,6 +1,7 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveLogo } from '../../../lib/assets';
+import { basePath } from '../../../lib/base';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
 const { contact } = restaurant;
@@ -8,7 +9,7 @@ const logoUrl = resolveLogo(restaurant);
 ---
 <header class="bs-nav-bar">
   <div class="bs-nav-inner">
-    <a href="/" class="bs-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:0;color:rgba(255,255,255,0.6);transition:all 0.2s;background:rgba(255,23,68,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF1744" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>
+    <a href={basePath('/')} class="bs-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:0;color:rgba(255,255,255,0.6);transition:all 0.2s;background:rgba(255,23,68,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF1744" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>
     <img src={logoUrl} alt={restaurant.name} class="bs-nav-logo" />
     <span class="bs-nav-name">{restaurant.name}</span>
     <nav class="bs-nav-actions" style="display:flex;gap:0.5rem;" aria-label="Contact">

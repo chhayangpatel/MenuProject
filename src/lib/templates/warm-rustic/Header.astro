@@ -1,6 +1,7 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveLogo } from '../../../lib/assets';
+import { basePath } from '../../../lib/base';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
 const { contact } = restaurant;
@@ -8,7 +9,7 @@ const logoUrl = resolveLogo(restaurant);
 ---
 <header class="wr-nav-bar">
   <div class="wr-nav-inner">
-    <a href="/" class="wr-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;color:#5D4A3A;transition:all 0.2s;background:rgba(196,90,42,0.1);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>
+    <a href={basePath('/')} class="wr-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;color:#5D4A3A;transition:all 0.2s;background:rgba(196,90,42,0.1);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>
     <img src={logoUrl} alt={restaurant.name} class="wr-nav-logo" />
     <span class="wr-nav-name">{restaurant.name}</span>
     <nav class="wr-nav-actions" style="display:flex;gap:0.5rem;" aria-label="Contact">

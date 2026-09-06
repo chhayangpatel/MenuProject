@@ -1,6 +1,7 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveLogo } from '../../../lib/assets';
+import { basePath } from '../../../lib/base';
 
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
@@ -10,7 +11,7 @@ const logoUrl = resolveLogo(restaurant);
 
 <header class="mm-nav-pill">
   <div class="mm-nav-pill-inner" id="mm-nav-pill">
-    <a href="/" class="mm-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:rgba(26,26,26,0.5);transition:all 0.2s;">
+    <a href={basePath('/')} class="mm-back-link" aria-label="Back" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:rgba(26,26,26,0.5);transition:all 0.2s;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </a>
     <img src={logoUrl} alt={restaurant.name} class="mm-nav-logo" />

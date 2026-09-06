@@ -1,6 +1,7 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveLogo } from '../../../lib/assets';
+import { basePath } from '../../../lib/base';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
 const { contact } = restaurant;
@@ -8,7 +9,7 @@ const logoUrl = resolveLogo(restaurant);
 ---
 <nav class="vp-nav-bottom" id="vp-nav-bottom" aria-label="Main navigation">
   <div class="vp-nav-inner">
-    <a href="/" class="vp-nav-btn" aria-label="Home" style="flex:1;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+    <a href={basePath('/')} class="vp-nav-btn" aria-label="Home" style="flex:1;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
     <button class="vp-nav-btn" data-target="menu" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg><span>Menu</span></button>
     {contact?.phone && <a href={"tel:"+contact.phone} class="vp-nav-btn" aria-label="Call"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2"/></svg><span>Call</span></a>}
     {contact?.googleMapsUrl && <a href={contact.googleMapsUrl} target="_blank" rel="noopener" class="vp-nav-btn" aria-label="Directions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Map</span></a>}

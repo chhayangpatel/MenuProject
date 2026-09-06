@@ -297,7 +297,7 @@ const motionFor = (t) =>
                 demo ? (
                     <p>
                         Demo restaurant:{" "}
-                        <a href={`/r/${demo.slug}/`}>{demo.name}</a> — every
+                        <a href={basePath(`/r/${demo.slug}/`)}>{demo.name}</a> — every
                         template renders the same config data.
                     </p>
                 ) : (

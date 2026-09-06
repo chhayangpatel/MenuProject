@@ -1,4 +1,6 @@
 ---
+import { basePath } from '../../lib/base';
+
 interface Props {
   name: string;
   description?: string;
@@ -11,7 +13,7 @@ interface Props {
 
 const { name, description, heroImage, heroQuote, slug, categoryId, categoryIndex } = Astro.props;
 const imageUrl = heroImage
-  ? (heroImage.startsWith('http') ? heroImage : `/r/${slug}/assets/${heroImage}`)
+  ? (heroImage.startsWith('http') ? heroImage : basePath(`/r/${slug}/assets/${heroImage}`))
   : null;
 ---
 

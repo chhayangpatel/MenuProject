@@ -1,5 +1,6 @@
 ---
 import type { Restaurant } from '../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../lib/assets';
 
 interface Props {
   restaurant: Restaurant;
@@ -9,10 +10,8 @@ const { restaurant } = Astro.props;
 const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 // Handle both local assets and external URLs
-const coverUrl = hasCover
-  ? (restaurant.coverImage.startsWith('http') ? restaurant.coverImage : '/r/' + restaurant.slug + '/assets/' + restaurant.coverImage)
-  : '';
-const logoUrl = restaurant.logo.startsWith('http') ? restaurant.logo : '/r/' + restaurant.slug + '/assets/' + restaurant.logo;
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
 ---
 
 <div class="hero-wrapper relative w-full overflow-hidden" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 70vh;' : 'padding: 5rem 1.5rem 3rem;'}>

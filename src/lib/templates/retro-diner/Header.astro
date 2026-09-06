@@ -1,12 +1,13 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveLogo } from '../../../lib/assets';
+import { basePath } from '../../../lib/base';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
 const logoUrl = resolveLogo(restaurant);
 ---
 <nav class="rd-nav">
-  <a href="/" class="rd-nav-back">← Back</a>
+  <a href={basePath('/')} class="rd-nav-back">← Back</a>
   <div class="rd-nav-center">
     <img src={logoUrl} alt="" class="rd-nav-logo" />
     <span class="rd-nav-name">{restaurant.name}</span>

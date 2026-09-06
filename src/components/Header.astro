@@ -1,5 +1,7 @@
 ---
 import type { Restaurant } from '../schemas/restaurant.schema';
+import { resolveLogo } from '../lib/assets';
+import { basePath } from '../lib/base';
 
 interface Props {
   restaurant: Restaurant;
@@ -7,13 +9,13 @@ interface Props {
 
 const { restaurant } = Astro.props;
 const { contact } = restaurant;
-const logoUrl = '/r/' + restaurant.slug + '/assets/' + restaurant.logo;
+const logoUrl = resolveLogo(restaurant);
 ---
 
 <header class="site-header" id="main-header">
   <div class="header-pill" id="header-pill">
     <div class="scroll-progress" id="scroll-progress"></div>
-    <a href="/" class="back-link" aria-label="Back to all restaurants">
+    <a href={basePath('/')} class="back-link" aria-label="Back to all restaurants">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
       </svg>

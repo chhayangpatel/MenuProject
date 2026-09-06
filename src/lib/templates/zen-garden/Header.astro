@@ -1,12 +1,13 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveLogo } from '../../../lib/assets';
+import { basePath } from '../../../lib/base';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
 const logoUrl = resolveLogo(restaurant);
 ---
 <nav class="zg-nav">
-  <a href="/" class="zg-nav-back">←</a>
+  <a href={basePath('/')} class="zg-nav-back">←</a>
   <span class="zg-nav-name">{restaurant.name}</span>
 </nav>
 <style>
