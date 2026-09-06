@@ -8,16 +8,21 @@ import NewRestaurantWizard from './NewRestaurantWizard';
 type AdminView = 'dashboard' | 'editor' | 'new';
 
 export default function AdminApp() {
-  const [token, setToken] = useState<string | null>(() => getStoredToken());
+  // Start with null so the prerendered HTML (no token) matches the first
+  // client render — reading localStorage during initial render causes a
+  // React hydration mismatch. We sync from storage after mount instead.
+  const [token, setToken] = useState<string | null>(null);
   const [view, setView] = useState<AdminView>('dashboard');
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if token is still valid on mount
-    if (token) {
-      localStorage.setItem('menu_admin_token', token);
+    // Restore persisted token after mount (hydration-safe)
+    const stored = getStoredToken();
+    if (stored) {
+      setToken(stored);
+      localStorage.setItem('menu_admin_token', stored);
     }
-  }, [token]);
+  }, []);
 
   function handleLogin() {
     setToken(getStoredToken());
