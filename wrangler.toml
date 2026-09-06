@@ -1,0 +1,5 @@
+# Project name uses a Pages-specific config; do NOT add an assets binding called "ASSETS"
+# since that name conflicts with the reserved Pages binding.
+name = "menuproject"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "./dist"
