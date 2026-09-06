@@ -60,6 +60,13 @@ ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject-1mg.pages.
 | `npm run deploy:pages` | `wrangler pages deploy dist --project-name menuproject` |
 | Worker deploy | `cd worker && npx wrangler deploy` |
 
+Local **production** deploy (build with the Cloudflare environment, then publish to `main`):
+
+```powershell
+$env:CF_PAGES = '1'; npm run build
+npx wrangler pages deploy dist --project-name menuproject --branch main
+```
+
 ---
 
 ## 3. Build configuration (auto-detection)
@@ -91,12 +98,14 @@ Dashboard → Workers & Pages → `menuproject` → **Settings → Build**:
 | Setting | Value |
 |---|---|
 | Build command | `npm run build` |
-| Deploy command | `npx wrangler pages deploy dist --project-name menuproject` |
+| Deploy command | `npx wrangler pages deploy dist --project-name menuproject --branch main` |
 
 > **Warning:** never use `npx wrangler deploy` (without `pages`) here. That is the **Workers** command and fails on a Pages project with
 > `✘ [ERROR] Missing entry-point to Worker script or to assets directory`.
 >
 > Alternative: leave the Deploy command **empty** — Pages then auto-deploys `pages_build_output_dir` with its own internal auth and no API token is needed.
+
+> **Important — `--branch main`:** inside the Pages CI build, wrangler may publish the deployment as a **preview** (e.g. `https://head.menuproject-1mg.pages.dev`) instead of production. Passing `--branch main` explicitly makes it the production deployment served at `https://menuproject-1mg.pages.dev`.
 
 ---
 
@@ -146,6 +155,7 @@ Create/update tokens at https://dash.cloudflare.com/profile/api-tokens.
 | `Missing entry-point to Worker script or to assets directory` | Used `wrangler deploy` (Workers command) on the Pages project | Deploy command must be `npx wrangler pages deploy …` (or empty) |
 | `Authentication error [code: 10000]` on `/pages/projects/…` | `CLOUDFLARE_API_TOKEN` lacks `Cloudflare Pages → Edit` | Fix token permissions (§5) |
 | `The Pages project "menuproject" does not exist` | Project was never created in the account | Create it (§6 step 1) |
+| Site served at `head.menuproject-1mg.pages.dev`, production 404 | Deploy published as a preview branch instead of production | Add `--branch main` to the deploy command (§4) |
 | Site loads but CSS/JS 404s, URLs contain `/MenuProject/` | Build ran with the GitHub Pages base path | Should no longer happen (auto-detection, §3); verify `CF_PAGES` is present and no stale `SITE_BASE` variable is set |
 | Admin panel can't reach API / CORS errors | New origin not in worker's `ALLOWED_ORIGIN` | Add origin to `worker/wrangler.toml` and redeploy worker |
 
