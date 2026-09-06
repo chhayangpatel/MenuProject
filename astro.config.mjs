@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, loadEnv } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -8,16 +8,12 @@ import tailwindcss from '@tailwindcss/vite';
 // Override via SITE_URL env var (set as a repo variable in CI).
 const site = process.env.SITE_URL || 'https://chhayangpatel.github.io/MenuProject/';
 
-// Worker URL: Vite auto-exposes VITE_* env vars via import.meta.env, but
-// we also define it explicitly here as a belt-and-suspenders fallback.
-// CI passes this from the repo variable; .env provides it locally.
-const WORKER_URL = process.env.VITE_WORKER_URL;
-
-if (!WORKER_URL) {
-  console.warn(
-    '⚠ VITE_WORKER_URL is not set. The admin dashboard will not work in production.',
-  );
-}
+// Worker URL — loaded from .env at config-eval time so it works in both:
+//   - Local dev: reads VITE_WORKER_URL from .env  (http://localhost:8787)
+//   - CI build:   reads from process.env (repo variable)
+const envName = process.env.NODE_ENV ?? 'development';
+const env = loadEnv(envName, process.cwd(), '', '');
+const WORKER_URL = process.env.VITE_WORKER_URL ?? env.VITE_WORKER_URL ?? '';
 
 // Static output. We do NOT install @astrojs/cloudflare here because the
 // adapter pulls node:fs and node:path into a "prerender" environment that
@@ -31,9 +27,10 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     define: {
-      // Force the worker URL into the client bundle at build time.
-      // import.meta.env.VITE_WORKER_URL reads this value at runtime.
-      'import.meta.env.VITE_WORKER_URL': JSON.stringify(WORKER_URL ?? ''),
+      // Bake the worker URL into the client bundle at build time.
+      // In dev, loadEnv reads .env so this picks up localhost:8787.
+      // In CI, process.env.VITE_WORKER_URL (repo var) takes priority.
+      'import.meta.env.VITE_WORKER_URL': JSON.stringify(WORKER_URL),
     },
   },
 });

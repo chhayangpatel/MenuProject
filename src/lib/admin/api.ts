@@ -1,6 +1,11 @@
-// Astro's envSchema guarantees this is set at build time. If it's empty
-// the build fails — so we never silently fall back to localhost in prod.
+// VITE_WORKER_URL is baked in via vite.define in astro.config.mjs.
+// If it's missing we get a clear error rather than a silent 404.
 const WORKER_URL = import.meta.env.VITE_WORKER_URL as string;
+if (!WORKER_URL) {
+  throw new Error(
+    'VITE_WORKER_URL is not set — check .env (local) or the CI repo variable VITE_WORKER_URL (prod)',
+  );
+}
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const url = path.startsWith('http') ? path : `${WORKER_URL}${path}`;
