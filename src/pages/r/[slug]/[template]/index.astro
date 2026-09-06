@@ -6,6 +6,7 @@
  * A small floating switcher bar links all template variants.
  */
 import { loadAllRestaurants } from "../../../../lib/loadRestaurants";
+import { basePath } from "../../../../lib/base";
 import RestaurantLayout from "../../../../layouts/RestaurantLayout.astro";
 import ItemDetailSheet from "../../../../components/ItemDetailSheet";
 import SearchFilterBar from "../../../../components/SearchFilterBar";
@@ -196,7 +197,7 @@ const switcherLinks = Object.values(templates).map((t) => ({
             </a>
         ))
     }
-    <a href={`/r/${restaurant.slug}/`} class="tpl-switcher-exit"
+    <a href={basePath(`/r/${restaurant.slug}/`)} class="tpl-switcher-exit"
         >✕ Exit preview</a
     >
 </nav>

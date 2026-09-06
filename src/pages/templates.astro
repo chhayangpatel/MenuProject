@@ -6,6 +6,7 @@
 import { templates } from "../lib/templates/registry";
 import { loadAllRestaurants } from "../lib/loadRestaurants";
 import { resolveLogo, resolveCover } from "../lib/assets";
+import { basePath } from "../lib/base";
 
 const restaurants = await loadAllRestaurants();
 const demo = restaurants[0];
@@ -265,21 +266,21 @@ const motionFor = (t) =>
                                         {t.id === demo.template ? (
                                             <a
                                                 class="btn primary"
-                                                href={`/r/${demo.slug}/`}
+                                                href={basePath(`/r/${demo.slug}/`)}
                                             >
                                                 Live demo
                                             </a>
                                         ) : (
                                             <a
                                                 class="btn primary"
-                                                href={`/r/${demo.slug}/${t.id}/`}
+                                                href={basePath(`/r/${demo.slug}/${t.id}/`)}
                                             >
                                                 Preview
                                             </a>
                                         )}
                                         <a
                                             class="btn"
-                                            href={`/r/${demo.slug}/${t.id}/`}
+                                            href={basePath(`/r/${demo.slug}/${t.id}/`)}
                                         >
                                             Compare
                                         </a>

@@ -7,6 +7,7 @@ import TemplateStyleManager from "../../../components/TemplateStyleManager.astro
 import { getTemplate, templates } from "../../../lib/templates/registry";
 import { templateComponents } from "../../../lib/templates/components";
 import { resolveMenuItemImage } from "../../../lib/assets";
+import { basePath } from "../../../lib/base";
 import type { Restaurant } from "../../../schemas/restaurant.schema";
 
 export async function getStaticPaths() {
@@ -239,8 +240,8 @@ const flatItems = menu
       <a
         href={
           t.id === restaurant.template
-            ? `/r/${restaurant.slug}/`
-            : `/r/${restaurant.slug}/${t.id}/`
+            ? basePath(`/r/${restaurant.slug}/`)
+            : basePath(`/r/${restaurant.slug}/${t.id}/`)
         }
         class:list={["tpl-switcher-link", { active: t.id === template.id }]}
         aria-current={t.id === template.id ? "page" : undefined}
