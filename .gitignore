@@ -60,6 +60,7 @@ worker/.dev.vars.*
 .clinerules
 .agents/
 .superpowers/
+skills-lock.json
 
 # ---- Other editors --------------------------------------------------------------
 .idea/
