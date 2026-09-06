@@ -6,8 +6,14 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // Site URL: GitHub Pages project site by default.
-// Override via SITE_URL env var (set as a repo variable in CI).
+// Override via SITE_URL env var (set as a repo variable in CI, or in the
+// Cloudflare Pages dashboard for the Pages deployment).
 const site = process.env.SITE_URL || 'https://chhayangpatel.github.io/MenuProject/';
+
+// Base path: GitHub Pages serves the site from /MenuProject. Cloudflare
+// Pages serves from the root, so set SITE_BASE=/ there. Defaults keep the
+// GitHub Pages deployment unchanged.
+const base = process.env.SITE_BASE || '/MenuProject';
 
 // Worker URL — loaded from .env at config-eval time so it works in both:
 //   - Local dev: reads VITE_WORKER_URL from .env  (http://localhost:8787)
@@ -23,7 +29,7 @@ const WORKER_URL = process.env.VITE_WORKER_URL ?? env.VITE_WORKER_URL ?? '';
 // dist/client/MenuProject output directly without needing the adapter.
 export default defineConfig({
   site,
-  base: '/MenuProject',
+  base,
   output: 'static',
   integrations: [react(), sitemap()],
   vite: {
