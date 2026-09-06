@@ -151,7 +151,7 @@ export default function RestaurantEditor({ slug, token, onBack }: RestaurantEdit
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: 32 }}>
         {activeTab === 'info' && <InfoTab config={config} updateConfig={updateConfig} />}
-        {activeTab === 'theme' && <ThemeTab config={config} updateConfig={updateConfig} />}
+        {activeTab === 'theme' && <ThemeTab config={config} updateConfig={updateConfig} slug={slug} />}
         {activeTab === 'menu' && <MenuTab config={config} updateConfig={updateConfig} />}
         {activeTab === 'settings' && <SettingsTab config={config} updateConfig={updateConfig} />}
       </main>

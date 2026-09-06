@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Restaurant } from '../../schemas/restaurant.schema';
 import type { TemplateId } from '../../lib/templates/registry';
+import { basePath } from '../../lib/base';
 
 const TEMPLATES: { id: TemplateId; label: string; description: string; mood: string }[] = [
   { id: 'editorial-classic', label: 'Editorial Classic', description: 'Refined, editorial typography', mood: 'Fine Dining' },
@@ -27,9 +28,10 @@ const BORDER_RADII = [
 interface ThemeTabProps {
   config: Restaurant;
   updateConfig: (patch: Record<string, any>) => void;
+  slug: string;
 }
 
-export default function ThemeTab({ config, updateConfig }: ThemeTabProps) {
+export default function ThemeTab({ config, updateConfig, slug }: ThemeTabProps) {
   const theme = config.theme || { primaryColor: '#1A1612', secondaryColor: '#FDFBF7', accentColor: '#C9A227', borderRadius: 'md', mode: 'light' };
 
   function updateTheme(patch: Record<string, any>) {
@@ -63,24 +65,59 @@ export default function ThemeTab({ config, updateConfig }: ThemeTabProps) {
       <Section title="Design Template">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
           {TEMPLATES.map(t => (
-            <button
+            <div
               key={t.id}
-              onClick={() => updateConfig({ template: t.id })}
               style={{
-                padding: 16,
-                background: config.template === t.id ? 'var(--admin-accent-soft)' : 'var(--admin-surface)',
-                border: `2px solid ${config.template === t.id ? 'var(--admin-accent)' : 'var(--admin-border)'}`,
-                borderRadius: 10,
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.15s',
-                color: config.template === t.id ? 'var(--admin-accent)' : 'var(--admin-text)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
               }}
             >
-              <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4, fontFamily: 'var(--admin-font-body)' }}>{t.label}</div>
-              <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginBottom: 4 }}>{t.description}</div>
-              <div style={{ fontSize: 11, color: 'var(--admin-text-dim)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{t.mood}</div>
-            </button>
+              <button
+                onClick={() => updateConfig({ template: t.id })}
+                style={{
+                  padding: 16,
+                  background: config.template === t.id ? 'var(--admin-accent-soft)' : 'var(--admin-surface)',
+                  border: `2px solid ${config.template === t.id ? 'var(--admin-accent)' : 'var(--admin-border)'}`,
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.15s',
+                  color: config.template === t.id ? 'var(--admin-accent)' : 'var(--admin-text)',
+                }}
+              >
+                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4, fontFamily: 'var(--admin-font-body)' }}>{t.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginBottom: 4 }}>{t.description}</div>
+                <div style={{ fontSize: 11, color: 'var(--admin-text-dim)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{t.mood}</div>
+              </button>
+              <a
+                href={`${basePath(`/admin/preview/${slug}/${t.id}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  padding: '8px 12px',
+                  background: 'var(--admin-surface)',
+                  border: '1px solid var(--admin-border)',
+                  borderRadius: 8,
+                  color: 'var(--admin-accent)',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  fontFamily: 'var(--admin-font-body)',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--admin-accent-soft)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--admin-surface)'; }}
+              >
+                <span style={{ fontSize: 14 }}>🔍</span>
+                Preview
+              </a>
+            </div>
           ))}
         </div>
       </Section>

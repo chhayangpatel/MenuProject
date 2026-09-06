@@ -4,10 +4,9 @@ import RestaurantLayout from "../../../layouts/RestaurantLayout.astro";
 import ItemDetailSheet from "../../../components/ItemDetailSheet";
 import SearchFilterBar from "../../../components/SearchFilterBar";
 import TemplateStyleManager from "../../../components/TemplateStyleManager.astro";
-import { getTemplate, templates } from "../../../lib/templates/registry";
+import { getTemplate } from "../../../lib/templates/registry";
 import { templateComponents } from "../../../lib/templates/components";
 import { resolveMenuItemImage } from "../../../lib/assets";
-import { basePath } from "../../../lib/base";
 import type { Restaurant } from "../../../schemas/restaurant.schema";
 
 export async function getStaticPaths() {
@@ -232,122 +231,6 @@ const flatItems = menu
   if (document.readyState !== "loading") setupTopButton();
 </script>
 
-<!-- Template Switcher Bar -->
-<nav class="tpl-switcher" aria-label="Template switcher">
-  <span class="tpl-switcher-label">Templates</span>
-  {
-    Object.values(templates).map((t) => (
-      <a
-        href={
-          t.id === restaurant.template
-            ? basePath(`/r/${restaurant.slug}/`)
-            : basePath(`/r/${restaurant.slug}/${t.id}/`)
-        }
-        class:list={["tpl-switcher-link", { active: t.id === template.id }]}
-        aria-current={t.id === template.id ? "page" : undefined}
-      >
-        <span
-          class="tpl-switcher-dot"
-          style={"background: " + (t.colorDefaults.accentColor || "#D4AF37")}
-        />
-        {t.name}
-      </a>
-    ))
-  }
-</nav>
-
-<style is:global>
-  .tpl-switcher {
-    position: fixed;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0.5rem 0.75rem;
-    background: rgba(11, 11, 13, 0.85);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(245, 242, 236, 0.08);
-    border-radius: 999px;
-    box-shadow:
-      0 16px 48px -8px rgba(0, 0, 0, 0.6),
-      0 0 0 1px rgba(245, 242, 236, 0.05);
-    max-width: calc(100vw - 2rem);
-    animation: tplSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  @keyframes tplSlideUp {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-  }
-  .tpl-switcher-label {
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(245, 242, 236, 0.35);
-    margin-right: 0.25rem;
-    white-space: nowrap;
-  }
-  .tpl-switcher-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: rgba(245, 242, 236, 0.5);
-    text-decoration: none;
-    border: 1px solid transparent;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    white-space: nowrap;
-  }
-  .tpl-switcher-link:hover {
-    color: #f5f2ec;
-    background: rgba(245, 242, 236, 0.06);
-    border-color: rgba(245, 242, 236, 0.1);
-  }
-  .tpl-switcher-link.active {
-    color: #0b0b0d;
-    background: #d4af37;
-    border-color: #d4af37;
-    font-weight: 700;
-  }
-  .tpl-switcher-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  @media (max-width: 640px) {
-    .tpl-switcher {
-      bottom: 0.5rem;
-      padding: 0.375rem 0.5rem;
-      gap: 0.25rem;
-      border-radius: 1.5rem 1.5rem 0 0;
-      width: 100%;
-      max-width: 100%;
-    }
-    .tpl-switcher-label {
-      display: none;
-    }
-    .tpl-switcher-link {
-      padding: 0.375rem 0.5rem;
-      font-size: 0.625rem;
-    }
-  }
-</style>
+<!-- Template switching is admin-only (see /admin/preview). Public site shows only the active template. -->
 
 <!-- Shared mr-* styles live in src/styles/global.css (imported by the layout) -->
