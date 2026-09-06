@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -16,8 +16,20 @@ export default defineConfig({
   site,
   base: '/MenuProject',
   output: 'static',
+  // Declare the worker URL so it gets inlined into the client bundle
+  // from process.env (populated by CI from repo variables) and from
+  // .env in local dev. Throws at build time if missing in production.
+  env: {
+    schema: {
+      VITE_WORKER_URL: envField.string({
+        context: 'client',
+        access: 'public',
+      }),
+    },
+  },
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
   },
 });
+

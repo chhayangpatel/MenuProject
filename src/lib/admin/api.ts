@@ -1,4 +1,6 @@
-const WORKER_URL = (import.meta.env.VITE_WORKER_URL as string | undefined) || 'http://localhost:8787';
+// Astro's envSchema guarantees this is set at build time. If it's empty
+// the build fails — so we never silently fall back to localhost in prod.
+const WORKER_URL = import.meta.env.VITE_WORKER_URL as string;
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const url = path.startsWith('http') ? path : `${WORKER_URL}${path}`;
