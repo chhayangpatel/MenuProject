@@ -12,7 +12,7 @@ Everything about the MenuProject codebase: architecture, schema, workflows, depl
 | Animations | **Framer Motion 13** (React) + vanilla IntersectionObserver (scroll) |
 | Data validation | **Zod 4** at build time |
 | Icons | Lucide React + inline thin-stroke SVGs |
-| Deploy | GitHub Actions → **GitHub Pages** |
+| Deploy | GitHub Actions → **GitHub Pages** + Cloudflare Pages (see [Cloudflare setup](08-cloudflare-setup.md)) |
 
 ## Repository layout
 
@@ -53,3 +53,4 @@ src/
 3. [Development workflow](03-development-workflow.md)
 4. [Deployment (GitHub Pages)](04-deployment.md)
 5. [Extending the platform](05-extending.md)
+6. [Cloudflare setup (Pages site + admin worker)](08-cloudflare-setup.md)
