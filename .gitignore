@@ -2,7 +2,6 @@
 node_modules/
 .pnp
 .pnp.*
-package-lock.json
 
 # ---- Astro build output ----------------------------------------------------
 dist/
@@ -61,7 +60,6 @@ worker/.dev.vars.*
 .clinerules
 .agents/
 .superpowers/
-skills-lock.json
 
 # ---- Other editors --------------------------------------------------------------
 .idea/
