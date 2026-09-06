@@ -3,17 +3,19 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import cloudflare from '@astrojs/cloudflare';
 
 // Site URL: GitHub Pages project site by default.
 // Override via SITE_URL env var (set as a repo variable in CI).
 const site = process.env.SITE_URL || 'https://chhayangpatel.github.io/MenuProject/';
 
+// Static output. We do NOT install @astrojs/cloudflare here because the
+// adapter pulls node:fs and node:path into a "prerender" environment that
+// breaks the GitHub Pages build. Cloudflare Pages serves the static
+// dist/client/MenuProject output directly without needing the adapter.
 export default defineConfig({
   site,
   base: '/MenuProject',
   output: 'static',
-  adapter: cloudflare(),
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
