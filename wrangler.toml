@@ -1,3 +1,7 @@
+# Cloudflare Pages config. Deploy with `npx wrangler pages deploy` (or leave
+# the Pages dashboard deploy command EMPTY — Pages auto-deploys
+# pages_build_output_dir). Do NOT use `npx wrangler deploy` — that is the
+# Workers command and fails with "Missing entry-point to Worker script".
 # Project name uses a Pages-specific config; do NOT add an assets binding called "ASSETS"
 # since that name conflicts with the reserved Pages binding.
 name = "menuproject"
