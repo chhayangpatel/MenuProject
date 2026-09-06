@@ -2,14 +2,20 @@ name = "menu-admin"
 main = "src/index.ts"
 compatibility_date = "2025-01-01"
 
-# Secrets (set via `wrangler secret put`)
+# Keep vars that exist only in the Cloudflare dashboard instead of deleting
+# them on deploy. Vars declared below still take precedence.
+keep_vars = true
+
+# Vars — this file is the source of truth. If you change ALLOWED_ORIGIN in
+# the dashboard, mirror the change here (or the next deploy will revert it).
+[vars]
+ALLOWED_ORIGIN = "https://chhayangpatel.github.io"
+# When the Cloudflare Pages deployment exists, add its origin, e.g.:
+# ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject.pages.dev"
+
+# Secrets (set via `wrangler secret put`, NOT here)
 # GITHUB_TOKEN        — GitHub PAT with `repo` scope
 # ADMIN_PASSWORD_HASH — SHA-256 hex of the admin password
 # JWT_SECRET          — random string for HMAC signing
 # REPO_OWNER          — GitHub username
 # REPO_NAME           — repo name
-#
-# Vars (set via `wrangler secret put` or the Cloudflare dashboard)
-# ALLOWED_ORIGIN      — only requests from this Origin header are accepted
-#                       (e.g. https://chhayangpatel.github.io). Set this to
-#                       block the worker from being called by other sites.
