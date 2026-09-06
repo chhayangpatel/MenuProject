@@ -154,11 +154,15 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get('Origin') || '';
 
-    // CORS origin check: reject requests from unknown origins.
-    // If ALLOWED_ORIGIN is set, only that origin is permitted.
-    // If unset, fall back to request's own origin (still restrictive).
-    const allowedOrigin = env.ALLOWED_ORIGIN || origin;
-    const isAllowed = !env.ALLOWED_ORIGIN || origin === env.ALLOWED_ORIGIN;
+    // CORS origin check — ALLOWED_ORIGIN is a comma-separated list, e.g.
+    // "https://chhayangpatel.github.io,http://localhost:4321".
+    const allowedList = env.ALLOWED_ORIGIN
+      ? env.ALLOWED_ORIGIN.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+    const hasAllowList = allowedList.length > 0;
+    const matches = !origin || allowedList.includes(origin);
+    const isAllowed = !hasAllowList || matches;
+    const allowedOrigin = hasAllowList ? (matches ? origin : '') : origin;
     const headers = corsHeaders(allowedOrigin);
 
     if (request.method === 'OPTIONS') {
