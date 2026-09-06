@@ -65,11 +65,12 @@
           "id": "bruschetta-al-pomodoro",
           "name": "Bruschetta al Pomodoro",
           "description": "Grilled sourdough, marinated San Marzano tomatoes, basil, Sicilian olive oil",
-          "price": 9,
+          "price": 9.99,
           "tags": [
-            "vegetarian"
+            "vegetarian",
+            "vegan"
           ],
-          "spicyLevel": 0,
+          "spicyLevel": 1,
           "available": true,
           "featured": true
         },
@@ -136,9 +137,9 @@
           "id": "calamari-fritti",
           "name": "Calamari Fritti",
           "description": "Lightly floured calamari, lemon aioli, marinara",
-          "price": 15,
+          "price": 15.99,
           "tags": [],
-          "spicyLevel": 0,
+          "spicyLevel": 2,
           "available": true,
           "featured": false
         },
