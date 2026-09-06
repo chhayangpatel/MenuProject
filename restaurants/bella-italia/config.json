@@ -1,7 +1,7 @@
 {
   "slug": "bella-italia",
-  "name": "Bella Italia",
-  "tagline": "Authentic Italian Cuisine Since 1985",
+  "name": "Bella Italia ",
+  "tagline": "Authentic Italian Cuisine Since 1995",
   "description": "Family-run Italian trattoria serving handmade pasta and wood-fired pizza.",
   "logo": "logo.svg",
   "coverImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80",
@@ -78,14 +78,15 @@
           "id": "burrata-pugliese",
           "name": "Burrata Pugliese",
           "description": "Creamy burrata, heirloom tomatoes, aged balsamic, basil oil",
-          "price": 16,
+          "price": 16.99,
           "tags": [
             "vegetarian",
             "gluten-free"
           ],
           "spicyLevel": 0,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "new"
         },
         {
           "id": "vitello-tonnato",
