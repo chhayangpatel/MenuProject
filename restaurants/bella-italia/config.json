@@ -1,7 +1,7 @@
 {
   "slug": "bella-italia",
   "name": "Bella Italia ",
-  "tagline": "Authentic Italian Cuisine Since 1995",
+  "tagline": "Authentic Italian Cuisine Since 1990, Owned by Nidhi",
   "description": "Family-run Italian trattoria serving handmade pasta and wood-fired pizza.",
   "logo": "logo.svg",
   "coverImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80",
@@ -116,7 +116,7 @@
           "id": "arancini-ai-funghi",
           "name": "Arancini ai Funghi",
           "description": "Crispy saffron risotto spheres, porcini, taleggio center",
-          "price": 12,
+          "price": 12.99,
           "tags": [
             "vegetarian"
           ],
