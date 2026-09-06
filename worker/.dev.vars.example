@@ -1,0 +1,9 @@
+# Cloudflare Worker secrets for local development
+# Copy this to .dev.vars and fill in your values
+# Run: npx wrangler dev
+
+GITHUB_TOKEN=ghp_your_github_pat_here
+ADMIN_PASSWORD_HASH=sha256_hex_hash_of_your_password_here
+JWT_SECRET=your_random_jwt_secret_here_at_least_32_chars
+REPO_OWNER=chhayangpatel
+REPO_NAME=MenuProject

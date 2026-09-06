@@ -35,6 +35,11 @@ lerna-debug.log*
 .env.local
 .env.*.local
 
+# ---- Cloudflare Worker secrets --------------------------------------------------
+worker/.dev.vars
+worker/.dev.vars.*
+!worker/.dev.vars.example
+
 # ---- Editors (VS Code) ---------------------------------------------------------
 # Ignore all VS Code files (personal/workspace-local state)
 .vscode/
@@ -53,6 +58,8 @@ lerna-debug.log*
 .roo/
 .cline/
 .clinerules
+.agents/
+.superpowers/
 
 # ---- Other editors --------------------------------------------------------------
 .idea/
@@ -84,4 +91,3 @@ scripts/fix-registry.mjs
 *.pem
 *.crt
 *.key
-.agents/

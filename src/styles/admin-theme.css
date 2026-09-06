@@ -1,0 +1,17 @@
+.admin-app {
+  --admin-bg: #0F0F0F;
+  --admin-surface: #18181B;
+  --admin-surface-hover: #232329;
+  --admin-card: #1A1A1A;
+  --admin-border: #2A2A2A;
+  --admin-text: #F5F5F5;
+  --admin-text-muted: #888888;
+  --admin-text-dim: #52525B;
+  --admin-accent: #E8A838;
+  --admin-accent-soft: rgba(232, 168, 56, 0.12);
+  --admin-danger: #EF4444;
+  --admin-success: #22C55E;
+  --admin-font-heading: 'Playfair Display', Georgia, serif;
+  --admin-font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  min-height: 100vh;
+}

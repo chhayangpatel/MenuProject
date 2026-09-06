@@ -34,6 +34,8 @@
     "zod": "^4.5.2"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "wrangler": true,
+    "workerd": true
   }
 }

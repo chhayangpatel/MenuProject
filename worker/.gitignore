@@ -1,0 +1,14 @@
+# Local secrets (real values) — never commit these
+.dev.vars
+.dev.vars.*
+
+# Keep the example template tracked
+!.dev.vars.example
+
+# Wrangler build artifacts
+.wrangler/
+dist/
+node_modules/
+
+# Local wrangler state
+.vscode/

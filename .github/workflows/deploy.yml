@@ -31,6 +31,7 @@ jobs:
         run: npm run build
         env:
           SITE_URL: ${{ vars.SITE_URL }}
+          VITE_WORKER_URL: ${{ vars.VITE_WORKER_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist

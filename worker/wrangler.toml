@@ -1,0 +1,10 @@
+name = "menu-admin"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+# Secrets (set via `wrangler secret put`)
+# GITHUB_TOKEN        — GitHub PAT with `repo` scope
+# ADMIN_PASSWORD_HASH — SHA-256 hex of the admin password
+# JWT_SECRET          — random string for HMAC signing
+# REPO_OWNER          — GitHub username
+# REPO_NAME           — repo name
