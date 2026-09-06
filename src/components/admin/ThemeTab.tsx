@@ -114,7 +114,7 @@ export default function ThemeTab({ config, updateConfig, slug }: ThemeTabProps) 
                 onMouseEnter={e => { e.currentTarget.style.background = 'var(--admin-accent-soft)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'var(--admin-surface)'; }}
               >
-                <span style={{ fontSize: 14 }}>🔍</span>
+                <span style={{ fontSize: 14, display: 'inline-flex', alignItems: 'center' }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
                 Preview
               </a>
             </div>

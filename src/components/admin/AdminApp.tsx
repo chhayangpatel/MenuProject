@@ -15,7 +15,7 @@ export default function AdminApp() {
   useEffect(() => {
     // Check if token is still valid on mount
     if (token) {
-      sessionStorage.setItem('menu_admin_token', token);
+      localStorage.setItem('menu_admin_token', token);
     }
   }, [token]);
 

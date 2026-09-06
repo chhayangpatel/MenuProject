@@ -14,18 +14,29 @@ export async function hashPassword(password: string): Promise<string> {
 
 export function getStoredToken(): string | null {
   try {
-    return sessionStorage.getItem(TOKEN_KEY);
+    // localStorage shared across tabs — fallback to sessionStorage for migration
+    return localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
   } catch {
     return null;
   }
 }
 
 export function setStoredToken(token: string): void {
-  sessionStorage.setItem(TOKEN_KEY, token);
+  try {
+    localStorage.setItem(TOKEN_KEY, token);
+  } catch {
+    // Fallback when storage is disabled (rare)
+    sessionStorage.setItem(TOKEN_KEY, token);
+  }
 }
 
 export function clearStoredToken(): void {
-  sessionStorage.removeItem(TOKEN_KEY);
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch {}
+  try {
+    sessionStorage.removeItem(TOKEN_KEY);
+  } catch {}
 }
 
 interface LoginScreenProps {

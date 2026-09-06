@@ -213,7 +213,11 @@ const switcherLinks = Object.values(templates).map((t) => ({
 <!-- Client-side auth guard — only logged-in admins can view previews -->
 <script is:inline define:vars={{ BASE_PATH }}>
     (function () {
-        var token = sessionStorage.getItem("menu_admin_token");
+        var token = null;
+        try { token = localStorage.getItem("menu_admin_token"); } catch (e) {}
+        if (!token) {
+            try { token = sessionStorage.getItem("menu_admin_token"); } catch (e) {}
+        }
         if (!token) {
             window.location.href = BASE_PATH + "/admin";
         }
