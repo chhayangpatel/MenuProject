@@ -207,6 +207,27 @@ export default {
       const authHeader = request.headers.get('Authorization');
       const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
+      // POST /auth/refresh - exchange a still-valid token for a fresh one.
+      // Lets the admin UI slide its session forward without re-entering the
+      // password, as long as it calls this before the current token expires.
+      if (url.pathname === '/auth/refresh' && request.method === 'POST') {
+        if (!token) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401, headers });
+        }
+        const payload = await verifyJWT(token, env.JWT_SECRET);
+        if (!payload) {
+          return Response.json({ error: 'Invalid or expired token' }, { status: 401, headers });
+        }
+
+        const fresh: JWTPayload = {
+          sub: payload.sub,
+          iat: Math.floor(Date.now() / 1000),
+          exp: Math.floor(Date.now() / 1000) + 3600, // 1 hour
+        };
+        const newToken = await signJWT(fresh, env.JWT_SECRET);
+        return Response.json({ token: newToken }, { headers });
+      }
+
       const protectedRoutes = ['/restaurants/save', '/restaurants/create', '/restaurants/upload'];
       const isProtected = protectedRoutes.some(r => url.pathname === r && request.method === 'POST');
 

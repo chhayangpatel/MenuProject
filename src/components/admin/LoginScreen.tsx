@@ -1,8 +1,13 @@
 import { useState, type FormEvent } from 'react';
 import { Lock } from 'lucide-react';
 import { apiFetch } from '../../lib/admin/api';
+import {
+  getStoredToken,
+  setStoredToken,
+} from '../../lib/admin/token';
 
-const TOKEN_KEY = 'menu_admin_token';
+// Re-exported for backward compatibility with existing imports
+export { getStoredToken, setStoredToken, clearStoredToken } from '../../lib/admin/token';
 
 export async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -10,33 +15,6 @@ export async function hashPassword(password: string): Promise<string> {
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-export function getStoredToken(): string | null {
-  try {
-    // localStorage shared across tabs — fallback to sessionStorage for migration
-    return localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
-  } catch {
-    return null;
-  }
-}
-
-export function setStoredToken(token: string): void {
-  try {
-    localStorage.setItem(TOKEN_KEY, token);
-  } catch {
-    // Fallback when storage is disabled (rare)
-    sessionStorage.setItem(TOKEN_KEY, token);
-  }
-}
-
-export function clearStoredToken(): void {
-  try {
-    localStorage.removeItem(TOKEN_KEY);
-  } catch {}
-  try {
-    sessionStorage.removeItem(TOKEN_KEY);
-  } catch {}
 }
 
 interface LoginScreenProps {
