@@ -9,9 +9,7 @@ keep_vars = true
 # Vars — this file is the source of truth. If you change ALLOWED_ORIGIN in
 # the dashboard, mirror the change here (or the next deploy will revert it).
 [vars]
-ALLOWED_ORIGIN = "https://chhayangpatel.github.io"
-# When the Cloudflare Pages deployment exists, add its origin, e.g.:
-# ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject.pages.dev"
+ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject-1mg.pages.dev"
 
 # Secrets (set via `wrangler secret put`, NOT here)
 # GITHUB_TOKEN        — GitHub PAT with `repo` scope
