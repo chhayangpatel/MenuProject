@@ -1,4 +1,5 @@
 import type { Restaurant } from '../schemas/restaurant.schema';
+import { basePath } from './base';
 
 export type AssetType = 'logo' | 'cover' | 'menu';
 
@@ -29,7 +30,7 @@ export function resolveAsset(
   }
 
   // Local asset - prefix with restaurant asset path
-  return `/r/${restaurant.slug}/assets/${path}`;
+  return basePath(`/r/${restaurant.slug}/assets/${path}`);
 }
 
 /**

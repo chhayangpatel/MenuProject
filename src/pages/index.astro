@@ -2,6 +2,7 @@
 import { loadAllRestaurants } from "../lib/loadRestaurants";
 import { resolveCover, resolveLogo } from "../lib/assets";
 import { getTemplate } from "../lib/templates/registry";
+import { basePath } from "../lib/base";
 import "../styles/global.css";
 
 const restaurants = await loadAllRestaurants();
@@ -13,7 +14,7 @@ const cards = restaurants.map((r) => {
     template,
     coverUrl: resolveCover(r),
     logoUrl: resolveLogo(r),
-    href: "/r/" + r.slug + "/",
+    href: basePath("/r/" + r.slug + "/"),
   };
 });
 ---
