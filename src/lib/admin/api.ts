@@ -1,11 +1,7 @@
 // VITE_WORKER_URL is baked in via vite.define in astro.config.mjs.
-// If it's missing we get a clear error rather than a silent 404.
-const WORKER_URL = import.meta.env.VITE_WORKER_URL as string;
-if (!WORKER_URL) {
-  throw new Error(
-    'VITE_WORKER_URL is not set — check .env (local) or the CI repo variable VITE_WORKER_URL (prod)',
-  );
-}
+// Local dev: if unset, fall back to localhost:8787 (wrangler dev default).
+// CI/prod: the repo variable provides it; missing would be a config error.
+const WORKER_URL = (import.meta.env.VITE_WORKER_URL as string) || 'http://localhost:8787';
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const url = path.startsWith('http') ? path : `${WORKER_URL}${path}`;
