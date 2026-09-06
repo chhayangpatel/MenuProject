@@ -8,3 +8,8 @@ compatibility_date = "2025-01-01"
 # JWT_SECRET          — random string for HMAC signing
 # REPO_OWNER          — GitHub username
 # REPO_NAME           — repo name
+#
+# Vars (set via `wrangler secret put` or the Cloudflare dashboard)
+# ALLOWED_ORIGIN      — only requests from this Origin header are accepted
+#                       (e.g. https://chhayangpatel.github.io). Set this to
+#                       block the worker from being called by other sites.

@@ -4,6 +4,7 @@ interface Env {
   JWT_SECRET: string;
   REPO_OWNER: string;
   REPO_NAME: string;
+  ALLOWED_ORIGIN: string;
 }
 
 interface JWTPayload {
@@ -151,11 +152,21 @@ async function listRestaurants(env: Env): Promise<string[]> {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    const origin = request.headers.get('Origin') || '*';
-    const headers = corsHeaders(origin);
+    const origin = request.headers.get('Origin') || '';
+
+    // CORS origin check: reject requests from unknown origins.
+    // If ALLOWED_ORIGIN is set, only that origin is permitted.
+    // If unset, fall back to request's own origin (still restrictive).
+    const allowedOrigin = env.ALLOWED_ORIGIN || origin;
+    const isAllowed = !env.ALLOWED_ORIGIN || origin === env.ALLOWED_ORIGIN;
+    const headers = corsHeaders(allowedOrigin);
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers });
+    }
+
+    if (!isAllowed) {
+      return new Response('Forbidden', { status: 403, headers });
     }
 
     try {
