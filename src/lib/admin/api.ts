@@ -1,4 +1,4 @@
-import { getStoredToken, setStoredToken } from './token';
+import { getStoredToken, setStoredToken, clearStoredToken } from './token';
 
 // VITE_WORKER_URL is baked in via vite.define in astro.config.mjs.
 // Local dev: if unset, fall back to localhost:8787 (wrangler dev default).
@@ -37,8 +37,8 @@ export async function apiFetch(path: string, options: RequestInit = {}): Promise
   });
 
   // Token expired mid-session: silently refresh once and retry the request
-  // with the new token. If refresh fails (token fully expired), the original
-  // 401 response is returned and the UI surfaces the error.
+  // with the new token. If refresh fails (token fully expired), clear the
+  // stale token and notify the app so it returns to the login screen.
   if (res.status === 401 && !path.startsWith('/auth/')) {
     if (!refreshPromise) {
       refreshPromise = refreshAuthToken().finally(() => { refreshPromise = null; });
@@ -54,6 +54,11 @@ export async function apiFetch(path: string, options: RequestInit = {}): Promise
         },
       });
     }
+    // Refresh failed — session is fully expired. Clear storage and emit a
+    // global event so AdminApp can show the login screen with a friendly
+    // "session expired" notice instead of a raw 401 error.
+    clearStoredToken();
+    window.dispatchEvent(new CustomEvent('menu_admin_session_expired'));
   }
 
   return res;
@@ -79,7 +84,10 @@ export async function saveRestaurant(slug: string, config: any, token: string): 
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ slug, config }),
   });
-  if (!res.ok) throw new Error(`Failed to save: ${res.status}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({})) as { error?: string };
+    throw new Error(data.error || `Failed to save: ${res.status}`);
+  }
   return res.json();
 }
 

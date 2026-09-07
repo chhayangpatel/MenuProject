@@ -12,6 +12,7 @@ export default function AdminApp() {
   // client render — reading localStorage during initial render causes a
   // React hydration mismatch. We sync from storage after mount instead.
   const [token, setToken] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [view, setView] = useState<AdminView>('dashboard');
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
@@ -22,10 +23,23 @@ export default function AdminApp() {
       setToken(stored);
       localStorage.setItem('menu_admin_token', stored);
     }
+
+    // When the API layer detects a fully-expired session (refresh failed),
+    // it clears the stale token and emits this event — return to login
+    // with a friendly notice instead of leaving the user on a broken screen.
+    function handleSessionExpired() {
+      setToken(null);
+      setSessionExpired(true);
+      setView('dashboard');
+      setSelectedSlug(null);
+    }
+    window.addEventListener('menu_admin_session_expired', handleSessionExpired);
+    return () => window.removeEventListener('menu_admin_session_expired', handleSessionExpired);
   }, []);
 
   function handleLogin() {
     setToken(getStoredToken());
+    setSessionExpired(false);
     setView('dashboard');
   }
 
@@ -44,7 +58,7 @@ export default function AdminApp() {
   }
 
   if (!token) {
-    return <LoginScreen onLogin={handleLogin} />;
+    return <LoginScreen onLogin={handleLogin} sessionExpired={sessionExpired} />;
   }
 
   if (view === 'editor' && selectedSlug) {

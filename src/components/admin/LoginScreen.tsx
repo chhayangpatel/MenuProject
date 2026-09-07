@@ -19,9 +19,10 @@ export async function hashPassword(password: string): Promise<string> {
 
 interface LoginScreenProps {
   onLogin: () => void;
+  sessionExpired?: boolean;
 }
 
-export default function LoginScreen({ onLogin }: LoginScreenProps) {
+export default function LoginScreen({ onLogin, sessionExpired }: LoginScreenProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -88,6 +89,18 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           margin: '0 0 8px',
           color: 'var(--admin-text)',
         }}>Admin Access</h1>
+        {sessionExpired && (
+          <div style={{
+            marginBottom: 20,
+            padding: '10px 14px',
+            background: 'rgba(245, 158, 11, 0.1)',
+            border: '1px solid rgba(245, 158, 11, 0.3)',
+            borderRadius: 6,
+            color: '#F59E0B',
+            fontSize: 13,
+            textAlign: 'center',
+          }}>Your session expired. Please sign in again.</div>
+        )}
         <p style={{
           textAlign: 'center',
           color: 'var(--admin-text-muted)',
