@@ -18,12 +18,12 @@ const hasVariants = item.variants && item.variants.length > 0;
     </div>
     {item.description && <p class="zg-item-desc">{item.description}</p>}
     <div class="zg-item-meta">
-      <span class="zg-item-price">{currencySymbol}{item.price.toFixed(2)}</span>
       <div class="zg-item-tags">
         {isVeg && !isVegan && <span class="zg-tag">菜</span>}
         {isVegan && <span class="zg-tag">菜</span>}
         {isGF && <span class="zg-tag">GF</span>}
       </div>
+      <span class="zg-item-price">{currencySymbol}{item.price.toFixed(2)}</span>
     </div>
   </div>
 </div>
@@ -35,7 +35,7 @@ const hasVariants = item.variants && item.variants.length > 0;
   .zg-item-name { font-family: var(--zg-font-heading); font-size: 1.0625rem; font-weight: 400; letter-spacing: 0.05em; color: var(--zg-primary); line-height: 1.4; }
   .zg-item-desc { font-family: var(--zg-font-body); font-size: 0.8125rem; color: rgba(0,0,0,0.4); line-height: 1.7; margin-bottom: 0.75rem; }
   .zg-item-meta { display: flex; justify-content: space-between; align-items: center; }
-  .zg-item-price { font-family: var(--zg-font-body); font-size: 0.9375rem; color: var(--zg-accent); }
+  .zg-item-price { font-family: var(--zg-font-body); font-size: 0.9375rem; color: var(--zg-accent); white-space: nowrap; flex-shrink: 0; font-variant-numeric: tabular-nums; }
   .zg-item-tags { display: flex; gap: 0.5rem; }
   .zg-tag { font-size: 0.75rem; color: rgba(0,0,0,0.3); }
 </style>
