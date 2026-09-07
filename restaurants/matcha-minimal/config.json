@@ -12,7 +12,7 @@
   ],
   "priceRange": "$$",
   "moodPreset": "modern-minimal",
-  "template": "editorial-classic",
+  "template": "artisan-craft",
   "story": {
     "heading": "A Place for Stillness",
     "body": "Born from a trip to Uji, Japan, Matcha & Co. brings the meditative ritual of tea to everyday dining. Every dish is crafted to be as nourishing as it is beautiful."
@@ -32,13 +32,13 @@
   },
   "hours": {
     "regular": {
-      "monday": "08:00-17:00",
+      "monday": "Closed",
       "tuesday": "08:00-17:00",
       "wednesday": "08:00-17:00",
       "thursday": "08:00-17:00",
       "friday": "08:00-18:00",
       "saturday": "09:00-18:00",
-      "sunday": "Closed"
+      "sunday": ""
     }
   },
   "theme": {
