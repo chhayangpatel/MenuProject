@@ -20,7 +20,7 @@ const isCloudflareBuild = Boolean(
 const site =
   process.env.SITE_URL ||
   process.env.CF_PAGES_URL ||
-  (isCloudflareBuild ? 'https://menuproject-1mg.pages.dev/' : undefined) ||
+  (isCloudflareBuild ? 'https://digitalmenus.pages.dev/' : undefined) ||
   'https://chhayangpatel.github.io/MenuProject/';
 
 // Base path: GitHub Pages serves the site from /MenuProject. Cloudflare

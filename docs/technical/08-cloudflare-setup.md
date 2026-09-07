@@ -5,12 +5,12 @@ The project deploys to **two places simultaneously**:
 | Target | What | URL | Trigger |
 |---|---|---|---|
 | GitHub Pages | The static menu site | `https://chhayangpatel.github.io/MenuProject/` | push to `main` (`.github/workflows/deploy.yml`) |
-| Cloudflare Pages | The same static site, served from the root | `https://menuproject-1mg.pages.dev/` | push to `main` (Cloudflare Pages CI) |
-| Cloudflare Workers | `menu-admin` API worker | `https://menu-admin.chhayang-jenkins.workers.dev` | manual (`npm run deploy:worker` or `cd worker && npx wrangler deploy`) |
+| Cloudflare Pages | The same static site, served from the root | `https://digitalmenus.pages.dev/` | push to `main` (Cloudflare Pages CI) |
+| Cloudflare Workers | `menu-admin` API worker | `https://menu-admin.chhayang-jenkins.workers.dev` | manual (`cd worker && npx wrangler deploy`) |
 
 Both site deployments share the same `dist/` build output. GitHub Pages serves it under `/MenuProject`; Cloudflare Pages serves it under `/`. The build auto-detects which one is running (see [Build configuration](#build-configuration)).
 
-> **Status (verified):** both deployments are live — GitHub Pages at the `/MenuProject` path and Cloudflare Pages at `https://menuproject-1mg.pages.dev` with root-relative assets and the admin panel wired to the production worker.
+> **Status (verified):** both deployments are live — GitHub Pages at the `/MenuProject` path and Cloudflare Pages at `https://digitalmenus.pages.dev` with root-relative assets and the admin panel wired to the production worker.
 
 ---
 
@@ -18,21 +18,21 @@ Both site deployments share the same `dist/` build output. GitHub Pages serves i
 
 | Resource | Name | Where configured |
 |---|---|---|
-| Pages project | `menuproject` | Cloudflare dashboard → Workers & Pages → `menuproject` |
+| Pages project | `digitalmenus` | Cloudflare dashboard → Workers & Pages → `digitalmenus` |
 | Worker | `menu-admin` | `worker/wrangler.toml` + dashboard secrets |
-| API token | `pages-deploy-token` (custom token) | https://dash.cloudflare.com/profile/api-tokens |
+| API token | custom token with Pages Edit | https://dash.cloudflare.com/profile/api-tokens |
 
 Account ID: `12241568cc83ebb1b0769d580a8fa9f2`
 
-### Why the URL is `menuproject-1mg.pages.dev` (and not `menuproject.pages.dev`)
+### How the `pages.dev` URL is assigned
 
-The `pages.dev` subdomain is **not** simply the project name. When a Pages project is created, Cloudflare appends a short **random suffix** (here `-1mg`) to guarantee the subdomain is globally unique across all `*.pages.dev` — `menuproject.pages.dev` was already taken by someone else, so Cloudflare assigned `menuproject-1mg.pages.dev`. The suffix:
+The `pages.dev` subdomain is **not** always just the project name. When a Pages project is created, Cloudflare assigns `<project-name>.pages.dev` **if that subdomain is still globally available**; otherwise it appends a short random suffix (e.g. `menuproject-1mg.pages.dev` — an earlier project of ours, now retired). The suffix, when assigned:
 
 - is chosen by Cloudflare at **project creation time** and cannot be chosen or changed,
 - is permanent for the life of the project,
 - does not affect custom domains — attaching `menus.yourdomain.com` later gives a clean URL.
 
-This is why the worker's `ALLOWED_ORIGIN` and the build defaults reference `menuproject-1mg.pages.dev`, and why any docs/scripts assuming `menuproject.pages.dev` are wrong.
+`digitalmenus.pages.dev` was available, so the project got the clean name. An older project `menuproject` (served at `menuproject-1mg.pages.dev`) exists from initial setup and can be deleted in the dashboard.
 
 ---
 
@@ -41,7 +41,7 @@ This is why the worker's `ALLOWED_ORIGIN` and the build defaults reference `menu
 ### Root `wrangler.toml` (Pages project)
 
 ```toml
-name = "menuproject"
+name = "digitalmenus"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "./dist"
 ```
@@ -59,7 +59,7 @@ compatibility_date = "2025-01-01"
 keep_vars = true
 
 [vars]
-ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject-1mg.pages.dev"
+ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://digitalmenus.pages.dev"
 ```
 
 - `ALLOWED_ORIGIN` is a comma-separated CORS allowlist. **When you add a new deployment origin (e.g. a custom domain), add it here and redeploy the worker.**
@@ -69,7 +69,7 @@ ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject-1mg.pages.
 
 | Script | Command |
 |---|---|
-| `npm run deploy:pages` | `wrangler pages deploy dist --project-name menuproject` |
+| `npm run deploy:pages` | `wrangler pages deploy dist --project-name digitalmenus` |
 | Worker deploy | `cd worker && npx wrangler deploy` |
 
 Local **production** deploy (build with the Cloudflare environment, then publish to `main`). `VITE_WORKER_URL` must be passed explicitly — local `.env` points at `localhost:8787` for dev, and a Cloudflare build without the variable fails loudly by design:
@@ -78,7 +78,7 @@ Local **production** deploy (build with the Cloudflare environment, then publish
 $env:CI = '1'
 $env:VITE_WORKER_URL = 'https://menu-admin.chhayang-jenkins.workers.dev'
 npm run build
-npx wrangler pages deploy dist --project-name menuproject --branch main
+npx wrangler pages deploy dist --project-name digitalmenus --branch main
 ```
 
 ---
@@ -90,7 +90,7 @@ npx wrangler pages deploy dist --project-name menuproject --branch main
 | Environment | `base` | `site` | Set by |
 |---|---|---|---|
 | Local dev / GitHub Pages | `/MenuProject` | `https://chhayangpatel.github.io/MenuProject/` | defaults |
-| Cloudflare build (classic Pages or unified Workers Builds) | `/` | `CF_PAGES_URL` or `https://menuproject-1mg.pages.dev/` | auto-detected |
+| Cloudflare build (classic Pages or unified Workers Builds) | `/` | `CF_PAGES_URL` or `https://digitalmenus.pages.dev/` | auto-detected |
 | Any explicit override | `SITE_BASE` | `SITE_URL` | env var (highest priority) |
 
 **How detection works:** classic Pages CI sets `CF_PAGES=1`/`CF_PAGES_URL`, but the newer unified **Workers Builds** system sets neither. Both run with `CI=true` and without `GITHUB_ACTIONS=true` (which only GitHub Actions sets), so `astro.config.mjs` treats `CI && !GITHUB_ACTIONS` as a Cloudflare build. No `SITE_BASE`/`SITE_URL` variables are needed in the dashboard.
@@ -99,7 +99,7 @@ npx wrangler pages deploy dist --project-name menuproject --branch main
 
 ### Required environment variables on the Pages project
 
-Dashboard → Workers & Pages → `menuproject` → **Settings → Build → Variables** (build variables — available to the build command):
+Dashboard → Workers & Pages → `digitalmenus` → **Settings → Build → Variables** (build variables — available to the build command):
 
 | Variable | Value | Purpose |
 |---|---|---|
@@ -113,7 +113,7 @@ Dashboard → Workers & Pages → `menuproject` → **Settings → Build → Var
 **Plain var** — declared in `worker/wrangler.toml` (source of truth; no dashboard action needed):
 | Variable | Value |
 |---|---|
-| `ALLOWED_ORIGIN` | `https://chhayangpatel.github.io,https://menuproject-1mg.pages.dev` |
+| `ALLOWED_ORIGIN` | `https://chhayangpatel.github.io,https://digitalmenus.pages.dev` |
 
 **Secrets** — set once via `npx wrangler secret put <NAME>` (run inside `worker/`); never in files or plain dashboard vars:
 | Secret | What it is |
@@ -132,19 +132,19 @@ Dashboard → Workers & Pages → `menuproject` → **Settings → Build → Var
 
 ## 4. Pages build & deploy settings
 
-Dashboard → Workers & Pages → `menuproject` → **Settings → Build**:
+Dashboard → Workers & Pages → `digitalmenus` → **Settings → Build**:
 
 | Setting | Value |
 |---|---|
 | Build command | `npm run build` |
-| Deploy command | `npx wrangler pages deploy dist --project-name menuproject --branch main` |
+| Deploy command | `npx wrangler pages deploy dist --project-name digitalmenus --branch main` |
 
 > **Warning:** never use `npx wrangler deploy` (without `pages`) here. That is the **Workers** command and fails on a Pages project with
 > `✘ [ERROR] Missing entry-point to Worker script or to assets directory`.
 >
 > Alternative: leave the Deploy command **empty** — Pages then auto-deploys `pages_build_output_dir` with its own internal auth and no API token is needed.
 
-> **Important — `--branch main`:** inside the Pages CI build, wrangler may publish the deployment as a **preview** (e.g. `https://head.menuproject-1mg.pages.dev`) instead of production. Passing `--branch main` explicitly makes it the production deployment served at `https://menuproject-1mg.pages.dev`.
+> **Important — `--branch main`:** inside the Pages CI build, wrangler may publish the deployment as a **preview** (e.g. `https://head.digitalmenus.pages.dev`) instead of production. Passing `--branch main` explicitly makes it the production deployment served at `https://digitalmenus.pages.dev`.
 
 ---
 
@@ -160,7 +160,7 @@ The custom deploy command runs `wrangler pages deploy` inside the build machine,
 If the token lacks Pages permissions, deploys fail with:
 
 ```
-✘ [ERROR] A request to the Cloudflare API (/accounts/…/pages/projects/menuproject) failed.
+✘ [ERROR] A request to the Cloudflare API (/accounts/…/pages/projects/digitalmenus) failed.
   Authentication error [code: 10000]
 ```
 
@@ -172,7 +172,7 @@ Create/update tokens at https://dash.cloudflare.com/profile/api-tokens.
 
 1. **Create the Pages project** (one-time; `wrangler pages deploy` fails with "The Pages project … does not exist" until this exists):
    ```powershell
-   npx wrangler pages project create menuproject --production-branch main
+   npx wrangler pages project create digitalmenus --production-branch main
    ```
 2. **Deploy the worker** and set its secrets:
    ```powershell
@@ -193,9 +193,10 @@ Create/update tokens at https://dash.cloudflare.com/profile/api-tokens.
 |---|---|---|
 | `Missing entry-point to Worker script or to assets directory` | Used `wrangler deploy` (Workers command) on the Pages project | Deploy command must be `npx wrangler pages deploy …` (or empty) |
 | `Authentication error [code: 10000]` on `/pages/projects/…` | `CLOUDFLARE_API_TOKEN` lacks `Cloudflare Pages → Edit` | Fix token permissions (§5) |
-| `The Pages project "menuproject" does not exist` | Project was never created in the account | Create it (§6 step 1) |
-| Site served at `head.menuproject-1mg.pages.dev`, production 404 | Deploy published as a preview branch instead of production | Add `--branch main` to the deploy command (§4) |
-| Site loads but CSS/JS 404s, URLs contain `/MenuProject/` | Build ran with the GitHub Pages base path | Should no longer happen (auto-detection, §3); verify `CF_PAGES` is present and no stale `SITE_BASE` variable is set |
+| `The Pages project "digitalmenus" does not exist` | Project was never created in the account | Create it (§6 step 1) |
+| Site served at `head.digitalmenus.pages.dev`, production 404 | Deploy published as a preview branch instead of production | Add `--branch main` to the deploy command (§4) |
+| Site loads but CSS/JS 404s, URLs contain `/MenuProject/` | Build ran with the GitHub Pages base path | Should no longer happen (auto-detection, §3); verify no stale `SITE_BASE` variable is set |
+| Admin panel calls `localhost:8787` | Build baked the dev URL in (missing `VITE_WORKER_URL` build variable) | Add the variable (§3); the build now fails loudly if it's missing |
 | Admin panel can't reach API / CORS errors | New origin not in worker's `ALLOWED_ORIGIN` | Add origin to `worker/wrangler.toml` and redeploy worker |
 
 ---

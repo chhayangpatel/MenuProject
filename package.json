@@ -16,7 +16,7 @@
     "validate:configs": "node scripts/validate-configs.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "generate:qr": "node scripts/generate-qr.mjs",
-    "deploy:pages": "wrangler pages deploy dist --project-name menuproject"
+    "deploy:pages": "wrangler pages deploy dist --project-name digitalmenus"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.2.0",
