@@ -4,7 +4,7 @@
   "tagline": "Mindful bites, clean flavors",
   "description": "A serene Japanese-inspired café focused on clean, plant-forward food and premium matcha drinks.",
   "logo": "logo.svg",
-  "coverImage": "https://images.unsplash.com/photo-1515823064-d6e0c04616ea?w=1600&q=80",
+  "coverImage": "cover.svg",
   "cuisine": [
     "Japanese",
     "Café",
@@ -23,7 +23,12 @@
   "contact": {
     "phone": "+1-555-0234",
     "email": "hello@matchaco.example",
-    "address": "88 Zen Lane, Westside"
+    "address": "88 Zen Lane, Westside",
+    "googleMapsUrl": "https://maps.google.com/?q=88+Zen+Lane+Westside",
+    "socials": {
+      "instagram": "https://instagram.com/matchaminimal",
+      "tiktok": "https://tiktok.com/@matchaminimal"
+    }
   },
   "hours": {
     "regular": {
@@ -69,7 +74,8 @@
           ],
           "spicyLevel": 0,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "must-try"
         },
         {
           "id": "matcha-latte",
@@ -81,7 +87,8 @@
           ],
           "spicyLevel": 0,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "peoples-favorite"
         },
         {
           "id": "strawberry-matcha-cloud",
@@ -93,7 +100,8 @@
           ],
           "spicyLevel": 0,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "chef-pick"
         },
         {
           "id": "hojicha-roast-latte",

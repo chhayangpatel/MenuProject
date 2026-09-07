@@ -1,6 +1,7 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
 
 interface Props {
   restaurant: Restaurant;
@@ -58,6 +59,9 @@ const logoUrl = resolveLogo(restaurant);
         {restaurant.tagline}
       </p>
     )}
+
+    {/* Story — 2-3 line summary under the title */}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
 
     {/* Scroll cue */}
     {hasCover && heroStyle === 'fullbleed' && (

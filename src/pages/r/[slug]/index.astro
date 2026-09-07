@@ -22,7 +22,7 @@ interface Props {
 }
 
 const { restaurant } = Astro.props;
-const { menu, settings, story } = restaurant;
+const { menu, settings } = restaurant;
 
 // Template resolution: registry is the single source of truth
 const template = getTemplate(restaurant.template, restaurant.moodPreset);
@@ -60,16 +60,6 @@ const flatItems = menu
   <TemplateStyleManager restaurant={restaurant} templateId={template.id} />
 
   <TemplateHero restaurant={restaurant} />
-  <TemplateHeader restaurant={restaurant} />
-
-  {
-    story && (
-      <section class="mr-story">
-        <p class="mr-story-eyebrow">{story.heading || "Our Story"}</p>
-        <p class="mr-story-body">{story.body}</p>
-      </section>
-    )
-  }
 
   {
     featuredItems.length > 0 && (
@@ -93,7 +83,7 @@ const flatItems = menu
   <TemplateCategoryNav categories={menu} />
 
   {/* Menu body — centered, responsive, scannable */}
-  <main class="mr-menu" id="menu-body">
+  <main class="mr-menu" id="menu">
     <p class="mr-menu-overview">
       {totalItems} dishes across {menu.length} categories
       <span class="mr-menu-overview-dot" aria-hidden="true">·</span>

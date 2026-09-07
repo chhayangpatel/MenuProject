@@ -1,28 +1,179 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 const coverUrl = resolveCover(restaurant);
 const logoUrl = resolveLogo(restaurant);
 ---
-<div class="wr-wrapper wr-hero-wrapper">
-  {hasCover && (
+
+<div class="wr-hero" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 70vh;' : 'padding: 5rem 1.5rem 3rem;'}>
+  {hasCover && heroStyle !== 'minimal' && (
     <>
-      <img src={coverUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
-      <div class="absolute inset-0 bg-gradient-to-t from-[var(--wr-cream)]/90 via-transparent to-transparent"></div>
+      <img src={coverUrl} alt="" class="wr-hero-bg" loading="eager" />
+      <div class="wr-hero-scrim"></div>
     </>
   )}
-  <div class="relative z-10 w-full max-w-3xl mx-auto px-6 text-center">
-    <div class="wr-logo-ring mb-8 mx-auto" style="width:90px;height:90px;border-radius:50%;padding:4px;background:linear-gradient(135deg,var(--wr-gold),var(--wr-accent) 60%);box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 12px 48px rgba(45,27,16,0.15);">
-      <img src={logoUrl} alt={restaurant.name} style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--wr-cream);" />
+  <div class="wr-hero-content relative z-10 w-full max-w-3xl mx-auto px-6 text-center">
+    <div class="wr-logo-ring mb-8 mx-auto">
+      <img src={logoUrl} alt={restaurant.name} class="wr-logo-img" />
     </div>
-    <h1 class="wr-hero-title">{restaurant.name}</h1>
-    {restaurant.tagline && <p class="wr-hero-tagline">"{restaurant.tagline}"</p>}
+    <h1 class={"wr-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'wr-text-light' : 'wr-text-dark')}>
+      {restaurant.name}
+    </h1>
+    <div class="wr-divider" aria-hidden="true"></div>
+    {restaurant.tagline && (
+      <p class={"wr-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'wr-text-light' : 'wr-text-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="wr-scroll-cue mt-8">
+        <span class="wr-scroll-dot"></span>
+        <span class="wr-scroll-text">Scroll to explore</span>
+      </div>
+    )}
   </div>
 </div>
+
 <style>
-  .wr-logo-ring { animation: wr-pop 1s var(--wr-ease-spring) 0.3s both; }
-  @keyframes wr-pop { from { opacity:0; transform:scale(0.6); } to { opacity:1; transform:scale(1); } }
+  .wr-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .wr-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wr-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+  }
+
+  .wr-hero-content {
+    padding-bottom: 3rem;
+    padding-top: 5rem;
+    animation: wr-contentUp 0.8s ease-out both;
+  }
+
+  @keyframes wr-contentUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .wr-logo-ring {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--wr-gold, var(--wr-accent)), transparent 60%);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 12px 48px rgba(45,27,16,0.15);
+    animation: wr-logoPop 0.7s ease-out 0.2s both;
+  }
+
+  @keyframes wr-logoPop {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .wr-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--wr-cream, var(--wr-secondary));
+  }
+
+  .wr-hero-title {
+    font-family: var(--wr-font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+
+  .wr-text-light { color: #fff; }
+  .wr-text-dark  { color: var(--wr-primary); }
+
+  .wr-divider {
+    width: 60px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--wr-accent), transparent);
+    margin: 1rem auto 1.25rem;
+    animation: wr-dividerGrow 0.6s ease-out 0.5s both;
+  }
+
+  @keyframes wr-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 60px; opacity: 1; }
+  }
+
+  .wr-hero-tagline {
+    font-family: var(--wr-font-body);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    max-width: 36ch;
+    margin: 0 auto;
+    animation: wr-contentUp 0.8s ease-out 0.1s both;
+  }
+
+  .wr-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.6;
+    animation: wr-contentUp 0.8s ease-out 0.8s both;
+  }
+
+  .wr-scroll-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--wr-accent);
+    animation: wr-scrollBounce 2s ease-in-out infinite;
+  }
+
+  .wr-scroll-text {
+    font-family: var(--wr-font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wr-accent);
+  }
+
+  @keyframes wr-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%       { transform: translateY(8px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wr-hero-content, .wr-logo-ring, .wr-hero-tagline, .wr-divider, .wr-scroll-cue {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* ── Anchor scrolling: smooth + sticky-header offset ──────────────────── */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Hero CTAs and nav "Menu" links target #menu; keep it clear of sticky bars */
+#menu {
+    scroll-margin-top: 5.5rem;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    Shared platform styles (mr-*)
    Consumed by /r/[slug]/ and /r/[slug]/[template]/ pages.

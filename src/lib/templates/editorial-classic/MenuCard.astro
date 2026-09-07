@@ -1,6 +1,7 @@
 ---
 import type { MenuItem } from "../../../schemas/restaurant.schema";
 import { resolveMenuItemImage } from "../../../lib/assets";
+import ItemBadge from "../../../components/ItemBadge.astro";
 
 interface Props {
   item: MenuItem;
@@ -40,7 +41,10 @@ const hasVariants = item.variants && item.variants.length > 0;
   aria-label={"View details for " + item.name}
 >
   <div class="ec-row__top">
-    <h3 class="ec-row-name">{item.name}</h3>
+    <div class="ec-row-name-wrap">
+      <h3 class="ec-row-name">{item.name}</h3>
+      <ItemBadge item={item} size="sm" />
+    </div>
     <span class="ec-row__leader" aria-hidden="true"></span>
     {
       showPrices && (
@@ -60,32 +64,6 @@ const hasVariants = item.variants && item.variants.length > 0;
 
   {/* Dietary + meta markers */}
   <div class="ec-row-meta">
-    {
-      item.featured && (
-        <span class="ec-row-tag ec-row-tag--gold">Chef's Pick</span>
-      )
-    }
-    {
-      item.popularity === "most-ordered" && (
-        <span class="ec-row-tag ec-row-tag--gold">Most Ordered</span>
-      )
-    }
-    {
-      item.popularity === "staff-favorite" && (
-        <span class="ec-row-tag ec-row-tag--gold">Staff Pick</span>
-      )
-    }
-    {
-      item.popularity === "new" && (
-        <span class="ec-row-tag ec-row-tag--gold">New</span>
-      )
-    }
-    {
-      item.popularity === "trending" && (
-        <span class="ec-row-tag ec-row-tag--gold">Trending</span>
-      )
-    }
-
     {
       !item.available && (
         <span class="ec-row-tag ec-row-tag--sold">Sold Out</span>
@@ -127,13 +105,14 @@ const hasVariants = item.variants && item.variants.length > 0;
 <style>
   /* ── Dotted leader row (the fine-dining signature) ────────────────── */
   .ec-row {
-    --row-gap: 0.75rem;
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding: 1.1rem 0.25rem;
     cursor: pointer;
     border-bottom: 1px solid
       color-mix(in srgb, var(--ec-primary) 7%, transparent);
     transition: background 0.25s var(--ec-ease-out-expo);
+    flex: 1;
   }
   .ec-row:hover {
     background: color-mix(in srgb, var(--ec-gold) 5%, transparent);
@@ -146,6 +125,15 @@ const hasVariants = item.variants && item.variants.length > 0;
     margin-bottom: 0.4rem;
   }
 
+  .ec-row-name-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
   .ec-row-name {
     font-family: var(--ec-font-heading);
     font-size: 1.05rem;
@@ -153,9 +141,8 @@ const hasVariants = item.variants && item.variants.length > 0;
     letter-spacing: -0.01em;
     line-height: 1.35;
     color: var(--ec-primary);
-    flex-shrink: 1;
-    min-width: 0;
     transition: color 0.25s ease;
+    margin: 0;
   }
   .ec-row:hover .ec-row-name {
     color: var(--ec-gold);
@@ -197,12 +184,14 @@ const hasVariants = item.variants && item.variants.length > 0;
     color: color-mix(in srgb, var(--ec-primary) 58%, transparent);
     max-width: 60ch;
     margin-bottom: 0.5rem;
+    flex: 1;
   }
 
   .ec-row-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
+    margin-top: auto;
   }
   .ec-row-tag {
     display: inline-flex;

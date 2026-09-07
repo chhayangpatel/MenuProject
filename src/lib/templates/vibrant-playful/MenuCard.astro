@@ -1,6 +1,7 @@
 ---
 import type { MenuItem } from '../../../schemas/restaurant.schema';
 import { resolveMenuItemImage } from '../../../lib/assets';
+import ItemBadge from '../../../components/ItemBadge.astro';
 interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
 const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
 const hasImage = !!item.image;
@@ -12,19 +13,129 @@ const hasVariants = item.variants && item.variants.length > 0;
   <div class="vp-card">
     <div class="vp-card-body">
       <div class="vp-card-text">
-        <div style="display:flex;justify-content:space-between;gap:1rem;margin-bottom:0.5rem;">
-          <h3 class="vp-item-name">{item.name}</h3>
+        <div class="vp-card-header">
+          <div class="vp-card-title-wrap">
+            <h3 class="vp-item-name">{item.name}</h3>
+            <ItemBadge item={item} size="sm" />
+          </div>
           {showPrices && <span class="vp-item-price">{hasVariants?'From ':''}{currencySymbol}{item.price.toFixed(2)}</span>}
         </div>
         {item.description && <p class="vp-item-desc">{item.description}</p>}
-        <div style="display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.5rem;">
-          {isVeg && !isVegan && <span style="background:var(--vp-blush);color:#AD1457;padding:2px 8px;border-radius:9999px;font-size:0.625rem;font-weight:700;">🌿 Veg</span>}
-          {isVegan && <span style="background:var(--vp-mint);color:#00695C;padding:2px 8px;border-radius:9999px;font-size:0.625rem;font-weight:700;">🌱 Vegan</span>}
-          {isGF && <span style="background:var(--vp-peach);color:#E65100;padding:2px 8px;border-radius:9999px;font-size:0.625rem;font-weight:700;">GF</span>}
-          {item.spicyLevel>0 && <span style="background:var(--vp-accent);color:#fff;padding:2px 8px;border-radius:9999px;font-size:0.625rem;font-weight:700;">{"🔥".repeat(item.spicyLevel)}</span>}
+        <div class="vp-card-tags">
+          {isVeg && !isVegan && <span class="vp-tag vp-tag--veg">🌿 Veg</span>}
+          {isVegan && <span class="vp-tag vp-tag--vegan">🌱 Vegan</span>}
+          {isGF && <span class="vp-tag vp-tag--gf">GF</span>}
+          {item.spicyLevel>0 && <span class="vp-tag vp-tag--spicy">{"🔥".repeat(item.spicyLevel)}</span>}
         </div>
       </div>
       {hasImage && <div class="vp-card-img-wrap"><img src={resolveMenuItemImage(restaurant, item.image)} alt={item.name} class="vp-card-img" loading="lazy" /></div>}
     </div>
   </div>
 </article>
+
+<style>
+  .vp-card-outer {
+    padding: 0.75rem 0;
+  }
+  .vp-card {
+    background: #fff;
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .vp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.12);
+  }
+  .vp-card-body {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .vp-card-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .vp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .vp-card-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  .vp-item-name {
+    font-family: var(--vp-font-heading);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--vp-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .vp-item-price {
+    font-family: var(--vp-font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--vp-accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .vp-item-desc {
+    font-family: var(--vp-font-body);
+    font-size: 0.8125rem;
+    color: rgba(0,0,0,0.5);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .vp-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: auto;
+  }
+  .vp-tag {
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .vp-tag--veg {
+    background: var(--vp-blush);
+    color: #AD1457;
+  }
+  .vp-tag--vegan {
+    background: var(--vp-mint);
+    color: #00695C;
+  }
+  .vp-tag--gf {
+    background: var(--vp-peach);
+    color: #E65100;
+  }
+  .vp-tag--spicy {
+    background: var(--vp-accent);
+    color: #fff;
+  }
+  .vp-card-img-wrap {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .vp-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

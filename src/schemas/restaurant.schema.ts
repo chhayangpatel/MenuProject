@@ -43,7 +43,7 @@ export const MenuItemSchema = z.object({
   // Ordering context hints
   prepTime: z.number().optional(),
   portionSize: z.string().optional(),
-  popularity: z.enum(["most-ordered", "staff-favorite", "new", "trending"]).optional(),
+  popularity: z.enum(["must-try", "chef-pick", "peoples-favorite", "most-ordered", "staff-favorite", "new", "trending"]).optional(),
 });
 
 export const MenuCategorySchema = z.object({

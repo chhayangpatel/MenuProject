@@ -9,6 +9,8 @@ interface Props {
 }
 
 const { items, currencySymbol, showPrices } = Astro.props;
+/* Cap at the top 4 items and lay them out in a responsive grid */
+const featured = items.slice(0, 4);
 ---
 
 <section class="featured-section" aria-labelledby="featured-heading">
@@ -22,9 +24,9 @@ const { items, currencySymbol, showPrices } = Astro.props;
     <h2 class="featured-heading" id="featured-heading">Must-Try Dishes</h2>
   </div>
 
-  <div class="featured-scroll-track" role="list" aria-label="Featured items carousel">
-    {items.map(item => (
-      <div class="featured-card-wrapper" role="listitem">
+  <div class="featured-grid" role="list" aria-label="Featured items">
+    {featured.map(item => (
+      <div class="featured-grid-item" role="listitem">
         <MenuItemCard item={{ ...item, restaurantSlug: (item as any).restaurantSlug || '' }} currencySymbol={currencySymbol} showPrices={showPrices} />
       </div>
     ))}
@@ -34,7 +36,6 @@ const { items, currencySymbol, showPrices } = Astro.props;
 <style>
   .featured-section {
     padding: 2rem 0;
-    overflow: hidden;
   }
   .featured-header {
     padding: 0 1.25rem;
@@ -59,19 +60,21 @@ const { items, currencySymbol, showPrices } = Astro.props;
     color: var(--color-primary);
     line-height: 1.2;
   }
-  .featured-scroll-track {
-    display: flex;
-    overflow-x: auto;
+  /* Responsive grid: 1 col on phone, 2 on tablet, up to 4 on desktop */
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 0.875rem;
-    padding: 0.25rem 1.25rem 1rem;
-    scroll-snap-type: x mandatory;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    padding: 0 1.25rem;
   }
-  .featured-scroll-track::-webkit-scrollbar { display: none; }
-  .featured-card-wrapper {
-    flex-shrink: 0;
-    width: min(320px, 80vw);
-    scroll-snap-align: start;
+  @media (min-width: 540px) {
+    .featured-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 900px) {
+    .featured-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
 </style>

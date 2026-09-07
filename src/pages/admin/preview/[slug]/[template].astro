@@ -35,7 +35,7 @@ interface Props {
 }
 
 const { restaurant, templateId } = Astro.props;
-const { menu, settings, story } = restaurant;
+const { menu, settings } = restaurant;
 
 const template = getTemplate(templateId, restaurant.moodPreset);
 const components = templateComponents[template.id];
@@ -78,16 +78,6 @@ const switcherLinks = Object.values(templates).map((t) => ({
     <TemplateStyleManager restaurant={restaurant} templateId={template.id} />
 
     <TemplateHero restaurant={restaurant} />
-    <TemplateHeader restaurant={restaurant} />
-
-    {
-        story && (
-            <section class="mr-story">
-                <p class="mr-story-eyebrow">{story.heading || "Our Story"}</p>
-                <p class="mr-story-body">{story.body}</p>
-            </section>
-        )
-    }
 
     {
         featuredItems.length > 0 && (
@@ -108,7 +98,7 @@ const switcherLinks = Object.values(templates).map((t) => ({
 
     <TemplateCategoryNav categories={menu} />
 
-    <main class="mr-menu" id="menu-body">
+    <main class="mr-menu" id="menu">
         <p class="mr-menu-overview">
             {totalItems} dishes across {menu.length} categories
         </p>

@@ -1,33 +1,189 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 const coverUrl = resolveCover(restaurant);
 const logoUrl = resolveLogo(restaurant);
 ---
-<div class="sc-hero">
-  <div class="sc-hero-left">
-    <img src={logoUrl} alt={restaurant.name} class="sc-hero-logo" />
-    <h1 class="sc-hero-title">{restaurant.name}</h1>
-    {restaurant.tagline && <p class="sc-hero-tagline">{restaurant.tagline}</p>}
-  </div>
-  {hasCover && (
-    <div class="sc-hero-right">
-      <img src={coverUrl} alt="" />
-    </div>
+
+<div class="sc-hero" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 70vh;' : 'padding: 5rem 1.5rem 3rem;'}>
+  {hasCover && heroStyle !== 'minimal' && (
+    <>
+      <img src={coverUrl} alt="" class="sc-hero-bg" loading="eager" />
+      <div class="sc-hero-scrim"></div>
+    </>
   )}
+  <div class="sc-hero-content relative z-10 w-full text-center px-6">
+    <div class="sc-logo-ring mb-6 mx-auto">
+      <img src={logoUrl} alt={restaurant.name} class="sc-logo-img" />
+    </div>
+    <h1 class={"sc-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'sc-text-light' : 'sc-text-dark')}>
+      {restaurant.name}
+    </h1>
+    <div class="sc-divider" aria-hidden="true"></div>
+    {restaurant.tagline && (
+      <p class={"sc-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'sc-text-light' : 'sc-text-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="sc-scroll-cue mt-8">
+        <span class="sc-scroll-dot"></span>
+        <span class="sc-scroll-text">Scroll to explore</span>
+      </div>
+    )}
+  </div>
   <svg class="sc-wave" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,30 1440,60 L1440,120 L0,120 Z" fill="var(--sc-secondary)"/></svg>
 </div>
+
 <style>
-  .sc-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 80vh; position: relative; }
-  .sc-hero-left { display: flex; flex-direction: column; justify-content: center; padding: 4rem; background: var(--sc-primary); }
-  .sc-hero-logo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 2rem; }
-  .sc-hero-title { font-family: var(--sc-font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; color: #fff; line-height: 1.1; margin-bottom: 1rem; }
-  .sc-hero-tagline { font-family: var(--sc-font-body); font-size: 1.125rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
-  .sc-hero-right { overflow: hidden; }
-  .sc-hero-right img { width: 100%; height: 100%; object-fit: cover; }
-  .sc-wave { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; }
-  @media (max-width: 768px) { .sc-hero { grid-template-columns: 1fr; } .sc-hero-right { display: none; } }
+  .sc-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .sc-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sc-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+  }
+
+  .sc-hero-content {
+    padding-bottom: 3rem;
+    padding-top: 5rem;
+    animation: sc-contentUp 0.8s ease-out both;
+  }
+
+  @keyframes sc-contentUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .sc-logo-ring {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--sc-accent), transparent 60%);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.15);
+    animation: sc-logoPop 0.7s ease-out 0.2s both;
+  }
+
+  @keyframes sc-logoPop {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .sc-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--sc-secondary);
+  }
+
+  .sc-hero-title {
+    font-family: var(--sc-font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+
+  .sc-text-light { color: #fff; }
+  .sc-text-dark  { color: var(--sc-primary); }
+
+  .sc-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sc-accent), transparent);
+    margin: 1rem auto 1.25rem;
+    animation: sc-dividerGrow 0.6s ease-out 0.5s both;
+  }
+
+  @keyframes sc-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 60px; opacity: 1; }
+  }
+
+  .sc-hero-tagline {
+    font-family: var(--sc-font-body);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    max-width: 36ch;
+    margin: 0 auto;
+    animation: sc-contentUp 0.8s ease-out 0.1s both;
+  }
+
+  .sc-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.6;
+    animation: sc-contentUp 0.8s ease-out 0.8s both;
+  }
+
+  .sc-scroll-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--sc-accent);
+    animation: sc-scrollBounce 2s ease-in-out infinite;
+  }
+
+  .sc-scroll-text {
+    font-family: var(--sc-font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sc-accent);
+  }
+
+  @keyframes sc-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%       { transform: translateY(8px); opacity: 1; }
+  }
+
+  .sc-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sc-hero-content, .sc-logo-ring, .sc-hero-tagline, .sc-divider, .sc-scroll-cue {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

@@ -1,25 +1,179 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 const coverUrl = resolveCover(restaurant);
 const logoUrl = resolveLogo(restaurant);
 ---
-<div class="ac-hero">
-  <div class="ac-hero-card">
-    <img src={logoUrl} alt={restaurant.name} class="ac-hero-logo" />
-    <h1 class="ac-hero-title">{restaurant.name}</h1>
-    {restaurant.tagline && <p class="ac-hero-tagline">"{restaurant.tagline}"</p>}
+
+<div class="ac-hero" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 65vh;' : 'padding: 5rem 1.5rem 3rem;'}>
+  {hasCover && heroStyle !== 'minimal' && (
+    <>
+      <img src={coverUrl} alt="" class="ac-hero-bg" loading="eager" />
+      <div class="ac-hero-scrim"></div>
+    </>
+  )}
+  <div class="ac-hero-content relative z-10 w-full text-center px-6">
+    <div class="ac-logo-ring mb-6 mx-auto">
+      <img src={logoUrl} alt={restaurant.name} class="ac-logo-img" />
+    </div>
+    <h1 class={"ac-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'ac-text-light' : 'ac-text-dark')}>
+      {restaurant.name}
+    </h1>
+    <div class="ac-divider" aria-hidden="true"></div>
+    {restaurant.tagline && (
+      <p class={"ac-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'ac-text-light' : 'ac-text-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="ac-scroll-cue mt-8">
+        <span class="ac-scroll-dot"></span>
+        <span class="ac-scroll-text">Scroll to explore</span>
+      </div>
+    )}
   </div>
-  {hasCover && <img src={coverUrl} alt="" class="ac-hero-bg" />}
 </div>
+
 <style>
-  .ac-hero { position: relative; min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
-  .ac-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.2; filter: sepia(0.3); }
-  .ac-hero-card { position: relative; z-index: 1; text-align: center; padding: 3rem; background: var(--ac-secondary); border: 2px solid var(--ac-primary); border-radius: 2px; box-shadow: 8px 8px 0 0 var(--ac-accent); max-width: 400px; }
-  .ac-hero-logo { width: 72px; height: 72px; border-radius: 2px; object-fit: cover; margin-bottom: 1.5rem; border: 1px solid var(--ac-primary); }
-  .ac-hero-title { font-family: var(--ac-font-heading); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600; color: var(--ac-primary); margin-bottom: 0.75rem; }
-  .ac-hero-tagline { font-family: var(--ac-font-body); font-size: 0.9375rem; color: rgba(0,0,0,0.5); font-style: italic; }
+  .ac-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .ac-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ac-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+  }
+
+  .ac-hero-content {
+    padding-bottom: 3rem;
+    padding-top: 5rem;
+    animation: ac-contentUp 0.8s ease-out both;
+  }
+
+  @keyframes ac-contentUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .ac-logo-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 2px;
+    padding: 3px;
+    background: var(--ac-accent);
+    box-shadow: 4px 4px 0 0 var(--ac-primary);
+    animation: ac-logoPop 0.7s ease-out 0.2s both;
+  }
+
+  @keyframes ac-logoPop {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .ac-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    object-fit: cover;
+    background: var(--ac-secondary);
+  }
+
+  .ac-hero-title {
+    font-family: var(--ac-font-heading);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+
+  .ac-text-light { color: #fff; }
+  .ac-text-dark  { color: var(--ac-primary); }
+
+  .ac-divider {
+    width: 50px;
+    height: 2px;
+    background: var(--ac-accent);
+    margin: 1rem auto 1.25rem;
+    animation: ac-dividerGrow 0.6s ease-out 0.5s both;
+  }
+
+  @keyframes ac-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 50px; opacity: 1; }
+  }
+
+  .ac-hero-tagline {
+    font-family: var(--ac-font-body);
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    font-weight: 400;
+    font-style: italic;
+    max-width: 36ch;
+    margin: 0 auto;
+    animation: ac-contentUp 0.8s ease-out 0.1s both;
+  }
+
+  .ac-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.6;
+    animation: ac-contentUp 0.8s ease-out 0.8s both;
+  }
+
+  .ac-scroll-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 2px;
+    background: var(--ac-accent);
+    animation: ac-scrollBounce 2s ease-in-out infinite;
+  }
+
+  .ac-scroll-text {
+    font-family: var(--ac-font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ac-accent);
+  }
+
+  @keyframes ac-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%       { transform: translateY(8px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ac-hero-content, .ac-logo-ring, .ac-hero-tagline, .ac-divider, .ac-scroll-cue {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

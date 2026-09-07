@@ -1,25 +1,179 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 const coverUrl = resolveCover(restaurant);
 const logoUrl = resolveLogo(restaurant);
 ---
-<div class="zg-hero">
-  <div class="zg-hero-inner">
-    <span class="zg-hero-en">禅</span>
-    <h1 class="zg-hero-title">{restaurant.name}</h1>
-    {restaurant.tagline && <p class="zg-hero-tagline">{restaurant.tagline}</p>}
+
+<div class="zg-hero" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 65vh;' : 'padding: 5rem 1.5rem 3rem;'}>
+  {hasCover && heroStyle !== 'minimal' && (
+    <>
+      <img src={coverUrl} alt="" class="zg-hero-bg" loading="eager" />
+      <div class="zg-hero-scrim"></div>
+    </>
+  )}
+  <div class="zg-hero-content relative z-10 w-full text-center px-6">
+    <div class="zg-logo-ring mb-6 mx-auto">
+      <img src={logoUrl} alt={restaurant.name} class="zg-logo-img" />
+    </div>
+    <h1 class={"zg-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'zg-text-light' : 'zg-text-dark')}>
+      {restaurant.name}
+    </h1>
+    <div class="zg-divider" aria-hidden="true"></div>
+    {restaurant.tagline && (
+      <p class={"zg-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'zg-text-light' : 'zg-text-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="zg-scroll-cue mt-8">
+        <span class="zg-scroll-dot"></span>
+        <span class="zg-scroll-text">Scroll to explore</span>
+      </div>
+    )}
   </div>
-  {hasCover && <div class="zg-hero-bg" style={"background-image: url(" + coverUrl + ")"}></div>}
 </div>
+
 <style>
-  .zg-hero { position: relative; min-height: 60vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .zg-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.15; filter: grayscale(0.5); }
-  .zg-hero-inner { position: relative; z-index: 1; text-align: center; padding: 4rem 2rem; }
-  .zg-hero-en { font-size: 3rem; color: var(--zg-accent); display: block; margin-bottom: 1rem; }
-  .zg-hero-title { font-family: var(--zg-font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: 0.3em; color: var(--zg-primary); margin-bottom: 1rem; }
-  .zg-hero-tagline { font-family: var(--zg-font-body); font-size: 0.9375rem; color: rgba(0,0,0,0.5); letter-spacing: 0.1em; }
+  .zg-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .zg-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .zg-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.25) 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+  }
+
+  .zg-hero-content {
+    padding-bottom: 3rem;
+    padding-top: 5rem;
+    animation: zg-contentUp 0.8s ease-out both;
+  }
+
+  @keyframes zg-contentUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .zg-logo-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--zg-accent), transparent 60%);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 8px 32px rgba(0,0,0,0.08);
+    animation: zg-logoPop 0.7s ease-out 0.2s both;
+  }
+
+  @keyframes zg-logoPop {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .zg-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--zg-secondary);
+  }
+
+  .zg-hero-title {
+    font-family: var(--zg-font-heading);
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+
+  .zg-text-light { color: #fff; }
+  .zg-text-dark  { color: var(--zg-primary); }
+
+  .zg-divider {
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--zg-accent), transparent);
+    margin: 1rem auto 1.25rem;
+    animation: zg-dividerGrow 0.6s ease-out 0.5s both;
+  }
+
+  @keyframes zg-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 50px; opacity: 1; }
+  }
+
+  .zg-hero-tagline {
+    font-family: var(--zg-font-body);
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    max-width: 36ch;
+    margin: 0 auto;
+    animation: zg-contentUp 0.8s ease-out 0.1s both;
+  }
+
+  .zg-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.5;
+    animation: zg-contentUp 0.8s ease-out 0.8s both;
+  }
+
+  .zg-scroll-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--zg-accent);
+    animation: zg-scrollBounce 2s ease-in-out infinite;
+  }
+
+  .zg-scroll-text {
+    font-family: var(--zg-font-body);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--zg-accent);
+  }
+
+  @keyframes zg-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50%       { transform: translateY(6px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zg-hero-content, .zg-logo-ring, .zg-hero-tagline, .zg-divider, .zg-scroll-cue {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

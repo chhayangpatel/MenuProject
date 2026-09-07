@@ -1,44 +1,186 @@
 ---
 import type { Restaurant } from '../../../schemas/restaurant.schema';
 import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
 interface Props { restaurant: Restaurant; }
 const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 const coverUrl = resolveCover(restaurant);
 const logoUrl = resolveLogo(restaurant);
 ---
-<div class="dl-hero">
-  {hasCover && (
+
+<div class="dl-hero" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 75vh;' : 'padding: 6rem 1.5rem 4rem;'}>
+  {hasCover && heroStyle !== 'minimal' && (
     <>
-      <div class="dl-hero-bg" style={"background-image: url(" + coverUrl + ")"}></div>
-      <div class="dl-hero-overlay"></div>
+      <img src={coverUrl} alt="" class="dl-hero-bg" loading="eager" />
+      <div class="dl-hero-scrim"></div>
     </>
   )}
   <div class="dl-hero-content">
-    <div class="dl-hero-logo">
-      <img src={logoUrl} alt={restaurant.name} />
+    <div class="dl-logo-ring mb-8 mx-auto">
+      <img src={logoUrl} alt={restaurant.name} class="dl-logo-img" />
     </div>
-    <h1 class="dl-hero-title">{restaurant.name}</h1>
-    {restaurant.tagline && <p class="dl-hero-tagline">— {restaurant.tagline} —</p>}
-    <div class="dl-hero-scroll-cue">
-      <span>Scroll</span>
-      <div class="dl-scroll-line"></div>
-    </div>
+    <h1 class={"dl-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'dl-text-light' : 'dl-text-dark')}>
+      {restaurant.name}
+    </h1>
+    <div class="dl-divider" aria-hidden="true"></div>
+    {restaurant.tagline && (
+      <p class={"dl-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'dl-text-light' : 'dl-text-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="dl-scroll-cue mt-12">
+        <span class="dl-scroll-dot"></span>
+        <span class="dl-scroll-text">Scroll to explore</span>
+      </div>
+    )}
   </div>
 </div>
+
 <style>
-  .dl-hero { position: relative; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .dl-hero-bg { position: absolute; inset: -50px; background-size: cover; background-position: center; filter: brightness(0.4) saturate(0.8); animation: dl-kenburns 20s ease-in-out infinite alternate; }
-  @keyframes dl-kenburns { from { transform: scale(1); } to { transform: scale(1.1); } }
-  .dl-hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.6) 100%); }
-  .dl-hero-content { position: relative; z-index: 1; text-align: center; padding: 2rem; }
-  .dl-hero-logo { width: 100px; height: 100px; margin: 0 auto 2rem; border-radius: 50%; overflow: hidden; border: 2px solid var(--dl-gold); padding: 3px; animation: dl-fadeUp 1s ease-out 0.3s both; }
-  .dl-hero-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-  .dl-hero-title { font-family: var(--dl-font-heading); font-size: clamp(3rem, 8vw, 6rem); font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; margin-bottom: 1rem; animation: dl-fadeUp 1s ease-out 0.5s both; }
-  .dl-hero-tagline { font-family: var(--dl-font-body); font-size: clamp(0.875rem, 2vw, 1.125rem); color: var(--dl-gold); letter-spacing: 0.3em; text-transform: uppercase; animation: dl-fadeUp 1s ease-out 0.7s both; }
-  .dl-hero-scroll-cue { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; animation: dl-fadeUp 1s ease-out 1s both; }
-  .dl-hero-scroll-cue span { font-size: 0.625rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-  .dl-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--dl-gold), transparent); animation: dl-scrollPulse 2s ease-in-out infinite; }
-  @keyframes dl-fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes dl-scrollPulse { 0%, 100% { opacity: 0.3; height: 40px; } 50% { opacity: 1; height: 60px; } }
+  .dl-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .dl-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) saturate(0.9);
+  }
+
+  .dl-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+  }
+
+  .dl-hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding-bottom: 4rem;
+    padding-top: 6rem;
+    animation: dl-contentUp 1s ease-out both;
+  }
+
+  @keyframes dl-contentUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .dl-logo-ring {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--dl-gold), transparent 60%);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 12px 48px rgba(0,0,0,0.3);
+    animation: dl-logoPop 0.9s ease-out 0.2s both;
+  }
+
+  @keyframes dl-logoPop {
+    from { opacity: 0; transform: scale(0.65); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .dl-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--dl-secondary, #1a1a1a);
+  }
+
+  .dl-hero-title {
+    font-family: var(--dl-font-heading);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 4px 32px rgba(0,0,0,0.6);
+  }
+
+  .dl-text-light { color: #fff; }
+  .dl-text-dark  { color: var(--dl-primary, #fff); }
+
+  .dl-divider {
+    width: 80px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--dl-gold), transparent);
+    margin: 1.25rem auto 1.5rem;
+    animation: dl-dividerGrow 0.8s ease-out 0.6s both;
+  }
+
+  @keyframes dl-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 80px; opacity: 1; }
+  }
+
+  .dl-hero-tagline {
+    font-family: var(--dl-font-body);
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    max-width: 38ch;
+    line-height: 1.75;
+    margin: 0 auto;
+    animation: dl-contentUp 1s ease-out 0.2s both;
+  }
+
+  .dl-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    animation: dl-contentUp 1s ease-out 1s both;
+  }
+
+  .dl-scroll-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dl-gold);
+    animation: dl-scrollBounce 2s ease-in-out infinite;
+    box-shadow: 0 0 12px var(--dl-gold);
+  }
+
+  .dl-scroll-text {
+    font-family: var(--dl-font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dl-gold);
+  }
+
+  @keyframes dl-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50%       { transform: translateY(12px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dl-hero-content, .dl-logo-ring, .dl-hero-tagline, .dl-divider, .dl-scroll-cue {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

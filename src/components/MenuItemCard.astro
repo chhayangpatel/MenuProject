@@ -1,6 +1,7 @@
 ---
 import type { MenuItem } from '../schemas/restaurant.schema';
 import { resolveMenuItemImage } from '../lib/assets';
+import ItemBadge from './ItemBadge.astro';
 
 interface Props {
   item: MenuItem;
@@ -25,25 +26,10 @@ const hasVariants = item.variants && item.variants.length > 0;
   aria-label={"View details for " + item.name}
 >
   <div class="menu-card">
-    {/* Featured badge */}
-    {item.featured && (
-      <div class="featured-badge" aria-label="Chef's Pick">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-        Chef's Pick
-      </div>
-    )}
-
-    {/* Popularity badge */}
-    {item.popularity && (
-      <div class={`popularity-badge popularity-badge--${item.popularity}`}>
-        {item.popularity === 'most-ordered' && '🔥 Most Ordered'}
-        {item.popularity === 'staff-favorite' && '⭐ Staff Pick'}
-        {item.popularity === 'new' && '✨ New'}
-        {item.popularity === 'trending' && '📈 Trending'}
-      </div>
-    )}
+    {/* Standout Badge */}
+    <div class="card-badge-container">
+      <ItemBadge item={item} size="sm" />
+    </div>
 
     {/* Sold Out overlay */}
     {!item.available && (
@@ -164,38 +150,16 @@ const hasVariants = item.variants && item.variants.length > 0;
     pointer-events: none;
   }
 
-  /* Featured badge */
-  .featured-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
-    background: var(--color-accent);
-    color: #fff;
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-radius: 999px;
-  }
-
-  /* Popularity badge */
-  .popularity-badge {
+  /* Standout badge container */
+  .card-badge-container {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 2;
-    padding: 3px 8px;
-    background: color-mix(in srgb, var(--color-primary) 85%, transparent);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    font-size: 0.625rem;
-    font-weight: 600;
-    border-radius: 999px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    pointer-events: none;
   }
 
   /* Sold out */

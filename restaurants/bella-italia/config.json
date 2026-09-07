@@ -25,7 +25,11 @@
     "whatsapp": "+1-555-0100",
     "email": "info@bellaitalia.example",
     "address": "123 Main St, Springfield",
-    "googleMapsUrl": "https://maps.google.com/?q=123+Main+St+Springfield"
+    "googleMapsUrl": "https://maps.google.com/?q=123+Main+St+Springfield",
+    "socials": {
+      "instagram": "https://instagram.com/bellaitalia",
+      "facebook": "https://facebook.com/bellaitalia"
+    }
   },
   "hours": {
     "regular": {
@@ -72,7 +76,8 @@
           ],
           "spicyLevel": 1,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "must-try"
         },
         {
           "id": "burrata-pugliese",
@@ -86,7 +91,7 @@
           "spicyLevel": 0,
           "available": true,
           "featured": true,
-          "popularity": "new"
+          "popularity": "chef-pick"
         },
         {
           "id": "vitello-tonnato",
@@ -273,7 +278,8 @@
           "tags": [],
           "spicyLevel": 0,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "peoples-favorite"
         },
         {
           "id": "spaghetti-alle-vongole",
@@ -435,7 +441,8 @@
           "tags": [],
           "spicyLevel": 2,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "must-try"
         },
         {
           "id": "quattro-formaggi",

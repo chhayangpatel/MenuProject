@@ -17,7 +17,13 @@
   },
   "contact": {
     "phone": "+1-555-9999",
-    "address": "456 Urban Ave, Downtown"
+    "email": "eat@neonburger.example",
+    "address": "456 Urban Ave, Downtown",
+    "googleMapsUrl": "https://maps.google.com/?q=456+Urban+Ave+Downtown",
+    "socials": {
+      "instagram": "https://instagram.com/neonburger",
+      "twitter": "https://twitter.com/neonburger"
+    }
   },
   "hours": {
     "regular": {
@@ -61,7 +67,8 @@
           "tags": [],
           "spicyLevel": 0,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "must-try"
         },
         {
           "id": "nuclear-nacho",
@@ -81,7 +88,8 @@
           "tags": [],
           "spicyLevel": 0,
           "available": true,
-          "featured": false
+          "featured": true,
+          "popularity": "peoples-favorite"
         },
         {
           "id": "hot-honey-bird",
@@ -91,7 +99,8 @@
           "tags": [],
           "spicyLevel": 2,
           "available": true,
-          "featured": true
+          "featured": true,
+          "popularity": "chef-pick"
         },
         {
           "id": "blue-collar",

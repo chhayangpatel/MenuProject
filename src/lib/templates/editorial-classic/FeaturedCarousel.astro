@@ -10,21 +10,29 @@ interface Props {
 }
 
 const { items, currencySymbol, showPrices, restaurant } = Astro.props;
+/* Cap at the top 4 items and lay them out in a responsive grid */
+const featured = items.slice(0, 4);
 ---
 
 <section class="ec-featured-carousel" aria-labelledby="ec-featured-heading">
   <div class="ec-featured-header">
-    <div class="ec-featured-label" aria-hidden="true">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-      </svg>
-      Must-Try Dishes
+    <!-- Decorative rule -->
+    <div class="ec-featured-rule" aria-hidden="true"></div>
+    <div class="ec-featured-title-group">
+      <p class="ec-featured-eyebrow" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Chef's Selection
+      </p>
+      <h2 class="ec-featured-heading" id="ec-featured-heading">Must-Try Dishes</h2>
+      <p class="ec-featured-subline">Curated favourites — crafted with intention, loved by every table</p>
     </div>
-    <h2 class="ec-featured-heading" id="ec-featured-heading">Chef's Selection</h2>
+    <div class="ec-featured-rule" aria-hidden="true"></div>
   </div>
 
-  <div class="ec-featured-track" role="list" aria-label="Featured items carousel">
-    {items.map(item => (
+  <div class="ec-featured-grid" role="list" aria-label="Featured items">
+    {featured.map(item => (
       <div class="ec-featured-card" role="listitem">
         <MenuCard
           item={item}
@@ -38,5 +46,107 @@ const { items, currencySymbol, showPrices, restaurant } = Astro.props;
 </section>
 
 <style>
-  /* Styles in editorial-classic/styles.css */
+  .ec-featured-carousel {
+    padding: 3rem 0 2rem;
+  }
+
+  /* ── Header ─────────────────────────────────────────────────────────── */
+  .ec-featured-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .ec-featured-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right,
+      transparent,
+      color-mix(in srgb, var(--ec-accent, #C9A227) 40%, transparent),
+      transparent
+    );
+  }
+
+  .ec-featured-title-group {
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .ec-featured-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--ec-font-body, sans-serif);
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ec-accent, #C9A227);
+    margin: 0 0 0.5rem;
+  }
+
+  .ec-featured-heading {
+    font-family: var(--ec-font-heading, serif);
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ec-primary, #1A1612);
+    margin: 0 0 0.5rem;
+  }
+
+  .ec-featured-subline {
+    font-family: var(--ec-font-body, sans-serif);
+    font-size: 0.875rem;
+    color: color-mix(in srgb, var(--ec-primary, #1A1612) 50%, transparent);
+    font-style: italic;
+    margin: 0;
+    max-width: 38ch;
+  }
+
+  /* ── Responsive grid: equal-height cards ────────────────────────────── */
+  .ec-featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0 1.25rem;
+    align-items: stretch;
+  }
+
+  .ec-featured-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* On tablet: 2-col grid with a divider between columns */
+  @media (min-width: 540px) {
+    .ec-featured-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 2rem;
+    }
+    .ec-featured-card:nth-child(odd) {
+      border-right: 1px dotted color-mix(in srgb, var(--ec-primary, #1A1612) 12%, transparent);
+      padding-right: 2rem;
+    }
+    .ec-featured-card:nth-child(even) {
+      padding-left: 0;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .ec-featured-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0 2rem;
+    }
+    .ec-featured-card:nth-child(odd) {
+      border-right: none;
+      padding-right: 0;
+    }
+    .ec-featured-card:not(:last-child) {
+      border-right: 1px dotted color-mix(in srgb, var(--ec-primary, #1A1612) 10%, transparent);
+      padding-right: 2rem;
+    }
+  }
 </style>

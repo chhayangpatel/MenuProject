@@ -1,0 +1,64 @@
+---
+import type { MenuItem } from '../schemas/restaurant.schema';
+
+interface Props {
+  item: MenuItem;
+  class?: string;
+  size?: 'sm' | 'md';
+}
+
+const { item, class: className = '', size = 'md' } = Astro.props;
+
+let badgeType = item.popularity;
+if (!badgeType && item.featured) {
+  badgeType = 'chef-pick';
+}
+---
+
+{badgeType && (
+  <span class:list={["item-badge", `item-badge--${badgeType}`, `item-badge--${size}`, className]} aria-label={badgeType.replace(/-/g, " ")}>
+    {badgeType === 'must-try' && <span>Must Try</span>}
+    {badgeType === 'chef-pick' && <span>Chef's Pick</span>}
+    {badgeType === 'peoples-favorite' && <span>People's Fav</span>}
+    {badgeType === 'most-ordered' && <span>Most Ordered</span>}
+    {badgeType === 'staff-favorite' && <span>Staff Pick</span>}
+    {badgeType === 'new' && <span>New</span>}
+    {badgeType === 'trending' && <span>Trending</span>}
+  </span>
+)}
+
+<style>
+  /*
+   * Template-native badge: minimal, text-only label that inherits
+   * accent color from whichever template is currently active.
+   * No icons, no heavy styling — just a subtle text accent.
+   */
+  .item-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: middle;
+    color: var(--color-accent, var(--ec-accent, var(--bs-accent, var(--mm-accent, #888))));
+    transition: color 0.2s ease;
+    transform: translateY(-1px);
+  }
+
+  .item-badge--md {
+    font-size: 0.6rem;
+  }
+
+  .item-badge--sm {
+    font-size: 0.5625rem;
+  }
+
+  /* must-try gets slightly stronger weight */
+  .item-badge--must-try {
+    font-weight: 700;
+    letter-spacing: 0.07em;
+  }
+</style>

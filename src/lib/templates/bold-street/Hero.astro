@@ -1,40 +1,182 @@
 ---
 import type { Restaurant } from "../../../schemas/restaurant.schema";
 import { resolveCover, resolveLogo } from "../../../lib/assets";
+import HeroStory from "../../../components/HeroStory.astro";
 interface Props {
   restaurant: Restaurant;
 }
 const { restaurant } = Astro.props;
+const heroStyle = restaurant.hero?.style || 'fullbleed';
 const hasCover = !!restaurant.coverImage;
 const coverUrl = resolveCover(restaurant);
 const logoUrl = resolveLogo(restaurant);
 ---
 
-<div class="bs-wrapper bs-hero-wrapper">
-  <div class="bs-hero-media">
-    {hasCover && <img src={coverUrl} alt="" loading="eager" />}
-    <div
-      class="absolute inset-0 bg-gradient-to-r from-[var(--bs-primary)]/90 to-transparent"
-    >
+<div class="bs-hero" style={hasCover && heroStyle !== 'minimal' ? 'min-height: 70vh;' : 'padding: 5rem 1.5rem 3rem;'}>
+  {hasCover && heroStyle !== 'minimal' && (
+    <>
+      <img src={coverUrl} alt="" class="bs-hero-bg" loading="eager" />
+      <div class="bs-hero-scrim"></div>
+    </>
+  )}
+  <div class="bs-hero-content relative z-10 w-full text-center px-6">
+    <div class="bs-logo-ring mb-6 mx-auto">
+      <img src={logoUrl} alt={restaurant.name} class="bs-logo-img" />
     </div>
-  </div>
-  <div class="bs-hero-content">
-    <span class="bs-hero-tag">{restaurant.tagline || "EST. 2024"}</span>
-    <h1 class="bs-hero-title">{restaurant.name}</h1>
-    <p class="bs-hero-desc">
-      {restaurant.description || restaurant.tagline || "Late night done right."}
-    </p>
-    <a href="#menu" class="bs-btn bs-btn-primary"
-      >View Menu <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        ><line x1="5" y1="12" x2="19" y2="12"></line><polyline
-          points="12 5 19 12 12 19"></polyline></svg
-      ></a
-    >
+    <h1 class={"bs-hero-title " + (hasCover && heroStyle !== 'minimal' ? 'bs-text-light' : 'bs-text-dark')}>
+      {restaurant.name}
+    </h1>
+    <div class="bs-divider" aria-hidden="true"></div>
+    {restaurant.tagline && (
+      <p class={"bs-hero-tagline " + (hasCover && heroStyle !== 'minimal' ? 'bs-text-light' : 'bs-text-dark')}>
+        {restaurant.tagline}
+      </p>
+    )}
+    <HeroStory restaurant={restaurant} light={hasCover && heroStyle !== 'minimal'} />
+    <a href="#menu" class="bs-btn bs-btn-primary">View Menu <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    {hasCover && heroStyle === 'fullbleed' && (
+      <div class="bs-scroll-cue mt-8">
+        <span class="bs-scroll-dot"></span>
+        <span class="bs-scroll-text">Scroll to explore</span>
+      </div>
+    )}
   </div>
 </div>
+
+<style>
+  .bs-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .bs-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bs-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.88) 0%,
+      rgba(0, 0, 0, 0.35) 50%,
+      rgba(0, 0, 0, 0.08) 100%
+    );
+  }
+
+  .bs-hero-content {
+    padding-bottom: 3.5rem;
+    padding-top: 5rem;
+    animation: bs-contentUp 0.8s ease-out both;
+  }
+
+  @keyframes bs-contentUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .bs-logo-ring {
+    width: 90px;
+    height: 90px;
+    border-radius: 0;
+    padding: 3px;
+    background: var(--bs-accent);
+    box-shadow: 0 0 0 2px var(--bs-accent), 0 8px 32px rgba(0,0,0,0.2);
+    animation: bs-logoPop 0.7s ease-out 0.2s both;
+  }
+
+  @keyframes bs-logoPop {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .bs-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: var(--bs-secondary);
+  }
+
+  .bs-hero-title {
+    font-family: var(--bs-font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  .bs-text-light { color: #fff; }
+  .bs-text-dark  { color: var(--bs-primary); }
+
+  .bs-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--bs-accent);
+    margin: 1rem auto 1.25rem;
+    animation: bs-dividerGrow 0.6s ease-out 0.5s both;
+  }
+
+  @keyframes bs-dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 60px; opacity: 1; }
+  }
+
+  .bs-hero-tagline {
+    font-family: var(--bs-font-body);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    max-width: 36ch;
+    margin: 0 auto 1.5rem;
+    animation: bs-contentUp 0.8s ease-out 0.1s both;
+  }
+
+  .bs-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.6;
+    animation: bs-contentUp 0.8s ease-out 0.8s both;
+  }
+
+  .bs-scroll-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--bs-accent);
+    animation: bs-scrollBounce 2s ease-in-out infinite;
+  }
+
+  .bs-scroll-text {
+    font-family: var(--bs-font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bs-accent);
+  }
+
+  @keyframes bs-scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%       { transform: translateY(8px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bs-hero-content, .bs-logo-ring, .bs-hero-tagline, .bs-divider, .bs-scroll-cue {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

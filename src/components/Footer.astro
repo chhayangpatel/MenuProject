@@ -1,5 +1,7 @@
 ---
 import type { Restaurant } from '../schemas/restaurant.schema';
+import SocialIcon from './SocialIcon.astro';
+import PoweredBy from './PoweredBy.astro';
 
 interface Props {
   restaurant: Restaurant;
@@ -11,28 +13,33 @@ const hourEntries = hours?.regular ? Object.entries(hours.regular) : (hours && !
 ---
 
 <footer class="site-footer" role="contentinfo">
-  <div class="footer-body max-w-3xl mx-auto">
+  <div class="footer-container">
 
-    {/* Restaurant identity */}
+    {/* Brand Header */}
     <div class="footer-brand">
-      <p class="footer-brand-name">{restaurant.name}</p>
+      <h2 class="footer-brand-name">{restaurant.name}</h2>
       {restaurant.tagline && <p class="footer-tagline">{restaurant.tagline}</p>}
+      <div class="footer-brand-divider" aria-hidden="true"></div>
     </div>
 
+    {/* Main Columns Grid */}
     <div class="footer-grid">
-      {/* Hours */}
+      {/* Hours Column */}
       {hourEntries.length > 0 && (
-        <div class="footer-col">
-          <h3 class="footer-col-heading">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-            </svg>
-            Hours
-          </h3>
+        <div class="footer-col footer-col--hours">
+          <div class="footer-col-header">
+            <span class="footer-col-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </span>
+            <h3 class="footer-col-heading">Opening Hours</h3>
+          </div>
           <ul class="hours-list">
             {hourEntries.map(([day, time]) => (
               <li class="hours-row">
                 <span class="hours-day">{day}</span>
+                <span class="hours-dots" aria-hidden="true"></span>
                 <span class="hours-time">{time}</span>
               </li>
             ))}
@@ -40,174 +47,382 @@ const hourEntries = hours?.regular ? Object.entries(hours.regular) : (hours && !
         </div>
       )}
 
-      {/* Location & Contact */}
-      <div class="footer-col">
-        <h3 class="footer-col-heading">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-          </svg>
-          Location
-        </h3>
-        {contact?.address && (
-          <p class="footer-address">{contact.address}</p>
-        )}
-        {contact?.googleMapsUrl && (
-          <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" class="footer-link footer-map-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      {/* Location & Contact Column */}
+      <div class="footer-col footer-col--contact">
+        <div class="footer-col-header">
+          <span class="footer-col-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
             </svg>
-            Get Directions
-          </a>
-        )}
-        {contact?.phone && (
-          <a href={"tel:" + contact.phone} class="footer-link">
-            {contact.phone}
-          </a>
-        )}
-        {contact?.email && (
-          <a href={"mailto:" + contact.email} class="footer-link">
-            {contact.email}
-          </a>
-        )}
+          </span>
+          <h3 class="footer-col-heading">Find & Contact Us</h3>
+        </div>
 
-        {/* Social links */}
-        {contact?.socials && Object.keys(contact.socials).length > 0 && (
-          <div class="social-row">
-            {Object.entries(contact.socials).map(([platform, url]) => (
-              <a href={url} target="_blank" rel="noopener noreferrer" class="social-link" title={platform}>
-                {platform}
+        <div class="contact-details">
+          {contact?.address && (
+            <div class="contact-item contact-address-block">
+              <p class="footer-address">{contact.address}</p>
+              {contact?.googleMapsUrl && (
+                <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" class="directions-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                  </svg>
+                  <span>Get Directions</span>
+                </a>
+              )}
+            </div>
+          )}
+
+          <div class="contact-links-group">
+            {contact?.phone && (
+              <a href={"tel:" + contact.phone} class="contact-action-link" aria-label={`Call ${contact.phone}`}>
+                <span class="link-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </span>
+                <span>{contact.phone}</span>
               </a>
-            ))}
+            )}
+
+            {contact?.whatsapp && (
+              <a href={"https://wa.me/" + contact.whatsapp.replace(/[^0-9]/g, '')} target="_blank" rel="noopener noreferrer" class="contact-action-link" aria-label="Chat on WhatsApp">
+                <span class="link-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                  </svg>
+                </span>
+                <span>WhatsApp Message</span>
+              </a>
+            )}
+
+            {contact?.email && (
+              <a href={"mailto:" + contact.email} class="contact-action-link" aria-label={`Email ${contact.email}`}>
+                <span class="link-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <span>{contact.email}</span>
+              </a>
+            )}
           </div>
-        )}
+
+          {/* Social Links */}
+          {contact?.socials && Object.keys(contact.socials).length > 0 && (
+            <div class="social-section">
+              <span class="social-label">Follow Us</span>
+              <div class="social-row">
+                {Object.entries(contact.socials).map(([platform, url]) => (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social-btn"
+                    aria-label={`Follow on ${platform}`}
+                    title={platform}
+                  >
+                    <SocialIcon platform={platform} size={18} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="footer-bottom max-w-3xl mx-auto">
-    <span>© {new Date().getFullYear()} {restaurant.name}</span>
-    <span class="footer-powered">Digital Menu</span>
+    {/* Bottom Bar */}
+    <div class="footer-bottom">
+      <span class="footer-copyright">© {new Date().getFullYear()} {restaurant.name}. All rights reserved.</span>
+      <div class="footer-powered-wrap">
+        <PoweredBy />
+      </div>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: 3rem;
-    padding: 3rem 1.5rem 1.5rem;
-    background: color-mix(in srgb, var(--color-primary) 5%, var(--color-secondary));
-    border-top: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
+    margin-top: 4rem;
+    padding: 4rem 1.5rem 2rem;
+    background: color-mix(in srgb, var(--color-primary, #111) 4%, var(--color-secondary, #fff));
+    border-top: 1px solid color-mix(in srgb, var(--color-primary, #111) 10%, transparent);
   }
-  .footer-body { display: flex; flex-direction: column; gap: 2rem; }
 
-  .footer-brand { text-align: center; }
+  .footer-container {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  /* Brand Header */
+  .footer-brand {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .footer-brand-name {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-family: var(--font-heading, serif);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
     font-weight: 800;
-    color: var(--color-primary);
+    color: var(--color-primary, #111);
     letter-spacing: -0.02em;
-  }
-  .footer-tagline {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: color-mix(in srgb, var(--color-primary) 55%, transparent);
-    margin-top: 0.25rem;
-    font-style: italic;
+    line-height: 1.2;
   }
 
+  .footer-tagline {
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.95rem;
+    color: color-mix(in srgb, var(--color-primary, #111) 60%, transparent);
+    margin-top: 0.35rem;
+    font-style: italic;
+    max-width: 500px;
+  }
+
+  .footer-brand-divider {
+    width: 48px;
+    height: 2px;
+    background: var(--color-accent, currentColor);
+    margin-top: 1.25rem;
+    border-radius: 9999px;
+    opacity: 0.8;
+  }
+
+  /* Grid Layout */
   .footer-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  @media (min-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; }
+    gap: 2.5rem;
   }
 
-  .footer-col {}
-  .footer-col-heading {
+  @media (min-width: 680px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  /* Column Headers */
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-col-header {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-body);
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-primary, #111) 8%, transparent);
+  }
+
+  .footer-col-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent, var(--color-primary));
+  }
+
+  .footer-col-heading {
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary, #111);
+  }
+
+  /* Hours List */
+  .hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hours-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.875rem;
+  }
+
+  .hours-day {
+    text-transform: capitalize;
+    font-weight: 600;
+    color: var(--color-primary, #111);
+    min-width: 80px;
+  }
+
+  .hours-dots {
+    flex: 1;
+    border-bottom: 1px dotted color-mix(in srgb, var(--color-primary, #111) 20%, transparent);
+    margin: 0 0.25rem;
+  }
+
+  .hours-time {
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--color-primary, #111) 75%, transparent);
+    font-weight: 500;
+  }
+
+  /* Contact Details */
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contact-address-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-address {
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-primary, #111) 75%, transparent);
+    margin: 0;
+  }
+
+  .directions-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    align-self: flex-start;
+    padding: 0.45rem 0.85rem;
+    background: color-mix(in srgb, var(--color-accent, var(--color-primary)) 12%, transparent);
+    color: var(--color-accent, var(--color-primary));
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid color-mix(in srgb, var(--color-accent, var(--color-primary)) 25%, transparent);
+  }
+
+  .directions-btn:hover {
+    background: var(--color-accent, var(--color-primary));
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent, #000) 25%, transparent);
+  }
+
+  .contact-links-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contact-action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.875rem;
+    color: color-mix(in srgb, var(--color-primary, #111) 75%, transparent);
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .contact-action-link:hover {
+    color: var(--color-accent, var(--color-primary));
+    transform: translateX(2px);
+  }
+
+  .link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--color-primary, #111) 6%, transparent);
+    color: var(--color-accent, var(--color-primary));
+    flex-shrink: 0;
+  }
+
+  /* Social Row */
+  .social-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .social-label {
+    font-family: var(--font-body, sans-serif);
     font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-accent);
-    margin-bottom: 0.875rem;
-  }
-
-  .hours-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.35rem; }
-  .hours-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.75rem;
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    color: color-mix(in srgb, var(--color-primary) 75%, transparent);
-  }
-  .hours-day { text-transform: capitalize; font-weight: 500; color: var(--color-primary); }
-  .hours-time {}
-
-  .footer-address {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: color-mix(in srgb, var(--color-primary) 70%, transparent);
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
-    white-space: pre-line;
-  }
-  .footer-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: color-mix(in srgb, var(--color-primary) 65%, transparent);
-    text-decoration: none;
-    margin-top: 0.3rem;
-    transition: color 0.2s;
-    display: block;
-  }
-  .footer-link:hover { color: var(--color-accent); }
-  .footer-map-link {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 0.3rem;
-    color: var(--color-accent) !important;
-    font-weight: 600;
-    font-size: 0.8125rem;
+    color: color-mix(in srgb, var(--color-primary, #111) 50%, transparent);
   }
 
   .social-row {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
-    margin-top: 0.75rem;
   }
-  .social-link {
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: capitalize;
-    letter-spacing: 0.04em;
-    color: color-mix(in srgb, var(--color-primary) 55%, transparent);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .social-link:hover { color: var(--color-accent); }
 
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-primary, #111) 6%, transparent);
+    color: var(--color-primary, #111);
+    border: 1px solid color-mix(in srgb, var(--color-primary, #111) 12%, transparent);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-decoration: none;
+  }
+
+  .social-btn:hover {
+    background: var(--color-accent, var(--color-primary));
+    color: #ffffff;
+    border-color: transparent;
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Bottom Bar */
   .footer-bottom {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-top: 2rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    color: color-mix(in srgb, var(--color-primary) 38%, transparent);
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-primary, #111) 10%, transparent);
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.8125rem;
+    color: color-mix(in srgb, var(--color-primary, #111) 45%, transparent);
+    text-align: center;
   }
-  .footer-powered { font-style: italic; }
+
+  @media (min-width: 600px) {
+    .footer-bottom {
+      flex-direction: row;
+      text-align: left;
+    }
+  }
+
+  .footer-copyright {
+    line-height: 1.4;
+  }
 </style>
