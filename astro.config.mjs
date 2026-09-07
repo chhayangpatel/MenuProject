@@ -5,22 +5,28 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// Cloudflare Pages builds expose CF_PAGES=1 and CF_PAGES_URL automatically.
-// They serve from the root and know their own URL, so prefer those when set.
-const isCloudflarePages = Boolean(process.env.CF_PAGES);
+// Cloudflare build detection. Classic Pages CI sets CF_PAGES=1 and
+// CF_PAGES_URL; the newer unified Workers Builds system sets neither, but
+// every Cloudflare build runs with CI=true and WITHOUT GITHUB_ACTIONS=true
+// (which only GitHub Actions sets). SITE_BASE/SITE_URL still override.
+const isCloudflareBuild = Boolean(
+  process.env.CF_PAGES ||
+  process.env.CF_PAGES_URL ||
+  (process.env.CI && !process.env.GITHUB_ACTIONS),
+);
 
 // Site URL: Cloudflare Pages URL when building there, otherwise the GitHub
 // Pages project site. SITE_URL env var overrides both.
 const site =
   process.env.SITE_URL ||
-  (isCloudflarePages && process.env.CF_PAGES_URL
-    ? process.env.CF_PAGES_URL
-    : 'https://chhayangpatel.github.io/MenuProject/');
+  process.env.CF_PAGES_URL ||
+  (isCloudflareBuild ? 'https://menuproject-1mg.pages.dev/' : undefined) ||
+  'https://chhayangpatel.github.io/MenuProject/';
 
 // Base path: GitHub Pages serves the site from /MenuProject. Cloudflare
 // Pages serves from the root. SITE_BASE env var overrides both.
 const base =
-  process.env.SITE_BASE || (isCloudflarePages ? '/' : '/MenuProject');
+  process.env.SITE_BASE || (isCloudflareBuild ? '/' : '/MenuProject');
 
 // Worker URL — loaded from .env at config-eval time so it works in both:
 //   - Local dev: reads VITE_WORKER_URL from .env  (http://localhost:8787)

@@ -63,7 +63,7 @@ ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject-1mg.pages.
 Local **production** deploy (build with the Cloudflare environment, then publish to `main`):
 
 ```powershell
-$env:CF_PAGES = '1'; npm run build
+$env:CI = '1'; npm run build
 npx wrangler pages deploy dist --project-name menuproject --branch main
 ```
 
@@ -76,10 +76,12 @@ npx wrangler pages deploy dist --project-name menuproject --branch main
 | Environment | `base` | `site` | Set by |
 |---|---|---|---|
 | Local dev / GitHub Pages | `/MenuProject` | `https://chhayangpatel.github.io/MenuProject/` | defaults |
-| Cloudflare Pages (`CF_PAGES=1`) | `/` | `CF_PAGES_URL` (e.g. `https://menuproject-1mg.pages.dev`) | Cloudflare build system |
+| Cloudflare build (classic Pages or unified Workers Builds) | `/` | `CF_PAGES_URL` or `https://menuproject-1mg.pages.dev/` | auto-detected |
 | Any explicit override | `SITE_BASE` | `SITE_URL` | env var (highest priority) |
 
-Because Cloudflare sets `CF_PAGES=1` and `CF_PAGES_URL` for us, **no `SITE_BASE`/`SITE_URL` variables need to be configured in the dashboard**.
+**How detection works:** classic Pages CI sets `CF_PAGES=1`/`CF_PAGES_URL`, but the newer unified **Workers Builds** system sets neither. Both run with `CI=true` and without `GITHUB_ACTIONS=true` (which only GitHub Actions sets), so `astro.config.mjs` treats `CI && !GITHUB_ACTIONS` as a Cloudflare build. No `SITE_BASE`/`SITE_URL` variables are needed in the dashboard.
+
+> **Caution:** do not set `SITE_BASE`/`SITE_URL` as **local Windows user environment variables** — they silently override the defaults in every local build and make it impossible to verify the GitHub Pages output locally. Keep them only in CI dashboards if ever needed.
 
 ### Required environment variables on the Pages project
 
