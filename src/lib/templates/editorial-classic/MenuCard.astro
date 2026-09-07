@@ -170,6 +170,8 @@ const hasVariants = item.variants && item.variants.length > 0;
     white-space: nowrap;
     flex-shrink: 0;
     font-variant-numeric: tabular-nums;
+    /* Keeps the price flush-right when the dotted leader is hidden on phones */
+    margin-left: auto;
   }
   .ec-row-price-from {
     font-size: 0.75em;
