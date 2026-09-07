@@ -24,6 +24,16 @@ Both site deployments share the same `dist/` build output. GitHub Pages serves i
 
 Account ID: `12241568cc83ebb1b0769d580a8fa9f2`
 
+### Why the URL is `menuproject-1mg.pages.dev` (and not `menuproject.pages.dev`)
+
+The `pages.dev` subdomain is **not** simply the project name. When a Pages project is created, Cloudflare appends a short **random suffix** (here `-1mg`) to guarantee the subdomain is globally unique across all `*.pages.dev` — `menuproject.pages.dev` was already taken by someone else, so Cloudflare assigned `menuproject-1mg.pages.dev`. The suffix:
+
+- is chosen by Cloudflare at **project creation time** and cannot be chosen or changed,
+- is permanent for the life of the project,
+- does not affect custom domains — attaching `menus.yourdomain.com` later gives a clean URL.
+
+This is why the worker's `ALLOWED_ORIGIN` and the build defaults reference `menuproject-1mg.pages.dev`, and why any docs/scripts assuming `menuproject.pages.dev` are wrong.
+
 ---
 
 ## 2. Config files in the repo
@@ -89,11 +99,34 @@ npx wrangler pages deploy dist --project-name menuproject --branch main
 
 ### Required environment variables on the Pages project
 
-Dashboard → Workers & Pages → `menuproject` → **Settings → Variables and Secrets** (Production):
+Dashboard → Workers & Pages → `menuproject` → **Settings → Build → Variables** (build variables — available to the build command):
 
 | Variable | Value | Purpose |
 |---|---|---|
-| `VITE_WORKER_URL` | `https://menu-admin.chhayang-jenkins.workers.dev` | Baked into the client bundle so the admin panel can reach the API. **Must be a Build variable** (Settings → Build → Variables), not a runtime binding — the site is static. If missing, the build fails with an explicit error. |
+| `VITE_WORKER_URL` | `https://menu-admin.chhayang-jenkins.workers.dev` | Baked into the client bundle so the admin panel can reach the API. **Must be a Build variable**, not a runtime binding — the site is static, runtime variables do nothing. If missing, the build fails with an explicit error. |
+| `CLOUDFLARE_API_TOKEN` | token with `Cloudflare Pages → Edit` | Only needed because a custom deploy command is used (see §5). Delete it if you switch to an empty deploy command. |
+
+**Do NOT set** `SITE_BASE` / `SITE_URL` here — auto-detection (above) handles them, and stale values silently override it.
+
+### Variables & secrets on the Worker `menu-admin`
+
+**Plain var** — declared in `worker/wrangler.toml` (source of truth; no dashboard action needed):
+| Variable | Value |
+|---|---|
+| `ALLOWED_ORIGIN` | `https://chhayangpatel.github.io,https://menuproject-1mg.pages.dev` |
+
+**Secrets** — set once via `npx wrangler secret put <NAME>` (run inside `worker/`); never in files or plain dashboard vars:
+| Secret | What it is |
+|---|---|
+| `GITHUB_TOKEN` | GitHub PAT with `repo` scope — the worker commits config changes to the repo |
+| `ADMIN_PASSWORD_HASH` | SHA-256 hex of the admin password |
+| `JWT_SECRET` | Random string for HMAC token signing |
+
+**Optional** (only if not provided another way — check the worker's dashboard Variables & Secrets):
+| Variable | Purpose |
+|---|---|
+| `REPO_OWNER` | GitHub username the worker commits to (`chhayangpatel`) |
+| `REPO_NAME` | Repo name (`MenuProject`) |
 
 ---
 
