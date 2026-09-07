@@ -1,0 +1,28 @@
+{
+  "slug": "b",
+  "name": "Bb",
+  "tagline": "",
+  "description": "",
+  "logo": "logo.svg",
+  "coverImage": "",
+  "cuisine": [],
+  "priceRange": "$$",
+  "moodPreset": "fine-dining",
+  "template": "editorial-classic",
+  "theme": {
+    "primaryColor": "#1A1612",
+    "secondaryColor": "#FDFBF7",
+    "accentColor": "#C9A227",
+    "borderRadius": "md",
+    "mode": "light"
+  },
+  "settings": {
+    "currency": "USD",
+    "currencySymbol": "$",
+    "language": "en",
+    "showPrices": true,
+    "enableSearch": true,
+    "enableDietaryFilters": true
+  },
+  "menu": []
+}
