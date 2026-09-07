@@ -10,6 +10,8 @@ The project deploys to **two places simultaneously**:
 
 Both site deployments share the same `dist/` build output. GitHub Pages serves it under `/MenuProject`; Cloudflare Pages serves it under `/`. The build auto-detects which one is running (see [Build configuration](#build-configuration)).
 
+> **Status (verified):** both deployments are live — GitHub Pages at the `/MenuProject` path and Cloudflare Pages at `https://menuproject-1mg.pages.dev` with root-relative assets and the admin panel wired to the production worker.
+
 ---
 
 ## 1. Cloudflare resources
