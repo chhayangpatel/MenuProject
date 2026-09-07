@@ -16,12 +16,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+// Keep in sync with src/lib/templates/registry.ts and src/schemas/restaurant.schema.ts
 const VALID_TEMPLATES = new Set([
   "editorial-classic",
   "modern-minimal",
   "bold-street",
   "warm-rustic",
   "vibrant-playful",
+  "dark-luxe",
+  "seaside-coastal",
+  "zen-garden",
+  "retro-diner",
+  "artisan-craft",
 ]);
 const VALID_MOODS = new Set([
   "fine-dining",

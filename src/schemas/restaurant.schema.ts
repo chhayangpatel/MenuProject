@@ -77,16 +77,17 @@ export const RestaurantSchema = z.object({
   // Restaurant-level metadata
   cuisine: z.array(z.string()).optional(),
   priceRange: z.enum(["$", "$$", "$$$", "$$$$"]).optional(),
+  // Optional: restaurants created via the admin wizard start without contact info
   contact: z.object({
     phone: z.string().optional(),
     whatsapp: z.string().optional(),
     email: z.string().email().optional(),
     address: z.string().optional(),
     googleMapsUrl: z.string().url().optional(),
-    socials: z.record(z.string().url()).optional(),
-  }),
+    socials: z.record(z.string(), z.string().url()).optional(),
+  }).optional(),
   hours: z.object({
-    regular: z.record(z.string()).optional(),
+    regular: z.record(z.string(), z.string()).optional(),
     special: z.array(z.object({
       date: z.string(),
       hours: z.string(),
@@ -103,12 +104,18 @@ export const RestaurantSchema = z.object({
     "bold-street",
   ]).default("fine-dining"),
   // Template system - complete design personality (layout, typography, motion, components)
+  // Keep in sync with src/lib/templates/registry.ts (TemplateId union)
   template: z.enum([
     "editorial-classic",
     "modern-minimal",
     "bold-street",
     "warm-rustic",
     "vibrant-playful",
+    "dark-luxe",
+    "seaside-coastal",
+    "zen-garden",
+    "retro-diner",
+    "artisan-craft",
   ]).optional().default("editorial-classic"),
   story: z.object({
     heading: z.string().optional(),
@@ -125,7 +132,9 @@ export const RestaurantSchema = z.object({
     enableSearch: z.boolean().default(true),
     enableDietaryFilters: z.boolean().default(true),
   }),
-  menu: z.array(MenuCategorySchema).min(1),
+  // Draft restaurants (created via admin wizard) may start with an empty menu;
+  // the content-quality gate lives in scripts/validate-configs.mjs
+  menu: z.array(MenuCategorySchema).default([]),
   // Combos / meal deals
   combos: z.array(z.object({
     id: z.string(),
