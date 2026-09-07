@@ -60,10 +60,12 @@ ALLOWED_ORIGIN = "https://chhayangpatel.github.io,https://menuproject-1mg.pages.
 | `npm run deploy:pages` | `wrangler pages deploy dist --project-name menuproject` |
 | Worker deploy | `cd worker && npx wrangler deploy` |
 
-Local **production** deploy (build with the Cloudflare environment, then publish to `main`):
+Local **production** deploy (build with the Cloudflare environment, then publish to `main`). `VITE_WORKER_URL` must be passed explicitly — local `.env` points at `localhost:8787` for dev, and a Cloudflare build without the variable fails loudly by design:
 
 ```powershell
-$env:CI = '1'; npm run build
+$env:CI = '1'
+$env:VITE_WORKER_URL = 'https://menu-admin.chhayang-jenkins.workers.dev'
+npm run build
 npx wrangler pages deploy dist --project-name menuproject --branch main
 ```
 
@@ -89,7 +91,7 @@ Dashboard → Workers & Pages → `menuproject` → **Settings → Variables and
 
 | Variable | Value | Purpose |
 |---|---|---|
-| `VITE_WORKER_URL` | `https://menu-admin.chhayang-jenkins.workers.dev` | Baked into the client bundle so the admin panel can reach the API |
+| `VITE_WORKER_URL` | `https://menu-admin.chhayang-jenkins.workers.dev` | Baked into the client bundle so the admin panel can reach the API. **Must be a Build variable** (Settings → Build → Variables), not a runtime binding — the site is static. If missing, the build fails with an explicit error. |
 
 ---
 

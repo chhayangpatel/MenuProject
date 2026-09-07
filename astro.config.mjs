@@ -28,13 +28,23 @@ const site =
 const base =
   process.env.SITE_BASE || (isCloudflareBuild ? '/' : '/MenuProject');
 
-// Worker URL — loaded from .env at config-eval time so it works in both:
-//   - Local dev: reads VITE_WORKER_URL from .env  (http://localhost:8787)
-//   - CI build:   reads from process.env (repo variable)
+// Worker URL — always comes from variables, never hardcoded:
+//   - Local dev: VITE_WORKER_URL in .env (http://localhost:8787)
+//   - CI builds: VITE_WORKER_URL build variable (GitHub Actions repo var /
+//     Cloudflare dashboard build variable)
+// If a CI build is missing it, fail loudly — silently baking the localhost
+// dev URL into a production bundle is worse than a failed build.
 const envName = process.env.NODE_ENV ?? 'development';
 // Third arg '' = load ALL keys (not just VITE_-prefixed ones)
 const env = loadEnv(envName, process.cwd(), '');
 const WORKER_URL = process.env.VITE_WORKER_URL ?? env.VITE_WORKER_URL ?? '';
+if (isCloudflareBuild && !WORKER_URL) {
+  throw new Error(
+    'VITE_WORKER_URL is not set. Add it as a build variable in the ' +
+    'Cloudflare dashboard (Settings → Build → Variables) so the admin ' +
+    'panel knows which worker to call.',
+  );
+}
 
 // Static output. We do NOT install @astrojs/cloudflare here because the
 // adapter pulls node:fs and node:path into a "prerender" environment that
