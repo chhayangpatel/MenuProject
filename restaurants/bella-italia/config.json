@@ -69,7 +69,7 @@
           "id": "bruschetta-al-pomodoro",
           "name": "Bruschetta al Pomodoro",
           "description": "Grilled sourdough, marinated San Marzano tomatoes, basil, Sicilian olive oil",
-          "price": 8.99,
+          "price": 8.9,
           "tags": [
             "vegetarian",
             "vegan"
@@ -83,7 +83,7 @@
           "id": "burrata-pugliese",
           "name": "Burrata Pugliese",
           "description": "Creamy burrata, heirloom tomatoes, aged balsamic, basil oil",
-          "price": 16.99,
+          "price": 16.9,
           "tags": [
             "vegetarian",
             "gluten-free"
