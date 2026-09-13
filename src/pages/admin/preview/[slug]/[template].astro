@@ -49,13 +49,23 @@ const {
     Footer: TemplateFooter,
 } = components;
 
+// Mixed-image detection: mirrors src/pages/r/[slug]/index.astro — only show
+// monogram placeholders when at least one item already has a photo.
+const anyItemImages = menu.some((cat) => cat.items.some((item) => !!item.image));
+
 const enableScramble = template.effects.includes("scramble");
 const featuredItems = menu
     .flatMap((cat) => cat.items)
     .filter((item) => item.featured);
 const totalItems = menu.reduce((n, c) => n + c.items.length, 0);
 const flatItems = menu
-    .flatMap((c) => c.items)
+    .flatMap((c) =>
+        c.items.map((item) => ({
+            ...item,
+            categoryName: c.name,
+            categoryId: c.id,
+        }))
+    )
     .map((item) => ({
         ...item,
         image: item.image
@@ -89,12 +99,6 @@ const switcherLinks = Object.values(templates).map((t) => ({
             />
         )
     }
-
-    <SearchFilterBar
-        client:load
-        enabled={settings?.enableSearch ?? true}
-        enableDietaryFilters={settings?.enableDietaryFilters ?? true}
-    />
 
     <TemplateCategoryNav categories={menu} />
 
@@ -142,12 +146,13 @@ const switcherLinks = Object.values(templates).map((t) => ({
 
                     <div class="mr-items-grid" data-stagger-container>
                         {category.items.map((item) => (
-                            <div class="mr-reveal">
+                            <div class="mr-reveal" data-no-popup="true">
                                 <TemplateMenuCard
                                     item={item}
                                     currencySymbol={settings?.currencySymbol}
                                     showPrices={settings?.showPrices}
                                     restaurant={restaurant}
+                                    showImagePlaceholders={anyItemImages}
                                 />
                             </div>
                         ))}
@@ -165,6 +170,14 @@ const switcherLinks = Object.values(templates).map((t) => ({
     </main>
 
     <TemplateFooter restaurant={restaurant} />
+
+    <SearchFilterBar
+        client:load
+        enabled={settings?.enableSearch ?? true}
+        enableDietaryFilters={settings?.enableDietaryFilters ?? true}
+        currencySymbol={settings?.currencySymbol ?? "$"}
+        categories={menu.map((c) => ({ id: c.id, name: c.name }))}
+    />
 
     <ItemDetailSheet
         client:load

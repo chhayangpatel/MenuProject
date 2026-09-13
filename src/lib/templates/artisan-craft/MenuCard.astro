@@ -2,15 +2,23 @@
 import type { MenuItem } from '../../../schemas/restaurant.schema';
 import { resolveMenuItemImage } from '../../../lib/assets';
 import ItemBadge from '../../../components/ItemBadge.astro';
-interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
-const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
+interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; showImagePlaceholders?: boolean; }
+const { item, currencySymbol='$', showPrices=true, restaurant, showImagePlaceholders=false } = Astro.props;
 const hasImage = !!item.image;
 const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
 const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
 const hasVariants = item.variants && item.variants.length > 0;
 ---
-<div class="ac-item">
-  {hasImage && <div class="ac-item-img"><img src={imageUrl} alt={item.name} /></div>}
+<div class="ac-item" data-item-id={item.id} role="button" tabindex="0" aria-label={"View "+item.name}>
+  {
+    hasImage ? (
+      <div class="ac-item-img"><img src={imageUrl} alt={item.name} /></div>
+    ) : showImagePlaceholders ? (
+      <div class="ac-item-img ac-item-img--ph" aria-hidden="true">
+        <span class="ac-item-img-mono">{item.name.charAt(0)}</span>
+      </div>
+    ) : null
+  }
   <div class="ac-item-info">
     <div class="ac-item-title-wrap">
       <h3 class="ac-item-name">{item.name}</h3>
@@ -25,6 +33,10 @@ const hasVariants = item.variants && item.variants.length > 0;
   .ac-item:hover { box-shadow: 4px 4px 0 0 var(--ac-accent); }
   .ac-item-img { flex-shrink: 0; width: 72px; height: 72px; border-radius: 2px; overflow: hidden; }
   .ac-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  /* Monogram placeholder — same block as the photo so mixed rows share one visual rhythm. */
+  .ac-item-img--ph { position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--ac-accent) 9%, transparent), transparent 68%), color-mix(in srgb, var(--ac-primary) 3.5%, transparent); }
+  .ac-item-img-mono { font-family: var(--ac-font-heading); font-size: 1.5rem; font-weight: 600; line-height: 1; color: color-mix(in srgb, var(--ac-primary) 62%, transparent); }
+  .ac-item-img--ph::after { content: ""; position: absolute; inset: 8px; border: 1px solid color-mix(in srgb, var(--ac-accent) 30%, transparent); }
   .ac-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   .ac-item-title-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 0.25rem; }
   .ac-item-name { font-family: var(--ac-font-heading); font-size: 1rem; font-weight: 600; color: var(--ac-primary); line-height: 1.3; }

@@ -92,3 +92,5 @@ scripts/fix-registry.mjs
 *.pem
 *.crt
 *.key
+
+.tmp-supabase/

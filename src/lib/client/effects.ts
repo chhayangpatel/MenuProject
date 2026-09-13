@@ -6,6 +6,8 @@
  *  - every effect checks prefers-reduced-motion
  */
 
+import { setupQuickAdd } from './quickAdd';
+
 declare global {
     interface Window {
         __RESTAURANT_ITEMS__?: Array<Record<string, unknown>>;
@@ -68,7 +70,10 @@ export function setupStagger() {
 
 // ── Item detail sheet wiring ───────────────────────────────────────────────
 export function setupDetailSheet() {
+    // Ordering pages + no-popup disabled sites never open the detail sheet.
+    if (window.__ORDERING_ENABLED__ === true) return;
     document.querySelectorAll<HTMLElement>("[data-item-id]").forEach((card) => {
+        if (card.closest("[data-no-popup]")) return;
         if (card.dataset.listenerAttached) return;
         card.dataset.listenerAttached = "true";
         card.addEventListener("click", () => {
@@ -261,6 +266,7 @@ export function setupCategorySpy() {
 
 // ── Boot everything ────────────────────────────────────────────────────────
 export function initPageEffects() {
+    setupQuickAdd();
     setupStagger();
     setupReveal();
     setupDetailSheet();

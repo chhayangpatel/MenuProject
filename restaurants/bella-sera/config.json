@@ -1,10 +1,10 @@
 {
-  "slug": "bella-italia",
-  "name": "Bella Italia ",
-  "tagline": "Authentic Italian Cuisine Since 1990, Owned by Nidhi ",
-  "description": "Family-run Italian trattoria serving handmade pasta and wood-fired pizza.",
+  "slug": "bella-sera",
+  "name": "Bella Sera",
+  "tagline": "Contemporary Italian Kitchen",
+  "description": "A modern Italian kitchen demo — the full editorial menu experience, typography only.",
   "logo": "logo.svg",
-  "coverImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80",
+  "coverImage": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80",
   "cuisine": [
     "Italian",
     "Pasta",
@@ -15,7 +15,7 @@
   "template": "editorial-classic",
   "story": {
     "heading": "Our Story",
-    "body": "Founded in 1985 by the Rossi family, Bella Italia still makes every pasta by hand, using a recipe passed down three generations."
+    "body": "Bella Sera is a demonstration restaurant: the complete editorial menu — 72 dishes, 8 courses — presented exactly as guests would see it, with no photography. Pure type, pure menu."
   },
   "hero": {
     "style": "fullbleed"
@@ -58,7 +58,7 @@
     "showPrices": true,
     "enableSearch": true,
     "enableDietaryFilters": true,
-    "enableOrdering": true
+    "enableOrdering": false
   },
   "menu": [
     {
@@ -70,7 +70,7 @@
           "id": "bruschetta-al-pomodoro",
           "name": "Bruschetta al Pomodoro",
           "description": "Grilled sourdough, marinated San Marzano tomatoes, basil, Sicilian olive oil",
-          "price": 8.9,
+          "price": 8.99,
           "tags": [
             "vegetarian",
             "vegan"
@@ -84,7 +84,7 @@
           "id": "burrata-pugliese",
           "name": "Burrata Pugliese",
           "description": "Creamy burrata, heirloom tomatoes, aged balsamic, basil oil",
-          "price": 16.9,
+          "price": 16.99,
           "tags": [
             "vegetarian",
             "gluten-free"
@@ -92,8 +92,7 @@
           "spicyLevel": 0,
           "available": true,
           "featured": true,
-          "popularity": "chef-pick",
-          "image": "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=800&q=80"
+          "popularity": "chef-pick"
         },
         {
           "id": "vitello-tonnato",
@@ -421,8 +420,7 @@
           ],
           "spicyLevel": 0,
           "available": true,
-          "featured": true,
-          "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80"
+          "featured": true
         },
         {
           "id": "marinara-verace",
@@ -759,8 +757,7 @@
           ],
           "spicyLevel": 0,
           "available": true,
-          "featured": true,
-          "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80"
+          "featured": true
         },
         {
           "id": "panna-cotta-al-vaniglia",

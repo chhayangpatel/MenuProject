@@ -2,8 +2,8 @@
 import type { MenuItem } from '../../../schemas/restaurant.schema';
 import { resolveMenuItemImage } from '../../../lib/assets';
 import ItemBadge from '../../../components/ItemBadge.astro';
-interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
-const { item, currencySymbol='$', showPrices=true, restaurant } = Astro.props;
+interface Props { item: MenuItem; currencySymbol?: string; showPrices?: boolean; restaurant: any; showImagePlaceholders?: boolean; }
+const { item, currencySymbol='$', showPrices=true, restaurant, showImagePlaceholders=false } = Astro.props;
 const hasImage = !!item.image;
 const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
 const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
@@ -28,7 +28,15 @@ const hasVariants = item.variants && item.variants.length > 0;
           {item.spicyLevel>0 && <span class="mm-tag mm-tag--spicy">{"🌶️".repeat(item.spicyLevel)}</span>}
         </div>
       </div>
-      {hasImage && <div class="mm-card-img-wrap"><img src={imageUrl} alt={item.name} class="mm-card-img" loading="lazy" /></div>}
+      {
+        hasImage ? (
+          <div class="mm-card-img-wrap"><img src={imageUrl} alt={item.name} class="mm-card-img" loading="lazy" /></div>
+        ) : showImagePlaceholders ? (
+          <div class="mm-card-img-wrap mm-card-img-wrap--ph" aria-hidden="true">
+            <span class="mm-card-img-mono">{item.name.charAt(0)}</span>
+          </div>
+        ) : null
+      }
     </div>
   </div>
 </article>
@@ -134,6 +142,23 @@ const hasVariants = item.variants && item.variants.length > 0;
   .mm-card-img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+  }
+  /* Monogram placeholder — same block as the photo so mixed rows share one visual rhythm. */
+  .mm-card-img-wrap--ph {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 42%, rgba(74,124,89,0.08), transparent 68%), rgba(0,0,0,0.02);
+  }
+  .mm-card-img-mono {
+    font-family: var(--mm-font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+    color: color-mix(in srgb, var(--mm-primary) 55%, transparent);
+  }
     object-fit: cover;
   }
 </style>

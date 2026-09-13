@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LogOut, ExternalLink, Settings, Plus } from 'lucide-react';
+import { LogOut, ExternalLink, Settings, Plus, ClipboardList } from 'lucide-react';
 import { getRestaurants, getRestaurantConfig } from '../../lib/admin/api';
 import { BASE_PATH } from '../../lib/base';
 import { clearStoredToken } from './LoginScreen';
@@ -185,6 +185,13 @@ export default function DashboardView({ token, onSelectRestaurant, onNewRestaura
                     border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: 'var(--admin-font-body)',
                   }}>Edit</button>
+                  <button onClick={() => window.open(`${BASE_PATH}/admin/orders`, '_blank')} title="Staff order queue (staff sign-in)" style={{
+                    padding: '10px 14px',
+                    background: 'transparent', color: 'var(--admin-text-muted)',
+                    border: '1px solid var(--admin-border)', borderRadius: 8, fontSize: 14,
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                    fontFamily: 'var(--admin-font-body)',
+                  }}><ClipboardList size={14} /> Orders</button>
                   <button onClick={() => window.open(`${BASE_PATH}/r/${r.slug}/`, '_blank')} style={{
                     padding: '10px 14px',
                     background: 'transparent', color: 'var(--admin-text-muted)',

@@ -8,6 +8,7 @@ interface Props {
   currencySymbol?: string;
   showPrices?: boolean;
   restaurant: any;
+  showImagePlaceholders?: boolean;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   currencySymbol = "$",
   showPrices = true,
   restaurant,
+  showImagePlaceholders = false,
 } = Astro.props;
 const hasImage = !!item.image;
 const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : "";
@@ -40,6 +42,17 @@ const hasVariants = item.variants && item.variants.length > 0;
   tabindex="0"
   aria-label={"View details for " + item.name}
 >
+  {
+    hasImage ? (
+      <div class="ec-item-img">
+        <img src={imageUrl} alt={item.name} loading="lazy" />
+      </div>
+    ) : showImagePlaceholders ? (
+      <div class="ec-item-img ec-item-img--ph" aria-hidden="true">
+        <span class="ec-item-img-mono">{item.name.charAt(0)}</span>
+      </div>
+    ) : null
+  }
   <div class="ec-row__top">
     <div class="ec-row-name-wrap">
       <h3 class="ec-row-name">{item.name}</h3>
@@ -113,6 +126,54 @@ const hasVariants = item.variants && item.variants.length > 0;
       color-mix(in srgb, var(--ec-primary) 7%, transparent);
     transition: background 0.25s var(--ec-ease-out-expo);
     flex: 1;
+  }
+
+  /* Dish photo — renders only when the item has an image; text-only rows
+     (the editorial signature) are untouched. */
+  .ec-item-img {
+    margin: 0 0 0.9rem;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: color-mix(in srgb, var(--ec-primary) 5%, transparent);
+  }
+  .ec-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Monogram placeholder — same block as the photo so mixed rows share one
+     visual rhythm (photo rows and text rows align in the items grid). */
+  .ec-item-img--ph {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(
+        circle at 50% 42%,
+        color-mix(in srgb, var(--ec-gold) 9%, transparent),
+        transparent 68%
+      ),
+      color-mix(in srgb, var(--ec-primary) 3.5%, transparent);
+  }
+  .ec-item-img-mono {
+    font-family: var(--ec-font-heading);
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 600;
+    line-height: 1;
+    color: color-mix(in srgb, var(--ec-gold) 62%, transparent);
+    transform: translateY(-4%);
+  }
+  /* Hairline frame keeps the quiet tile intentional, not empty */
+  .ec-item-img--ph::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid
+      color-mix(in srgb, var(--ec-primary) 8%, transparent);
+    border-radius: 10px;
   }
   .ec-row:hover {
     background: color-mix(in srgb, var(--ec-gold) 5%, transparent);

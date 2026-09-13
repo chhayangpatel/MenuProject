@@ -5,6 +5,10 @@ interface Env {
   REPO_OWNER: string;
   REPO_NAME: string;
   ALLOWED_ORIGIN: string;
+  // Optional — when present, saving a restaurant config also upserts a
+  // menu price snapshot into Supabase so place_order() prices stay fresh.
+  SUPABASE_URL?: string;
+  SUPABASE_SERVICE_ROLE_KEY?: string;
 }
 
 interface JWTPayload {
@@ -131,6 +135,47 @@ async function githubPut(env: Env, path: string, content: string, message: strin
   if (!res.ok) throw new Error(`GitHub PUT failed: ${res.status} ${await res.text()}`);
   const data = await res.json();
   return { sha: data.content.sha };
+}
+
+/**
+ * Extract the per-item pricing/availability data the ordering RPC needs from
+ * a restaurant config, then upsert it into menu_snapshots via PostgREST.
+ * Direct call — no Edge Function hop (design review §2.3).
+ * Returns true on success; failures never block the admin save.
+ */
+async function syncMenuSnapshot(env: Env, slug: string, config: any): Promise<boolean> {
+  if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) return false;
+  try {
+    const items = (config?.menu ?? []).flatMap((cat: any) =>
+      (cat.items ?? []).map((item: any) => ({
+        id: item.id,
+        price: item.price,
+        available: item.available !== false,
+        variants: (item.variants ?? []).map((v: any) => ({
+          id: v.id,
+          priceModifier: v.priceModifier,
+        })),
+      })),
+    );
+
+    const res = await fetch(`${env.SUPABASE_URL}/rest/v1/menu_snapshots`, {
+      method: 'POST', // PostgREST upsert via Prefer: resolution=merge-duplicates
+      headers: {
+        'apikey': env.SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({
+        restaurant_slug: slug,
+        items,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 async function listRestaurants(env: Env): Promise<string[]> {
@@ -279,7 +324,11 @@ export default {
         const message = `chore: update restaurant ${slug} config via admin`;
         await githubPut(env, `restaurants/${slug}/config.json`, JSON.stringify(config, null, 2), message, current.sha);
 
-        return Response.json({ success: true }, { headers });
+        // Fire-and-forget snapshot sync (order pricing); surface the outcome
+        // so the admin UI can warn on drift (review §3.8). Never blocks save.
+        const snapshotSynced = await syncMenuSnapshot(env, slug, config);
+
+        return Response.json({ success: true, snapshotSynced }, { headers });
       }
 
       // POST /restaurants/create - create new restaurant
@@ -300,7 +349,9 @@ export default {
         // Also create .gitkeep in assets to ensure folder exists
         await githubPut(env, `restaurants/${slug}/assets/.gitkeep`, '', message);
 
-        return Response.json({ success: true }, { headers });
+        const snapshotSynced = await syncMenuSnapshot(env, slug, config);
+
+        return Response.json({ success: true, snapshotSynced }, { headers });
       }
 
       // POST /restaurants/upload - upload asset file

@@ -47,6 +47,12 @@ npm run dev          # http://localhost:4321
 | `npm run check:contrast` | WCAG contrast check on every restaurant's palette |
 | `npm run new-restaurant -- --name "X"` | Scaffold a new restaurant folder |
 
+## Per-table ordering
+
+Optional, per restaurant: flip `settings.enableOrdering: true` and diners can order from the table — QR code → menu → "Add to Order" → checkout → the order lands in the live staff queue at `/admin/orders` (order-only; no payments). Prices are validated server-side against a menu snapshot that stays in sync with the admin panel, and a 90-day retention job keeps Supabase usage tiny.
+
+Setup (Supabase, staff accounts, QR codes, security model): **[docs/ordering.md](docs/ordering.md)**
+
 ## Documentation
 
 Everything lives in [`docs/`](docs/README.md):

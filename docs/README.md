@@ -35,6 +35,7 @@ Everything about the codebase, architecture, and project updates:
 - [Extending the platform](technical/05-extending.md)
 - [Scaling architecture (`06-scaling-architecture.md`)](technical/06-scaling-architecture.md) — build strategy, asset tiers, CDN topology, and the onboarding SLA for thousands of restaurants.
 - [Self-service editing options (`07-self-service-options.md`)](technical/07-self-service-options.md) — git-CMS vs headless-CMS vs thin-admin comparison and staged recommendation.
+- [Per-table ordering](ordering.md) — diner QR ordering, `place_order()` RPC, staff order queue, Supabase setup, and the 90-day retention policy.
 
 ---
 

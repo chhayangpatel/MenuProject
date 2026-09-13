@@ -13,6 +13,7 @@ export default function SettingsTab({ config, updateConfig }: SettingsTabProps) 
     showPrices: true,
     enableSearch: true,
     enableDietaryFilters: true,
+    enableOrdering: false,
   };
 
   function updateSettings(patch: Record<string, any>) {
@@ -72,6 +73,17 @@ export default function SettingsTab({ config, updateConfig }: SettingsTabProps) 
             description="Show vegetarian, vegan, gluten-free filter chips"
             checked={settings.enableDietaryFilters}
             onChange={v => updateSettings({ enableDietaryFilters: v })}
+          />
+        </div>
+      </Section>
+
+      <Section title="Per-Table Ordering">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <Toggle
+            label="Enable Ordering"
+            description="Guests scan the table QR, add items, and place orders to the live staff queue (/admin/orders). Prices are validated server-side. Requires the restaurant to have a staff account."
+            checked={settings.enableOrdering}
+            onChange={v => updateSettings({ enableOrdering: v })}
           />
         </div>
       </Section>

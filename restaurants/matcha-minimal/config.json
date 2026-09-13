@@ -56,7 +56,8 @@
     "language": "en",
     "showPrices": true,
     "enableSearch": true,
-    "enableDietaryFilters": true
+    "enableDietaryFilters": true,
+    "enableOrdering": true
   },
   "menu": [
     {

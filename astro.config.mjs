@@ -62,6 +62,14 @@ export default defineConfig({
       // In dev, loadEnv reads .env so this picks up localhost:8787.
       // In CI, process.env.VITE_WORKER_URL (repo var) takes priority.
       'import.meta.env.VITE_WORKER_URL': JSON.stringify(WORKER_URL),
+      // Supabase (diner ordering + staff queue). Publishable anon key only —
+      // the service-role key stays in the Worker secrets, never the bundle.
+      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(
+        process.env.VITE_SUPABASE_URL ?? env.VITE_SUPABASE_URL ?? ''
+      ),
+      'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(
+        process.env.VITE_SUPABASE_ANON_KEY ?? env.VITE_SUPABASE_ANON_KEY ?? ''
+      ),
     },
   },
 });

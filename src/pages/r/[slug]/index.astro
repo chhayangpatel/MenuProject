@@ -2,6 +2,7 @@
 import { loadAllRestaurants } from "../../../lib/loadRestaurants";
 import RestaurantLayout from "../../../layouts/RestaurantLayout.astro";
 import ItemDetailSheet from "../../../components/ItemDetailSheet";
+import OrderingFlow from "../../../components/OrderingFlow";
 import SearchFilterBar from "../../../components/SearchFilterBar";
 import TemplateStyleManager from "../../../components/TemplateStyleManager.astro";
 import { getTemplate } from "../../../lib/templates/registry";
@@ -40,13 +41,23 @@ const {
 // Narrative effects are template-owned (registry.effects)
 const enableScramble = template.effects.includes("scramble");
 
+// Mixed-image detection: if at least one item has a photo, show monogram
+// placeholders on the image-less items so the layout rhythm stays even.
+const anyItemImages = menu.some((cat) => cat.items.some((item) => !!item.image));
+
 // Featured items + total for the menu overview strip
 const featuredItems = menu
   .flatMap((cat) => cat.items)
   .filter((item) => item.featured);
 const totalItems = menu.reduce((n, c) => n + c.items.length, 0);
 const flatItems = menu
-  .flatMap((c) => c.items)
+  .flatMap((c) =>
+    c.items.map((item) => ({
+      ...item,
+      categoryName: c.name,
+      categoryId: c.id,
+    }))
+  )
   .map((item) => ({
     ...item,
     image: item.image
@@ -72,14 +83,6 @@ const flatItems = menu
     )
   }
 
-  {/* Sticky controls: search + filters, then category tabs (template-owned) */}
-  <div class="mr-controls">
-    <SearchFilterBar
-      client:load
-      enabled={settings?.enableSearch ?? true}
-      enableDietaryFilters={settings?.enableDietaryFilters ?? true}
-    />
-  </div>
   <TemplateCategoryNav categories={menu} />
 
   {/* Menu body — centered, responsive, scannable */}
@@ -127,12 +130,13 @@ const flatItems = menu
 
           <div class="mr-items-grid" data-stagger-container>
             {category.items.map((item) => (
-              <div class="mr-reveal">
+              <div class="mr-reveal" data-no-popup="true">
                 <TemplateMenuCard
                   item={item}
                   currencySymbol={settings?.currencySymbol}
                   showPrices={settings?.showPrices}
                   restaurant={restaurant}
+                  showImagePlaceholders={anyItemImages}
                 />
               </div>
             ))}
@@ -162,6 +166,15 @@ const flatItems = menu
 
   <TemplateFooter restaurant={restaurant} />
 
+  {/* Floating search button + instant discovery sheet */}
+  <SearchFilterBar
+    client:load
+    enabled={settings?.enableSearch ?? true}
+    enableDietaryFilters={settings?.enableDietaryFilters ?? true}
+    currencySymbol={settings?.currencySymbol ?? "$"}
+    categories={menu.map((c) => ({ id: c.id, name: c.name }))}
+  />
+
   {/* Floating back-to-top (appears after scrolling) */}
   <button class="mr-top-btn" id="mr-top-btn" aria-label="Back to top">
     <svg
@@ -179,16 +192,35 @@ const flatItems = menu
     </svg>
   </button>
 
-  {/* React island for item detail bottom sheet */}
-  <ItemDetailSheet
-    client:load
-    currencySymbol={settings?.currencySymbol ?? "$"}
-  />
+  {/* React island for item detail bottom sheet — read-only pages only.
+      Ordering pages use inline add-to-order instead (no popup). */}
+  {!settings?.enableOrdering && (
+    <ItemDetailSheet
+      client:load
+      currencySymbol={settings?.currencySymbol ?? "$"}
+    />
+  )}
+
+  {/* Diner per-table ordering island (cart badge + checkout sheet).
+      Shares state with ItemDetailSheet via the cart store's
+      `cart-changed` window events — no prop threading needed. */}
+  {
+    settings?.enableOrdering && (
+      <OrderingFlow
+        client:load
+        restaurantSlug={restaurant.slug}
+        currencySymbol={settings?.currencySymbol ?? "$"}
+      />
+    )
+  }
 </RestaurantLayout>
 
 <!-- Inject menu data for the client-side item detail sheet -->
-<script define:vars={{ flatItems }}>
+<script define:vars={{ flatItems, orderingEnabled: settings?.enableOrdering ?? false, currencySymbol: settings?.currencySymbol ?? "$", restaurantSlug: restaurant.slug }}>
   window.__RESTAURANT_ITEMS__ = flatItems;
+  window.__ORDERING_ENABLED__ = orderingEnabled;
+  window.__CURRENCY_SYMBOL__ = currencySymbol;
+  window.__RESTAURANT_SLUG__ = restaurantSlug;
 </script>
 
 <!-- Shared effect bootstrapping + back-to-top -->
@@ -219,6 +251,13 @@ const flatItems = menu
 
   document.addEventListener("astro:page-load", setupTopButton);
   if (document.readyState !== "loading") setupTopButton();
+
+  // Boot page effects (scroll reveal, item detail sheet wiring, tilt, swipe
+  // nav, category spy, scramble). initPageEffects is idempotent. This direct
+  // call is REQUIRED: the import alone gets tree-shaken out of the bundle
+  // (the binding is otherwise unused), which silently killed the item detail
+  // sheet — menu cards had no click handlers (found via browser E2E test).
+  initPageEffects();
 </script>
 
 <!-- Template switching is admin-only (see /admin/preview). Public site shows only the active template. -->

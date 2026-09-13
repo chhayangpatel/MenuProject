@@ -131,6 +131,9 @@ export const RestaurantSchema = z.object({
     showPrices: z.boolean().default(true),
     enableSearch: z.boolean().default(true),
     enableDietaryFilters: z.boolean().default(true),
+    // Per-table ordering (QR → place_order RPC → staff queue). Requires a
+    // menu_snapshots row synced from the admin save flow.
+    enableOrdering: z.boolean().default(false),
   }),
   // Draft restaurants (created via admin wizard) may start with an empty menu;
   // the content-quality gate lives in scripts/validate-configs.mjs
