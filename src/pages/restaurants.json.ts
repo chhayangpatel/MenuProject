@@ -1,4 +1,3 @@
----
 // Static JSON of all restaurants (slug + display name). Built once at build
 // time so client islands (e.g. the master order queue) can map order slugs
 // to restaurant names without a worker round-trip.
