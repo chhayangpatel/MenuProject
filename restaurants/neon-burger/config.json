@@ -52,7 +52,7 @@
     "showPrices": true,
     "enableSearch": true,
     "enableDietaryFilters": false,
-    "enableOrdering": true
+    "enableOrdering": false
   },
   "menu": [
     {
