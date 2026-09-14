@@ -487,13 +487,22 @@ html {
     transform: scale(1.1);
 }
 
-/* Elevate FAB when diner cart order bar is present */
+/* Elevate FAB when diner cart order bar is present. The badge is a full-width
+   bar on mobile, so the FAB must clear it entirely (it sits at z 75 > badge z 60). */
 body:has(.of-badge) .mr-search-fab-container {
-    bottom: calc(5.2rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px));
 }
 
 /* Hide FAB when search sheet is open */
 body:has(.mr-search-sheet-backdrop) .mr-search-fab-container {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Hide FAB when the checkout sheet is open — otherwise the FAB (z 75) floats
+   over the sheet (z 70) and lands on the table-number input / Place order
+   button. Same treatment as the search sheet above. */
+body:has(.of-sheet-wrap) .mr-search-fab-container {
     opacity: 0 !important;
     pointer-events: none !important;
 }
@@ -1101,8 +1110,8 @@ body:has(.of-sheet-wrap) .mr-top-btn{opacity:0 !important;pointer-events:none !i
 .of-qty button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid color-mix(in srgb,var(--brand-primary,#1a1612) 25%,transparent);background:none;color:inherit;cursor:pointer;}
 .of-qty button:hover{background:color-mix(in srgb,var(--brand-primary,#1a1612) 8%,transparent);}
 .of-checkout{display:flex;gap:0.6rem;padding:1rem 1.4rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid color-mix(in srgb,var(--brand-primary,#1a1612) 8%,transparent);background:var(--brand-secondary,#fff);}
-.of-table-input{width:5.5rem;padding:0.7rem 0.8rem;border-radius:10px;border:1px solid color-mix(in srgb,var(--brand-primary,#1a1612) 25%,transparent);background:transparent;color:inherit;font-size:1rem;}
-.of-place-btn{flex:1;padding:0.7rem 1rem;border:none;border-radius:10px;background:var(--brand-accent,var(--brand-primary,#1a1612));color:var(--mr-on-accent,#fff);font-family:var(--font-heading,inherit);font-size:1rem;font-weight:700;cursor:pointer;transition:opacity 0.15s ease;}
+.of-table-input{flex:0 0 auto;width:5.5rem;min-width:0;padding:0.7rem 0.8rem;border-radius:10px;border:1px solid color-mix(in srgb,var(--brand-primary,#1a1612) 25%,transparent);background:transparent;color:inherit;font-size:1rem;}
+.of-place-btn{flex:1 1 auto;min-width:0;padding:0.7rem 1rem;border:none;border-radius:10px;background:var(--brand-accent,var(--brand-primary,#1a1612));color:var(--mr-on-accent,#fff);font-family:var(--font-heading,inherit);font-size:1rem;font-weight:700;cursor:pointer;transition:opacity 0.15s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .of-place-btn:disabled{opacity:0.45;cursor:not-allowed;}
 @keyframes of-bump{0%{transform:scale(1);}40%{transform:scale(1.14);}100%{transform:scale(1);}}
 .of-badge--bump{animation:of-bump 0.35s ease;}
