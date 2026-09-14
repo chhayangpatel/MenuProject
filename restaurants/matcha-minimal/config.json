@@ -4,7 +4,7 @@
   "tagline": "Mindful bites, clean flavors",
   "description": "A serene Japanese-inspired café focused on clean, plant-forward food and premium matcha drinks.",
   "logo": "logo.svg",
-  "coverImage": "cover.svg",
+  "coverImage": "https://unsplash.com/photos/a-table-topped-with-lots-of-plates-of-food-hatqfX3b9Vo?w=1600&q=80",
   "cuisine": [
     "Japanese",
     "Café",
