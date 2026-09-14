@@ -29,7 +29,13 @@ interface PlaceOrderResult {
 export default function OrderingFlow({ restaurantSlug, currencySymbol }: OrderingFlowProps) {
     // Cart state mirrors the shared store (single source of truth also used
     // by the inline quick-add steppers). Re-read on every `cart-changed`.
-    const [lines, setLines] = useState<CartLine[]>(() => getCart().lines);
+    //
+    // NOTE: initial state is [] (NOT getCart().lines) so SSR and client
+    // hydration match. The store restores a saved cart from sessionStorage at
+    // module load, which only exists in the browser — reading it during the
+    // server render produced a different initial tree and triggered React
+    // hydration error #418. The actual cart is restored in the effect below.
+    const [lines, setLines] = useState<CartLine[]>([]);
     const [open, setOpen] = useState(false);
     const [tableNumber, setTableNumber] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -45,8 +51,12 @@ export default function OrderingFlow({ restaurantSlug, currencySymbol }: Orderin
 
     // Stay in sync with quick-add steppers + detail sheet (one write path).
     useEffect(() => {
-        setLastOrder(null);
-        return subscribeCart(() => setLines(getCart().lines));
+      // Restore cart from sessionStorage after mount. The initial state above
+      // is set to [] to avoid a hydration mismatch (#418); restore it now
+      // that we’re in the browser.
+      setLines(getCart().lines);
+      setLastOrder(null);
+      return subscribeCart(() => setLines(getCart().lines));
     }, []);
 
     const total = useMemo(
