@@ -12,8 +12,9 @@ Tap item → "Add to Order"
 Cart badge → checkout sheet
 "Place order" → place_order()
   (Supabase RPC: server-side          /admin/orders → staff sign-in
-   price validation against           → live queue (3s polling)
-   menu_snapshots)                    → new → preparing → ready → served
+   price validation against           → live queue (Supabase Realtime
+   menu_snapshots)                      push + 90s safety poll)
+                                        → new → preparing → ready → served
 ```
 
 ## Setup
@@ -21,6 +22,8 @@ Cart badge → checkout sheet
 1. **Supabase project** — create one at [supabase.com](https://supabase.com), then apply the migrations in order (SQL editor or `supabase db push`):
    - `supabase/migrations/001_ordering_tables.sql` — `menu_snapshots`, `orders`, `staff` tables, RLS policies, and the `place_order()` RPC (SECURITY DEFINER; prices are computed server-side, clients can never inject a total).
    - `supabase/migrations/002_retention_cron.sql` — 90-day retention purge via `pg_cron` (enable the extension first: Dashboard → Database → Extensions). Keeps the free tier comfortably under the 500k row limit.
+   - `supabase/migrations/003_master_admin.sql` — master-admin role + policies.
+   - `supabase/migrations/004_realtime.sql` — adds `orders` to the `supabase_realtime` publication so the staff dashboard receives push updates (Realtime). Required — without it the header shows "○ connecting…" and the queue falls back to the 90s poll.
 2. **Create a menu snapshot + staff user** — the snapshot is created automatically the next time you save the restaurant in the admin panel (the Worker upserts prices into `menu_snapshots`). For staff:
    1. Add a user in Supabase Dashboard → Authentication → Users. (Email must use a valid TLD — Supabase Auth rejects reserved ones like `.test`.)
    2. Insert their staff row:

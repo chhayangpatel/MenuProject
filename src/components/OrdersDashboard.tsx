@@ -8,6 +8,7 @@ import {
     fetchOrders,
     getStaffProfile,
     STATUS_FLOW,
+    subscribeToOrders,
     updateOrderStatus,
     type OrderRow,
     type OrderStatus,
@@ -36,6 +37,31 @@ function timeAgo(iso: string): string {
     return `${hrs}h ${mins % 60}m ago`;
 }
 
+/** Best-effort "new order" chime via WebAudio. Browsers allow AudioContext
+ *  creation after any user gesture (sign-in counts). Never blocks the UI. */
+function playChime(): void {
+    try {
+        const Ctx = window.AudioContext
+            ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!Ctx) return;
+        const ctx = new Ctx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1175, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.7);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.75);
+        osc.onended = () => void ctx.close();
+    } catch {
+        // Audio is a nicety, not a requirement.
+    }
+}
+
 /**
  * Staff order queue. Auth gate per design review §3.9: the page shell is
  * public, but the dashboard requires a Supabase Auth session linked to a
@@ -58,6 +84,8 @@ export default function OrdersDashboard() {
     const [filter, setFilter] = useState<OrderStatus | 'all'>('all');
     const [loadError, setLoadError] = useState<string | null>(null);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
+    const [newOrderToast, setNewOrderToast] = useState<OrderRow | null>(null);
+    const [live, setLive] = useState(false);
 
     // Master login (staff.role = 'admin'): sees every restaurant's queue.
     const isMaster = role === 'admin';
@@ -122,17 +150,24 @@ export default function OrdersDashboard() {
         };
     }, [phase, isMaster]);
 
-    // Poll the queue every 3s while the dashboard is open.
+    // Live queue: realtime push (primary) + a slow safety poll (fallback).
+    // INSERT/UPDATE events carry the full row, so changes are applied to
+    // local state with zero refetch — the old 3s poll is gone (≈95% egress
+    // saving). The 90s poll only catches events missed during a websocket
+    // drop and keeps the free project from pausing; the queue also refetches
+    // when the tab regains focus. RLS scopes every event to the caller's
+    // restaurant, exactly like the REST path.
     useEffect(() => {
         if (phase !== 'ready') return;
         let cancelled = false;
-        async function poll() {
+        const scope = isMaster
+            ? (restaurantFilter === 'all' ? null : restaurantFilter)
+            : slug;
+
+        async function load() {
             try {
                 // Master admins can pass null (RLS returns every restaurant);
                 // regular staff always scope to their own slug.
-                const scope = isMaster
-                    ? (restaurantFilter === 'all' ? null : restaurantFilter)
-                    : slug;
                 const rows = await fetchOrders(client(), scope, filter);
                 if (!cancelled) {
                     setOrders(rows);
@@ -144,13 +179,63 @@ export default function OrdersDashboard() {
                 }
             }
         }
-        poll();
-        const id = setInterval(poll, 3000);
+
+        void load();
+
+        // Apply a realtime event's row straight into local state.
+        const unsubscribe = subscribeToOrders(
+            client(),
+            (row, event) => {
+                if (cancelled) return;
+                if (scope && row.restaurant_slug !== scope) return;
+                let isNew = false;
+                setOrders((prev) => {
+                    const idx = prev.findIndex((o) => o.id === row.id);
+                    if (idx >= 0) {
+                        // An active status filter hides rows that moved out of it.
+                        if (filter !== 'all' && row.status !== filter) {
+                            return prev.filter((o) => o.id !== row.id);
+                        }
+                        const next = [...prev];
+                        next[idx] = row;
+                        return next;
+                    }
+                    isNew = true;
+                    return [row, ...prev].slice(0, 100);
+                });
+                if (event === 'INSERT' && isNew) {
+                    setNewOrderToast(row);
+                    playChime();
+                }
+            },
+            (status) => setLive(status === 'SUBSCRIBED'),
+        );
+
+        // Safety net: slow poll (missed events / reconnect) + refetch on
+        // tab focus — staff tabs are usually backgrounded, so this keeps
+        // REST traffic near zero during service.
+        const poll = window.setInterval(() => void load(), 90_000);
+        const refetchIfVisible = () => {
+            if (document.visibilityState === 'visible') void load();
+        };
+        window.addEventListener('focus', refetchIfVisible);
+        document.addEventListener('visibilitychange', refetchIfVisible);
+
         return () => {
             cancelled = true;
-            clearInterval(id);
+            unsubscribe();
+            window.clearInterval(poll);
+            window.removeEventListener('focus', refetchIfVisible);
+            document.removeEventListener('visibilitychange', refetchIfVisible);
         };
     }, [phase, slug, filter, restaurantFilter, isMaster, client]);
+
+    // Auto-dismiss the "new order" toast.
+    useEffect(() => {
+        if (!newOrderToast) return;
+        const t = window.setTimeout(() => setNewOrderToast(null), 8_000);
+        return () => window.clearTimeout(t);
+    }, [newOrderToast]);
 
     async function handleSignIn(e: FormEvent) {
         e.preventDefault();
@@ -263,14 +348,32 @@ export default function OrdersDashboard() {
                     </h1>
                     <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--admin-text-muted, #999)' }}>
                         {isMaster
-                            ? `master · ${restaurantFilter === 'all' ? 'every restaurant' : (restaurantNames[restaurantFilter] ?? restaurantFilter)} · live, refreshes every 3s`
-                            : `${slug} · live, refreshes every 3s`}
+                            ? `master · ${restaurantFilter === 'all' ? 'every restaurant' : (restaurantNames[restaurantFilter] ?? restaurantFilter)}`
+                            : slug}
+                        {' · '}
+                        <span style={{ fontWeight: 600, color: live ? 'var(--admin-success, #10B981)' : 'var(--admin-warning, #F59E0B)' }}>
+                            {live ? '● live' : '○ connecting…'}
+                        </span>
+                        <span style={{ marginLeft: 6 }}>updates pushed in real time</span>
                     </p>
                 </div>
                 <button onClick={handleSignOut} title="Sign out" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', background: 'transparent', color: 'var(--admin-text-muted, #999)', border: '1px solid var(--admin-border, #2A2A2A)', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>
                     <LogOut size={14} /> Sign out
                 </button>
             </header>
+
+            {newOrderToast && (
+                <div
+                    role="status"
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: 10, background: '#10B981',
+                        color: '#0F0F0F', borderRadius: 10, padding: '10px 14px', marginBottom: 16,
+                        fontWeight: 600, fontSize: 14,
+                    }}
+                >
+                    🔔 New order — Table {newOrderToast.table_number} · ${Number(newOrderToast.total_price).toFixed(2)}
+                </div>
+            )}
 
             {isMaster && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
