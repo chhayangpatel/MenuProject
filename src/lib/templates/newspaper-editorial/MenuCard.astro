@@ -1,0 +1,361 @@
+---
+/**
+ * Newspaper Editorial — MenuCard
+ *
+ * One dish as a ruled listing in a printed menu column: serif name, dotted
+ * leader, tabular price, then the description in a narrow measure and the
+ * dietary marks underneath. Featured dishes break out into a larger plate.
+ * Photographs are optional — when a restaurant mixes photographed and
+ * photo-less dishes the page asks for a mono monogram so the column keeps its
+ * rhythm. Dishes are not clickable (product decision), so there are no hover
+ * affordances implying a tap target.
+ */
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+import ItemBadge from '../../../components/ItemBadge.astro';
+
+interface Props {
+  item: MenuItem;
+  currencySymbol?: string;
+  showPrices?: boolean;
+  restaurant: any;
+  showImagePlaceholders?: boolean;
+}
+
+const {
+  item,
+  currencySymbol = '$',
+  showPrices = true,
+  restaurant,
+  showImagePlaceholders = false,
+} = Astro.props;
+
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
+const showPlaceholder = !hasImage && showImagePlaceholders;
+const unavailable = item.available === false;
+const isFeatured = !!item.featured;
+
+const TAG_LABELS: Record<string, string> = {
+  vegetarian: 'Vegetarian',
+  vegan: 'Vegan',
+  'gluten-free': 'Gluten free',
+  'dairy-free': 'Dairy free',
+  'nut-free': 'Nut free',
+  halal: 'Halal',
+  kosher: 'Kosher',
+  organic: 'Organic',
+  'house-made': 'House made',
+  seasonal: 'Seasonal',
+};
+
+const tags = (item.tags ?? []).map((tag) => TAG_LABELS[tag] ?? tag).filter(Boolean);
+
+/* Variants carry a price modifier — advertise the opening price, not a guess */
+const variantPrices = (item.variants ?? []).map(
+  (variant) => item.price + (variant.priceModifier ?? 0),
+);
+const hasVariantPricing = variantPrices.length > 1;
+const leadPrice = hasVariantPricing ? Math.min(...variantPrices) : item.price;
+const priceLabel = `${currencySymbol}${leadPrice.toFixed(2)}`;
+
+const measures = [
+  item.portionSize,
+  item.prepTime ? `${item.prepTime} min` : '',
+].filter((value): value is string => Boolean(value));
+
+const spicyLabel =
+  typeof item.spicyLevel === 'number' && item.spicyLevel > 0
+    ? `Spicy ${item.spicyLevel}/3`
+    : '';
+
+const hasMeta = Boolean(item.popularity || isFeatured || tags.length || spicyLabel);
+---
+
+<article
+  class:list={[
+    'ne-dish',
+    {
+      'ne-dish--featured': isFeatured,
+      'ne-dish--unavailable': unavailable,
+      'ne-dish--media': hasImage || showPlaceholder,
+    },
+  ]}
+  data-item-id={item.id}
+>
+  <div class="ne-dish-main">
+    <div class="ne-dish-line">
+      <h3 class="ne-dish-name">{item.name}</h3>
+      {
+        showPrices && (
+          <>
+            <span class="ne-dish-leader" aria-hidden="true" />
+            <span class="ne-dish-price">
+              {hasVariantPricing && <span class="ne-dish-from">from</span>}
+              {priceLabel}
+            </span>
+          </>
+        )
+      }
+    </div>
+
+    {item.description && <p class="ne-dish-desc">{item.description}</p>}
+
+    {
+      hasMeta && (
+        <p class="ne-dish-meta">
+          <ItemBadge item={item} size="sm" />
+          {tags.map((tag) => (
+            <span class="ne-dish-tag">{tag}</span>
+          ))}
+          {spicyLabel && <span class="ne-dish-tag">{spicyLabel}</span>}
+        </p>
+      )
+    }
+
+    {measures.length > 0 && <p class="ne-dish-measure">{measures.join(' · ')}</p>}
+
+    {unavailable && <p class="ne-dish-off">Currently unavailable</p>}
+  </div>
+
+  {
+    hasImage && (
+      <figure class="ne-dish-figure">
+        <img
+          class="ne-dish-img"
+          src={imageUrl}
+          alt={item.name}
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    )
+  }
+
+  {
+    showPlaceholder && (
+      <span class="ne-dish-figure ne-dish-figure--mono" aria-hidden="true">
+        <span class="ne-dish-mono">{item.name.charAt(0)}</span>
+      </span>
+    )
+  }
+</article>
+
+<style>
+  /* Each dish is a ruled line of type in a column — never a floating card */
+  .ne-dish {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(1rem, 3vw, 1.75rem);
+    padding: clamp(1.1rem, 2.5vw, 1.5rem) 0;
+    border-bottom: var(--ne-rule-soft);
+  }
+
+  .ne-dish-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ne-dish-line {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .ne-dish-name {
+    font-family: var(--ne-serif);
+    font-size: clamp(1.125rem, 2.2vw, 1.3125rem);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    color: var(--ne-ink);
+  }
+
+  /* Dotted leader — the printed-menu convention */
+  .ne-dish-leader {
+    flex: 1;
+    min-width: 1.5rem;
+    height: 0.72em;
+    margin: 0 0.7rem;
+    border-bottom: 1px dotted var(--ne-hair);
+  }
+
+  .ne-dish-price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: var(--ne-mono);
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--ne-ink);
+    white-space: nowrap;
+  }
+
+  .ne-dish-from {
+    font-size: 0.5625rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ne-muted);
+  }
+
+  .ne-dish-desc {
+    margin-top: 0.4rem;
+    max-width: 58ch;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--ne-muted);
+  }
+
+  .ne-dish-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.75rem;
+    margin-top: 0.55rem;
+  }
+
+  .ne-dish-tag {
+    font-family: var(--ne-mono);
+    font-size: 0.5625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ne-faint);
+  }
+
+  .ne-dish-measure {
+    margin-top: 0.45rem;
+    font-family: var(--ne-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ne-faint);
+  }
+
+  .ne-dish-off {
+    margin-top: 0.5rem;
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ne-accent, #7d3037);
+  }
+
+  /* Optional photograph: a print-size plate, not a hero crop */
+  .ne-dish-figure {
+    flex-shrink: 0;
+    display: block;
+    width: clamp(84px, 20vw, 116px);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: var(--ne-rule-soft);
+    background: var(--ne-wash);
+  }
+
+  .ne-dish-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.88) contrast(1.04);
+  }
+
+  .ne-dish-figure--mono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: var(--ne-wash);
+  }
+
+  .ne-dish-mono {
+    font-family: var(--ne-serif);
+    font-size: clamp(1.35rem, 3.5vw, 2rem);
+    line-height: 1;
+    color: var(--ne-faint);
+  }
+
+  /* A placeholder initial stays modest even beside a featured dish */
+  .ne-dish--featured .ne-dish-figure--mono {
+    width: clamp(110px, 18vw, 150px);
+    aspect-ratio: 4 / 3;
+  }
+
+  /* A featured dish is a printed feature, not a promotional card */
+  .ne-dish--featured {
+    padding-top: clamp(1.5rem, 3.5vw, 2.25rem);
+    border-top: var(--ne-double-rule);
+  }
+
+  .ne-dish--featured .ne-dish-name {
+    font-size: clamp(1.5rem, 3.6vw, 2rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+
+  .ne-dish--featured .ne-dish-price {
+    font-size: 1rem;
+  }
+
+  .ne-dish--featured .ne-dish-desc {
+    max-width: 62ch;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--ne-ink) 72%, var(--ne-paper));
+  }
+
+  .ne-dish--featured .ne-dish-figure {
+    width: clamp(140px, 30vw, 240px);
+    aspect-ratio: 3 / 2;
+  }
+
+  /* Unavailable dishes stay legible but visibly withdrawn */
+  .ne-dish--unavailable .ne-dish-name,
+  .ne-dish--unavailable .ne-dish-desc,
+  .ne-dish--unavailable .ne-dish-price,
+  .ne-dish--unavailable .ne-dish-figure {
+    opacity: 0.45;
+  }
+
+  /* Phones: keep the listing a column of type — small square plates, and a
+     featured dish stacks its photograph above the copy instead of beside it */
+  @media (max-width: 560px) {
+    .ne-dish {
+      gap: 0.85rem;
+    }
+
+    .ne-dish-figure {
+      width: 68px;
+      aspect-ratio: 1 / 1;
+    }
+
+    .ne-dish-name {
+      font-size: 1.0625rem;
+    }
+
+    .ne-dish-price {
+      font-size: 0.8125rem;
+    }
+
+    .ne-dish-mono {
+      font-size: 1.15rem;
+    }
+
+    .ne-dish--featured {
+      flex-direction: column;
+    }
+
+    .ne-dish--featured .ne-dish-name {
+      font-size: 1.4375rem;
+    }
+
+    .ne-dish--featured .ne-dish-figure {
+      order: -1;
+      width: 100%;
+      aspect-ratio: 3 / 2;
+    }
+  }
+</style>

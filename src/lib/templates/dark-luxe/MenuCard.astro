@@ -9,7 +9,7 @@ const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
 const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
 const hasVariants = item.variants && item.variants.length > 0;
 ---
-<div class="dl-item" data-item-id={item.id} role="button" tabindex="0" aria-label={"View "+item.name}>
+<div class="dl-item" data-item-id={item.id}>
   {hasImage ? <div class="dl-item-img"><img src={imageUrl} alt={item.name} loading="lazy" /></div> : showImagePlaceholders ? <div class="dl-item-img dl-item-img--ph" aria-hidden="true"><span class="dl-item-img-mono">{item.name.charAt(0)}</span></div> : null}
   <div class="dl-item-content">
     <div class="dl-item-top">

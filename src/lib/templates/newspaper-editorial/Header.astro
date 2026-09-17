@@ -1,0 +1,106 @@
+---
+/**
+ * Newspaper Editorial — Header
+ *
+ * A slim publication bar: the restaurant name in the masthead serif on the
+ * left, this site's real contact actions on the right. Neither /r/[slug]/ nor
+ * the admin preview mounts this component today (the page renders Hero →
+ * Featured → CategoryNav), so the sticky section index in CategoryNav carries
+ * the persistent-bar duty; this component is kept correct and dependency-free
+ * so it can be mounted as-is later.
+ */
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+
+interface Props {
+  restaurant: Restaurant;
+}
+
+const { restaurant } = Astro.props;
+const phone = restaurant.contact?.phone ?? '';
+const email = restaurant.contact?.email ?? '';
+---
+
+<header class="ne-bar">
+  <div class="ne-bar-inner">
+    <a class="ne-bar-brand" href="#top">{restaurant.name}</a>
+    <nav class="ne-bar-nav" aria-label="Restaurant menu links">
+      <a class="ne-bar-link" href="#menu">The Menu</a>
+      {phone && (
+        <a class="ne-bar-link" href={`tel:${phone}`} aria-label={`Call ${phone}`}>
+          Call
+        </a>
+      )}
+      {email && (
+        <a class="ne-bar-link" href={`mailto:${email}`} aria-label={`Email ${email}`}>
+          Write
+        </a>
+      )}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .ne-bar {
+    position: sticky;
+    top: 0;
+    z-index: 70;
+    background: color-mix(in srgb, var(--ne-paper) 94%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: var(--ne-rule);
+  }
+
+  .ne-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: var(--ne-measure);
+    margin: 0 auto;
+    padding: 0 var(--ne-gutter);
+  }
+
+  .ne-bar-brand {
+    font-family: var(--ne-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ne-ink);
+    text-decoration: none;
+    padding: 0.85rem 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .ne-bar-nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 3vw, 1.75rem);
+  }
+
+  .ne-bar-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ne-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .ne-bar-link:hover {
+    color: var(--ne-ink);
+  }
+
+  @media (max-width: 520px) {
+    .ne-bar-link:first-child {
+      display: none;
+    }
+  }
+</style>

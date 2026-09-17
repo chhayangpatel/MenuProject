@@ -1,0 +1,272 @@
+---
+/**
+ * Newspaper Editorial — CategoryNav
+ *
+ * The publication's section index: a "The Menu" standfirst above a sticky,
+ * hairline-ruled list of sections ("01 Starters 8"). Plain hash links — the
+ * shared scrollspy toggles `.active` through `data-category-btn`, and the
+ * global smooth-scroll + scroll-margin handles the offset, so it works with
+ * JavaScript disabled too.
+ */
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+
+interface Props {
+  categories: MenuCategory[];
+}
+
+const { categories = [] } = Astro.props;
+const totalItems = categories.reduce((n, c) => n + (c.items?.length ?? 0), 0);
+---
+
+{
+  categories.length > 0 && (
+    <div class="ne-index-masthead">
+      <p class="ne-index-title">The Menu</p>
+      <p class="ne-index-standfirst">
+        {categories.map((category) => category.name).join(" · ")}
+      </p>
+    </div>
+  )
+}
+
+<nav class="ne-index" aria-label="Menu sections">
+  <div class="ne-index-inner">
+    <p class="ne-index-label" aria-hidden="true">The Menu</p>
+    <ul class="ne-index-list">
+      {categories.map((category, index) => (
+        <li class="ne-index-item">
+          <a
+            class="ne-index-link"
+            href={`#category-${category.id}`}
+            data-category-btn={category.id}
+          >
+            <span class="ne-index-num" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span class="ne-index-name">{category.name}</span>
+            <span class="ne-index-count" aria-hidden="true">
+              {category.items?.length ?? 0}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="ne-index-total" aria-hidden="true">{totalItems} dishes</p>
+  </div>
+</nav>
+
+<script>
+  /**
+   * Release the sticky index once the colophon comes into view so it never sits
+   * permanently over the footer at the end of the page. Idempotent across
+   * view-transition navigations, and a no-op without IntersectionObserver.
+   */
+  function setupNeIndexRelease() {
+    const index = document.querySelector<HTMLElement>('.ne-index');
+    const colophon = document.querySelector<HTMLElement>('.ne-colophon');
+    if (!index || !colophon || index.dataset.neReleaseAttached) return;
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    index.dataset.neReleaseAttached = 'true';
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        index.classList.toggle('is-done', entry.isIntersecting);
+      },
+      { rootMargin: '0px 0px -20% 0px' },
+    );
+
+    observer.observe(colophon);
+  }
+
+  document.addEventListener('astro:page-load', setupNeIndexRelease, { passive: true });
+  if (document.readyState !== 'loading') setupNeIndexRelease();
+</script>
+
+<style>
+  /* Section opener: the publication introducing its listings */
+  .ne-index-masthead {
+    max-width: var(--ne-measure);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4rem) var(--ne-gutter) clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .ne-index-title {
+    font-family: var(--ne-serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ne-ink);
+  }
+
+  .ne-index-standfirst {
+    margin-top: 0.6rem;
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ne-muted);
+  }
+
+  /* Sticky index bar */
+  .ne-index {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: color-mix(in srgb, var(--ne-paper) 94%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: var(--ne-rule);
+    border-bottom: var(--ne-rule);
+  }
+
+  .ne-index-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: var(--ne-measure);
+    margin: 0 auto;
+    padding: 0 var(--ne-gutter);
+  }
+
+  .ne-index-label {
+    flex-shrink: 0;
+    display: none;
+    padding-right: 1rem;
+    border-right: var(--ne-rule);
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ne-ink);
+  }
+
+  .ne-index-list {
+    display: flex;
+    flex: 1;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ne-index-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ne-index-item {
+    display: flex;
+  }
+
+  .ne-index-link {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    min-height: var(--ne-index-h);
+    padding: 0.9rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--ne-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.25s ease;
+  }
+
+  .ne-index-link::after {
+    content: "";
+    position: absolute;
+    right: 0.35rem;
+    bottom: 0;
+    left: 0.35rem;
+    height: 2px;
+    background: var(--ne-accent, #7d3037);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--mr-ease-out-expo, ease-out);
+  }
+
+  .ne-index-num {
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--ne-faint);
+    transition: color 0.25s ease;
+  }
+
+  .ne-index-count {
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    color: var(--ne-faint);
+  }
+
+  .ne-index-link:hover,
+  .ne-index-link:focus-visible {
+    color: var(--ne-ink);
+  }
+
+  .ne-index-link.active {
+    color: var(--ne-ink);
+  }
+
+  .ne-index-link.active .ne-index-num,
+  .ne-index-link.active .ne-index-count {
+    color: var(--ne-accent, #7d3037);
+  }
+
+  .ne-index-link.active::after {
+    transform: scaleX(1);
+  }
+
+  .ne-index-total {
+    flex-shrink: 0;
+    display: none;
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ne-faint);
+  }
+
+  /* Released once the colophon is in view — it belongs to the listings only */
+  .ne-index.is-done {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ne-index.is-done {
+      transition: none;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .ne-index-label,
+    .ne-index-total {
+      display: block;
+    }
+
+    .ne-index-link:first-child {
+      padding-left: 0;
+    }
+
+    .ne-index-link::after {
+      left: 0;
+      right: 0.85rem;
+    }
+
+    .ne-index-link:first-child::after {
+      left: 0;
+    }
+  }
+</style>

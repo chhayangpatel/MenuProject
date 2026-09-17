@@ -15,6 +15,8 @@ import scCSS from "../lib/templates/seaside-coastal/styles.css?raw";
 import zgCSS from "../lib/templates/zen-garden/styles.css?raw";
 import rdCSS from "../lib/templates/retro-diner/styles.css?raw";
 import acCSS from "../lib/templates/artisan-craft/styles.css?raw";
+import nrCSS from "../lib/templates/modern-dark/styles.css?raw";
+import neCSS from "../lib/templates/newspaper-editorial/styles.css?raw";
 
 interface Props {
   restaurant: Restaurant;
@@ -34,7 +36,8 @@ const cssByTemplate: Record<string, string> = {
   "bold-street": boldCSS,
   "warm-rustic": rusticCSS,
   "vibrant-playful": playfulCSS,
-
+  "modern-dark": nrCSS,
+  "newspaper-editorial": neCSS,
 };
 
 const templateCSS = cssByTemplate[template.id] ?? editorialCSS;

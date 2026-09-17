@@ -1,0 +1,184 @@
+---
+/**
+ * Modern Dark — FeaturedCarousel
+ * Signature dishes as a horizontal, snap-scrolling strip of portrait cards.
+ * Cinematic 4/5 crops, name + dotted price leader beneath. No overlays.
+ * Renders nothing when there are no items.
+ */
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+
+interface Props { items: MenuItem[]; currencySymbol?: string; showPrices?: boolean; restaurant: any; }
+const { items, currencySymbol = '$', showPrices = true, restaurant } = Astro.props;
+const featured = items.slice(0, 6);
+---
+
+{featured.length > 0 && (
+  <section class="nr-featured" aria-label="Signature dishes">
+    <div class="nr-featured-head">
+      <span class="nr-featured-eyebrow">From the kitchen</span>
+      <h2 class="nr-featured-title">Signatures</h2>
+    </div>
+    <div class="nr-featured-track">
+      {featured.map((item) => {
+        const imageUrl = item.image ? resolveMenuItemImage(restaurant, item.image) : '';
+        return (
+          <article
+            class="nr-feat-card"
+            data-item-id={item.id}
+          >
+            <div class="nr-feat-media">
+              {imageUrl ? (
+                <img src={imageUrl} alt={item.name} loading="lazy" />
+              ) : (
+                <span class="nr-feat-mono" aria-hidden="true">{item.name.charAt(0)}</span>
+              )}
+            </div>
+            <div class="nr-feat-row">
+              <h3 class="nr-feat-name">{item.name}</h3>
+              {showPrices && (
+                <>
+                  <span class="nr-feat-leader" aria-hidden="true"></span>
+                  <span class="nr-feat-price">{currencySymbol}{item.price.toFixed(2)}</span>
+                </>
+              )}
+            </div>
+            {item.description && <p class="nr-feat-desc">{item.description}</p>}
+          </article>
+        );
+      })}
+    </div>
+  </section>
+)}
+
+<style>
+  .nr-featured {
+    padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--nr-surface, #171816);
+    border-top: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    border-bottom: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+  }
+
+  .nr-featured-head {
+    max-width: 72rem;
+    margin: 0 auto clamp(1.25rem, 3vw, 2rem);
+    padding: 0 clamp(1rem, 4vw, 2.5rem);
+  }
+
+  .nr-featured-eyebrow {
+    display: block;
+    font-family: var(--nr-font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--nr-accent, #c6aa78);
+    margin-bottom: 0.5rem;
+  }
+
+  .nr-featured-title {
+    font-family: var(--nr-font-heading);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--nr-primary, #f5f1e8);
+  }
+
+  .nr-featured-track {
+    display: flex;
+    gap: clamp(0.875rem, 2vw, 1.5rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-snap-align: start;
+    padding: 0.25rem clamp(1rem, 4vw, 2.5rem) 1rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nr-featured-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nr-feat-card {
+    flex-shrink: 0;
+    width: clamp(230px, 62vw, 300px);
+    scroll-snap-align: start;
+  }
+
+  .nr-feat-media {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    border-radius: 2px;
+    background: var(--nr-surface-raised, #1d1e1b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nr-feat-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.88) contrast(1.05) brightness(0.96);
+    transition: filter 0.4s ease, transform 0.6s var(--mr-ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  @media (hover: hover) {
+    .nr-feat-card:hover .nr-feat-media img {
+      filter: none;
+      transform: scale(1.04);
+    }
+  }
+
+  .nr-feat-mono {
+    font-family: var(--nr-font-heading);
+    font-size: 2.5rem;
+    color: color-mix(in srgb, var(--nr-accent, #c6aa78) 55%, transparent);
+  }
+
+  .nr-feat-row {
+    display: flex;
+    align-items: baseline;
+    margin-top: 0.9rem;
+  }
+
+  .nr-feat-name {
+    font-family: var(--nr-font-heading);
+    font-size: 1.0625rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--nr-primary, #f5f1e8);
+    line-height: 1.3;
+  }
+
+  .nr-feat-leader {
+    flex: 1;
+    min-width: 1rem;
+    height: 0.8em;
+    margin: 0 0.6rem;
+    border-bottom: 1px dotted var(--nr-border-strong, rgba(245, 241, 232, 0.22));
+  }
+
+  .nr-feat-price {
+    font-family: var(--nr-font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--nr-accent, #c6aa78);
+    white-space: nowrap;
+  }
+
+  .nr-feat-desc {
+    font-family: var(--nr-font-body);
+    font-size: 0.75rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--nr-muted, #aba39f);
+    margin-top: 0.3rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

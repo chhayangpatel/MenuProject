@@ -1,0 +1,330 @@
+---
+/**
+ * Modern Dark — Hero
+ * Cinematic restaurant introduction. Three grammars driven by hero.style:
+ *  - fullbleed (default): full-viewport cover, letterbox framing, left-set content
+ *  - split: image beside content on desktop, stacked portrait crop on mobile
+ *  - minimal / no cover: purely typographic hero on charcoal
+ * Only renders fields that exist in the restaurant data.
+ */
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover, resolveLogo } from '../../../lib/assets';
+import HeroStory from '../../../components/HeroStory.astro';
+
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+
+const heroStyle = restaurant.hero?.style || 'fullbleed';
+const coverUrl = resolveCover(restaurant);
+const logoUrl = resolveLogo(restaurant);
+const hasCover = !!coverUrl;
+
+const isFullbleed = hasCover && heroStyle !== 'minimal' && heroStyle !== 'split';
+const isSplit = hasCover && heroStyle === 'split';
+const isTypographic = !hasCover || heroStyle === 'minimal';
+
+const cuisine = restaurant.cuisine?.filter(Boolean).join(' · ');
+const phone = restaurant.contact?.phone;
+const address = restaurant.contact?.address;
+const mapsUrl = restaurant.contact?.googleMapsUrl;
+const hasMeta = !!(restaurant.priceRange || address || phone);
+---
+
+<header class:list={["nr-hero", { "nr-hero--fullbleed": isFullbleed, "nr-hero--split": isSplit, "nr-hero--typo": isTypographic }]}>
+  {isFullbleed && (
+    <>
+      <div class="nr-hero-media">
+        <img src={coverUrl} alt="" class="nr-hero-img" loading="eager" fetchpriority="high" />
+      </div>
+      <div class="nr-hero-scrim" aria-hidden="true"></div>
+      <div class="nr-hero-vignette" aria-hidden="true"></div>
+    </>
+  )}
+
+  {isSplit && (
+    <div class="nr-hero-media nr-hero-media--split">
+      <img src={coverUrl} alt="" class="nr-hero-img" loading="eager" fetchpriority="high" />
+      <div class="nr-hero-vignette" aria-hidden="true"></div>
+    </div>
+  )}
+
+  <div class="nr-hero-content">
+    {logoUrl && (
+      <img src={logoUrl} alt="" class="nr-hero-logo" loading="eager" />
+    )}
+    {cuisine && <p class="nr-hero-eyebrow">{cuisine}</p>}
+    <h1 class="nr-hero-title">{restaurant.name}</h1>
+    {restaurant.tagline && <p class="nr-hero-tagline">{restaurant.tagline}</p>}
+    <HeroStory restaurant={restaurant} light={!isTypographic} />
+
+    {hasMeta && (
+      <ul class="nr-hero-meta">
+        {restaurant.priceRange && <li>{restaurant.priceRange}</li>}
+        {address && (
+          <li>
+            {mapsUrl ? (
+              <a href={mapsUrl} target="_blank" rel="noopener noreferrer">{address}</a>
+            ) : (
+              <span>{address}</span>
+            )}
+          </li>
+        )}
+        {phone && (
+          <li><a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{phone}</a></li>
+        )}
+      </ul>
+    )}
+
+    <a href="#menu" class="nr-hero-cta">Explore the menu</a>
+  </div>
+</header>
+
+<style>
+  .nr-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--nr-secondary, #101110);
+    color: var(--nr-primary, #f5f1e8);
+  }
+
+  /* ── Fullbleed: cinematic cover, letterbox framing ── */
+  .nr-hero--fullbleed {
+    min-height: 92svh;
+  }
+
+  /* Letterbox bars — the template's signature frame */
+  .nr-hero--fullbleed::before,
+  .nr-hero--fullbleed::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: clamp(10px, 1.8vh, 20px);
+    background: var(--nr-letterbox);
+    z-index: 3;
+  }
+  .nr-hero--fullbleed::before { top: 0; }
+  .nr-hero--fullbleed::after { bottom: 0; }
+
+  .nr-hero-media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .nr-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85) contrast(1.04) brightness(0.9);
+  }
+
+  .nr-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--nr-secondary, #101110) 92%, transparent) 0%,
+      color-mix(in srgb, var(--nr-secondary, #101110) 55%, transparent) 42%,
+      color-mix(in srgb, var(--nr-secondary, #101110) 12%, transparent) 100%
+    );
+  }
+
+  .nr-hero-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+  }
+
+  .nr-hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(6rem, 12vh, 9rem) clamp(1.25rem, 5vw, 4rem) clamp(3rem, 7vh, 5rem);
+  }
+
+  .nr-hero-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 1px solid var(--nr-border-strong, rgba(245, 241, 232, 0.22));
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    background: var(--nr-surface, #171816);
+  }
+
+  .nr-hero-eyebrow {
+    font-family: var(--nr-font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--nr-accent, #c6aa78);
+    margin-bottom: 1rem;
+  }
+
+  .nr-hero-title {
+    font-family: var(--nr-font-heading);
+    font-size: clamp(2.75rem, 8vw, 5.25rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+
+  .nr-hero-tagline {
+    font-family: var(--nr-font-body);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--nr-muted, #aba39f);
+    max-width: 46ch;
+    margin-top: 1.25rem;
+  }
+
+  .nr-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0;
+    list-style: none;
+    margin-top: 1.75rem;
+    font-family: var(--nr-font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--nr-muted, #aba39f);
+  }
+
+  .nr-hero-meta li {
+    display: flex;
+    align-items: center;
+  }
+
+  .nr-hero-meta li + li::before {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 0.9em;
+    background: var(--nr-border-strong, rgba(245, 241, 232, 0.22));
+    margin: 0 0.9rem;
+  }
+
+  .nr-hero-meta a {
+    color: inherit;
+    text-decoration: none;
+    padding: 0.35rem 0;
+    transition: color 0.25s ease;
+  }
+
+  .nr-hero-meta a:hover {
+    color: var(--nr-accent, #c6aa78);
+  }
+
+  .nr-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 2.25rem;
+    padding: 0.75rem 1.75rem;
+    border: 1px solid var(--nr-accent, #c6aa78);
+    border-radius: 2px;
+    font-family: var(--nr-font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--nr-accent, #c6aa78);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .nr-hero-cta:hover,
+  .nr-hero-cta:focus-visible {
+    background: var(--nr-accent, #c6aa78);
+    color: var(--mr-on-accent, #111111);
+  }
+
+  /* ── Split: image beside content (desktop), stacked (mobile) ── */
+  .nr-hero--split {
+    display: block;
+    min-height: 100svh;
+  }
+
+  .nr-hero-media--split {
+    position: relative;
+    inset: auto;
+    height: 52svh;
+  }
+
+  @media (min-width: 900px) {
+    .nr-hero--split {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: stretch;
+    }
+
+    .nr-hero-media--split {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 42%;
+      height: auto;
+    }
+
+    .nr-hero--split .nr-hero-content {
+      align-self: center;
+      max-width: 40rem;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 4rem;
+    }
+  }
+
+  /* ── Typographic: no image, pure charcoal ── */
+  .nr-hero--typo {
+    min-height: 72svh;
+    align-items: center;
+  }
+
+  .nr-hero--typo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(110% 80% at 30% 20%, color-mix(in srgb, var(--nr-primary, #f5f1e8) 5%, transparent) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .nr-hero--typo .nr-hero-content {
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+  }
+
+  @media (max-width: 640px) {
+    .nr-hero--fullbleed {
+      min-height: 88svh;
+    }
+    .nr-hero--fullbleed .nr-hero-content {
+      padding-bottom: 2.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .nr-hero-content {
+      animation: nr-enter-up var(--nr-duration-enter, 900ms) var(--mr-ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) both;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nr-hero-content {
+      animation: none;
+    }
+  }
+</style>

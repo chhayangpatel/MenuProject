@@ -1,0 +1,93 @@
+---
+/**
+ * Newspaper Editorial — CategoryHero
+ *
+ * A single editorial photograph inserted beneath the section headline, with a
+ * mono page-number credit and the category's own hero quote (falling back to
+ * its description). The shared category header already renders the section h2,
+ * so this component stays a pure image insert and never repeats the name.
+ *
+ * Props mirror the shared template contract:
+ *   { category, slug, categoryIndex, restaurant }
+ */
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+import { resolveCategoryHeroImage } from '../../../lib/assets';
+
+interface Props {
+  category: MenuCategory;
+  slug?: string;
+  categoryIndex: number;
+  restaurant: any;
+}
+
+const { category, categoryIndex, restaurant } = Astro.props;
+const imageUrl = resolveCategoryHeroImage(restaurant, category.heroImage);
+const caption = category.heroQuote || category.description || '';
+const pageNumber =
+  typeof categoryIndex === 'number' && categoryIndex >= 0
+    ? String(categoryIndex + 1).padStart(2, '0')
+    : '';
+---
+
+<figure class="ne-insert">
+  <img class="ne-insert-img" src={imageUrl} alt="" loading="lazy" decoding="async" />
+  {
+    caption && (
+      <figcaption class="ne-insert-caption">
+        {pageNumber && (
+          <span class="ne-insert-num" aria-hidden="true">
+            {pageNumber}
+          </span>
+        )}
+        <span class="ne-insert-text">{caption}</span>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .ne-insert {
+    margin: 0 0 clamp(1.5rem, 3.5vw, 2.25rem);
+  }
+
+  .ne-insert-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+    border: var(--ne-rule-soft);
+    background: var(--ne-wash);
+    filter: saturate(0.9) contrast(1.03);
+  }
+
+  .ne-insert-caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-top: 0.65rem;
+    padding-top: 0.55rem;
+    border-top: var(--ne-rule-soft);
+  }
+
+  .ne-insert-num {
+    flex-shrink: 0;
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--ne-accent, #7d3037);
+  }
+
+  .ne-insert-text {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ne-muted);
+    max-width: 60ch;
+  }
+
+  @media (max-width: 700px) {
+    .ne-insert-img {
+      aspect-ratio: 3 / 2;
+    }
+  }
+</style>

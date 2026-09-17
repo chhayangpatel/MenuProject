@@ -69,31 +69,15 @@ export function setupStagger() {
 }
 
 // ── Item detail sheet wiring ───────────────────────────────────────────────
+// Card clicks must NOT open the item detail sheet (product decision, applies
+// to every template). This is intentionally a no-op: no click/keydown
+// listeners are attached to `[data-item-id]` cards, so tapping a dish never
+// opens a popup. The `ItemDetailSheet` island still exists and only opens
+// via the search-results flow (SearchFilterBar dispatches `open-item-detail`).
+// Ordering pages never used this path anyway — quickAdd injects inline
+// add-to-order controls instead.
 export function setupDetailSheet() {
-    // Ordering pages + no-popup disabled sites never open the detail sheet.
-    if (window.__ORDERING_ENABLED__ === true) return;
-    document.querySelectorAll<HTMLElement>("[data-item-id]").forEach((card) => {
-        if (card.closest("[data-no-popup]")) return;
-        if (card.dataset.listenerAttached) return;
-        card.dataset.listenerAttached = "true";
-        card.addEventListener("click", () => {
-            const id = card.getAttribute("data-item-id");
-            const item = window.__RESTAURANT_ITEMS__?.find(
-                (i) => i.id === id
-            );
-            if (item) {
-                window.dispatchEvent(
-                    new CustomEvent("open-item-detail", { detail: item })
-                );
-            }
-        });
-        card.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                card.click();
-            }
-        });
-    });
+    return;
 }
 
 // ── Text scramble (gated: only templates with the 'scramble' effect) ──────

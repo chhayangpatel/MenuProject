@@ -116,6 +116,8 @@ export const RestaurantSchema = z.object({
     "zen-garden",
     "retro-diner",
     "artisan-craft",
+    "modern-dark",
+    "newspaper-editorial",
   ]).optional().default("editorial-classic"),
   story: z.object({
     heading: z.string().optional(),

@@ -1,0 +1,86 @@
+---
+/**
+ * Modern Dark — CategoryHero
+ * Immersive category banner, rendered only when category.heroImage exists.
+ * Wide cinematic crop with a quiet bottom-left caption (number + quote/desc).
+ * Deliberately does NOT repeat the category name heading — the shared
+ * category header already renders the h2.
+ */
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+import { resolveCategoryHeroImage } from '../../../lib/assets';
+
+interface Props { category: MenuCategory; slug: string; categoryIndex: number; restaurant: any; }
+const { category, categoryIndex, restaurant } = Astro.props;
+const imageUrl = resolveCategoryHeroImage(restaurant, category.heroImage);
+const caption = category.heroQuote || category.description;
+---
+
+<figure class="nr-cathero">
+  <img src={imageUrl} alt="" class="nr-cathero-img" loading="lazy" />
+  <div class="nr-cathero-scrim" aria-hidden="true"></div>
+  {caption && (
+    <figcaption class="nr-cathero-caption">
+      <span class="nr-cathero-num" aria-hidden="true">{String(categoryIndex + 1).padStart(2, "0")}</span>
+      <span class="nr-cathero-quote">{caption}</span>
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .nr-cathero {
+    position: relative;
+    height: clamp(200px, 30vw, 340px);
+    margin: 0 0 2.5rem;
+    overflow: hidden;
+    border: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    border-radius: 2px;
+  }
+
+  .nr-cathero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85) contrast(1.04) brightness(0.88);
+  }
+
+  .nr-cathero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--nr-secondary, #101110) 85%, transparent) 0%,
+      color-mix(in srgb, var(--nr-secondary, #101110) 20%, transparent) 55%,
+      transparent 100%
+    );
+  }
+
+  .nr-cathero-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  .nr-cathero-num {
+    font-family: var(--nr-font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--nr-accent, #c6aa78);
+    flex-shrink: 0;
+  }
+
+  .nr-cathero-quote {
+    font-family: var(--nr-font-heading);
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--nr-primary, #f5f1e8);
+    max-width: 52ch;
+  }
+</style>

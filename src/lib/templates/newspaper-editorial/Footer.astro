@@ -1,0 +1,24 @@
+---
+/**
+ * Newspaper Editorial — Footer (colophon)
+ *
+ * Wraps the shared platform footer, which owns all the real data logic
+ * (opening hours, address/map, phone/email/WhatsApp, socials, attribution).
+ * The publication treatment — square corners, hairline rules, mono labels,
+ * icons dropped in favour of type — lives in the template stylesheet under
+ * `body.tpl-template-newspaper-editorial .ne-colophon`, so no data handling
+ * is duplicated here.
+ */
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import Footer from '../../../components/Footer.astro';
+
+interface Props {
+  restaurant: Restaurant;
+}
+
+const { restaurant } = Astro.props;
+---
+
+<div class="ne-colophon">
+  <Footer restaurant={restaurant} />
+</div>

@@ -1,0 +1,293 @@
+---
+/**
+ * Newspaper Editorial — Hero (the opening spread)
+ *
+ * Renders a publication masthead: metadata line, serif name, standfirst,
+ * dateline, a wide above-the-fold photograph and one asymmetric "The Story"
+ * column. Only real config data is used — no invented dates, awards, ratings
+ * or locations — and the story column is omitted when the config has none.
+ */
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import { resolveCover } from '../../../lib/assets';
+
+interface Props {
+  restaurant: Restaurant;
+}
+
+const { restaurant } = Astro.props;
+
+const heroStyle = restaurant.hero?.style || 'fullbleed';
+const coverUrl = heroStyle === 'minimal' ? '' : resolveCover(restaurant);
+
+const cuisines = (restaurant.cuisine ?? []).filter((c) => Boolean(c && c.trim()));
+const kickerLeft = cuisines.join(' · ');
+const kickerRight = restaurant.priceRange ?? '';
+
+const standfirst = restaurant.description || '';
+const subtitle = restaurant.tagline || '';
+
+const { contact } = restaurant;
+const dateline = [contact?.phone, contact?.email].filter((v): v is string => Boolean(v));
+const photoCredit = contact?.address ?? '';
+
+const storyBody = restaurant.story?.body ?? '';
+const storyHeading = restaurant.story?.heading ?? '';
+---
+
+<header class="ne-masthead">
+  <div class="ne-masthead-inner">
+    {
+      (kickerLeft || kickerRight) && (
+        <p class="ne-kicker">
+          {kickerLeft && <span class="ne-kicker-text">{kickerLeft}</span>}
+          <span class="ne-kicker-rule" aria-hidden="true" />
+          {kickerRight && <span class="ne-kicker-text ne-kicker-text--right">{kickerRight}</span>}
+        </p>
+      )
+    }
+
+    <h1 class="ne-title">{restaurant.name}</h1>
+
+    {subtitle && <p class="ne-subtitle">{subtitle}</p>}
+
+    {standfirst && <p class="ne-standfirst">{standfirst}</p>}
+
+    {
+      dateline.length > 0 && (
+        <p class="ne-dateline">
+          {dateline.map((line, i) => (
+            <>
+              {i > 0 && <span class="ne-dateline-sep" aria-hidden="true">/</span>}
+              <span>{line}</span>
+            </>
+          ))}
+        </p>
+      )
+    }
+
+    {
+      coverUrl && (
+        <figure class="ne-plate">
+          <img
+            class="ne-plate-img"
+            src={coverUrl}
+            alt=""
+            loading="eager"
+            decoding="async"
+          />
+          {photoCredit && <figcaption class="ne-plate-credit">{photoCredit}</figcaption>}
+        </figure>
+      )
+    }
+  </div>
+
+  {
+    storyBody && (
+      <section class="ne-story" aria-labelledby={storyHeading ? 'ne-story-title' : undefined}>
+        <p class="ne-story-label">
+          <span class="ne-story-rule" aria-hidden="true" />
+          <span>The Story</span>
+        </p>
+        <div class="ne-story-column">
+          <h2 id={storyHeading ? 'ne-story-title' : undefined} class="ne-story-headline">
+            {storyHeading}
+          </h2>
+          <p class="ne-story-text">{storyBody}</p>
+        </div>
+      </section>
+    )
+  }
+</header>
+
+<style>
+  .ne-masthead {
+    max-width: var(--ne-measure);
+    margin: 0 auto;
+    padding: clamp(2.25rem, 6vw, 4.5rem) var(--ne-gutter) 0;
+  }
+
+  .ne-masthead-inner {
+    padding-bottom: clamp(1.75rem, 4vw, 2.5rem);
+    border-bottom: var(--ne-double-rule);
+  }
+
+  /* Metadata line: cuisine · ————————— price range */
+  .ne-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ne-muted);
+  }
+
+  .ne-kicker-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--ne-hair);
+  }
+
+  .ne-kicker-text--right {
+    color: var(--ne-accent, #7d3037);
+  }
+
+  .ne-title {
+    font-family: var(--ne-serif);
+    font-size: clamp(2.6rem, 8.5vw, 6rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--ne-ink);
+    text-wrap: balance;
+  }
+
+  .ne-subtitle {
+    margin-top: 1rem;
+    font-size: clamp(0.95rem, 1.6vw, 1.0625rem);
+    line-height: 1.6;
+    color: var(--ne-accent, #7d3037);
+    max-width: 52ch;
+  }
+
+  .ne-standfirst {
+    margin-top: 1.1rem;
+    font-size: clamp(1.0625rem, 2vw, 1.3125rem);
+    line-height: 1.7;
+    color: var(--ne-ink);
+    max-width: 54ch;
+  }
+
+  .ne-dateline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: clamp(1.5rem, 4vw, 2.25rem);
+    padding-top: 0.85rem;
+    border-top: var(--ne-rule-soft);
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    color: var(--ne-muted);
+  }
+
+  .ne-dateline-sep {
+    color: var(--ne-hair);
+  }
+
+  /* Above-the-fold photograph */
+  .ne-plate {
+    margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+  }
+
+  .ne-plate-img {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    max-height: 420px;
+    object-fit: cover;
+    border: var(--ne-rule-soft);
+    background: var(--ne-wash);
+    filter: saturate(0.9) contrast(1.03);
+  }
+
+  .ne-plate-credit {
+    margin-top: 0.5rem;
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ne-faint);
+  }
+
+  @media (max-width: 700px) {
+    .ne-plate-img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  /* The Story: label column + reading column */
+  .ne-story {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: clamp(2.25rem, 6vw, 3.5rem) 0;
+    border-bottom: var(--ne-rule-soft);
+  }
+
+  .ne-story-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ne-accent, #7d3037);
+  }
+
+  .ne-story-rule {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .ne-story-headline {
+    font-family: var(--ne-serif);
+    font-size: clamp(1.75rem, 4.2vw, 2.75rem);
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--ne-ink);
+    max-width: 26ch;
+    text-wrap: balance;
+  }
+
+  .ne-story-text {
+    margin-top: 1.1rem;
+    font-size: clamp(1.0125rem, 1.6vw, 1.125rem);
+    line-height: 1.8;
+    color: var(--ne-muted);
+    max-width: 66ch;
+  }
+
+  /* Drop cap — the printed-page flourish */
+  .ne-story-text::first-letter {
+    float: left;
+    padding: 0.06em 0.12em 0 0;
+    font-family: var(--ne-serif);
+    font-size: 3.4em;
+    line-height: 0.78;
+    color: var(--ne-accent, #7d3037);
+  }
+
+  @media (min-width: 900px) {
+    .ne-story {
+      grid-template-columns: 12rem minmax(0, 1fr);
+      gap: clamp(2rem, 5vw, 4rem);
+    }
+
+    .ne-story-label {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 0.55rem;
+    }
+
+    .ne-story-rule {
+      width: 2.5rem;
+    }
+
+    .ne-story-text {
+      text-align: justify;
+      hyphens: auto;
+    }
+  }
+</style>

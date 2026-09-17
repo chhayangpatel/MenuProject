@@ -1,0 +1,25 @@
+---
+/**
+ * Modern Dark — Footer
+ * Wraps the shared platform Footer (hours, contact, socials) with the
+ * template's charcoal surface treatment.
+ */
+import type { Restaurant } from '../../../schemas/restaurant.schema';
+import Footer from '../../../components/Footer.astro';
+
+interface Props { restaurant: Restaurant; }
+const { restaurant } = Astro.props;
+---
+
+<div class="nr-footer">
+  <Footer restaurant={restaurant} />
+</div>
+
+<style>
+  .nr-footer {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    border-top: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    background: var(--nr-surface, #171816);
+    color: var(--nr-primary, #f5f1e8);
+  }
+</style>

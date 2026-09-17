@@ -14,6 +14,8 @@ const TEMPLATES: { id: TemplateId; label: string; description: string; mood: str
   { id: 'zen-garden', label: 'Zen Garden', description: 'Calm, minimalist focus', mood: 'Minimal' },
   { id: 'retro-diner', label: 'Retro Diner', description: 'Nostalgic Americana', mood: 'Retro' },
   { id: 'artisan-craft', label: 'Artisan Craft', description: 'Artisanal handcrafted feel', mood: 'Artisan' },
+  { id: 'modern-dark', label: 'Modern Dark', description: 'Cinematic fine dining after dark', mood: 'Fine Dining' },
+  { id: 'newspaper-editorial', label: 'Newspaper Editorial', description: 'Contemporary newspaper × independent food journal. Light cream, serif headlines, numbered sections, hairline rules.', mood: 'Fine Dining' },
 ];
 
 const BORDER_RADII = [

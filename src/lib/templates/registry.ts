@@ -10,9 +10,11 @@ export type TemplateId =
   | 'seaside-coastal'
   | 'zen-garden'
   | 'retro-diner'
-  | 'artisan-craft';
+  | 'artisan-craft'
+  | 'modern-dark'
+  | 'newspaper-editorial';
 
-export type LayoutType = 'editorial' | 'minimal' | 'bento' | 'story' | 'carousel' | 'cinematic' | 'airy' | 'zen' | 'retro' | 'artisan';
+export type LayoutType = 'editorial' | 'minimal' | 'bento' | 'story' | 'carousel' | 'cinematic' | 'airy' | 'zen' | 'retro' | 'artisan' | 'noir' | 'newspaper';
 
 export type TemplateEffect =
   | 'scramble'
@@ -30,7 +32,10 @@ export type TemplateEffect =
   | 'neon-flicker'
   | 'jukebox-bounce'
   | 'paper-grain'
-  | 'ink-bleed';
+  | 'ink-bleed'
+  | 'vignette'
+  | 'letterbox'
+  | 'newsprint';
 
 export interface MotionConfig {
   intensity: number;
@@ -512,6 +517,89 @@ export const templates: Record<TemplateId, Template> = {
       fontHeading: '"Lora", serif',
       fontBody: '"Source Sans 3", sans-serif',
       borderRadius: 'md',
+    },
+  },
+  'modern-dark': {
+    id: 'modern-dark',
+    name: 'Modern Dark',
+    description: 'Contemporary fine dining after dark. Cinematic charcoal canvas, champagne accent, Marcellus serif, dot-leader menu rows, letterbox hero framing.',
+    layout: 'noir',
+    defaultMoodPreset: 'fine-dining',
+    prefix: 'nr',
+    fonts: 'https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&display=swap',
+    effects: ['vignette', 'letterbox'],
+    components: {
+      Hero: 'modern-dark/Hero',
+      Header: 'modern-dark/Header',
+      CategoryNav: 'modern-dark/CategoryNav',
+      CategoryHero: 'modern-dark/CategoryHero',
+      MenuCard: 'modern-dark/MenuCard',
+      FeaturedCarousel: 'modern-dark/FeaturedCarousel',
+      Footer: 'modern-dark/Footer',
+    },
+    motion: {
+      intensity: 3,
+      entryDuration: 900,
+      staggerDelay: 80,
+      easings: EASINGS,
+      parallaxDepth: 0.15,
+      reducedMotionFallback: 'fade',
+    },
+    typography: {
+      ...TYPOGRAPHY_BASE,
+      hero: 'clamp(2.75rem, 8vw, 5.25rem)',
+    },
+    colorDefaults: {
+      primaryColor: '#F5F1E8',      // on-dark: warm ivory ink
+      secondaryColor: '#101110',    // near-black charcoal canvas
+      accentColor: '#C6AA78',       // muted champagne
+      fontHeading: '"Marcellus", serif',
+      fontBody: '"Manrope", sans-serif',
+      borderRadius: 'none',
+    },
+  },
+  'newspaper-editorial': {
+    id: 'newspaper-editorial',
+    name: 'Newspaper Editorial',
+    description: 'Contemporary newspaper × independent food journal. Light cream canvas, serif headlines, numbered sections, thin hairline rules, restrained burgundy accent.',
+    layout: 'newspaper',
+    defaultMoodPreset: 'modern-minimal',
+    prefix: 'ne',
+    fonts: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap',
+    effects: ['newsprint'],
+    components: {
+      Hero: 'newspaper-editorial/Hero',
+      Header: 'newspaper-editorial/Header',
+      CategoryNav: 'newspaper-editorial/CategoryNav',
+      CategoryHero: 'newspaper-editorial/CategoryHero',
+      MenuCard: 'newspaper-editorial/MenuCard',
+      FeaturedCarousel: 'newspaper-editorial/FeaturedCarousel',
+      Footer: 'newspaper-editorial/Footer',
+    },
+    motion: {
+      intensity: 2,
+      entryDuration: 900,
+      staggerDelay: 120,
+      easings: EASINGS,
+      parallaxDepth: 0.05,
+      reducedMotionFallback: 'instant',
+    },
+    typography: {
+      ...TYPOGRAPHY_BASE,
+      hero: 'clamp(2.8rem, 7vw, 5.5rem)',
+      leadingHeading: '1.05',
+      leadingBody: '1.65',
+      trackingHeading: '-0.03em',
+      trackingWide: '0.08em',
+      trackingMicro: '0.12em',
+    },
+    colorDefaults: {
+      primaryColor: '#191917',
+      secondaryColor: '#F7F5EF',
+      accentColor: '#7D3037',
+      fontHeading: '"Playfair Display", serif',
+      fontBody: '"Plus Jakarta Sans", sans-serif',
+      borderRadius: 'none',
     },
   },
 };

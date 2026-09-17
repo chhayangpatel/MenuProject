@@ -1,0 +1,489 @@
+{
+  "slug": "the-daily-journal",
+  "name": "The Daily Journal",
+  "tagline": "Independent food journal — handcrafted, seasonal, always honest.",
+  "description": "The Daily Journal is an independent food publication that happens to serve exceptional meals. We believe in simplicity, quality ingredients, and the craft of honest cooking.",
+  "story": {
+    "heading": "About the Journal",
+    "body": "What began as a handwritten menu on a chalkboard has grown into a conversation between chef and guest. We source from local producers, prepare in small batches, and serve with intention. No performance — just genuinely good food."
+  },
+  "logo": "logo.svg",
+  "coverImage": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80",
+  "cuisine": ["Seasonal Kitchen"],
+  "priceRange": "$$",
+  "moodPreset": "fine-dining",
+  "template": "newspaper-editorial",
+  "contact": {
+    "phone": "+1-555-0100",
+    "email": "hello@example.com",
+    "address": "123 Main St, City",
+    "googleMapsUrl": "https://maps.google.com/?q=123+Main+St+City"
+  },
+  "hours": {
+    "regular": {
+      "monday": "11:00-22:00",
+      "tuesday": "11:00-22:00",
+      "wednesday": "11:00-22:00",
+      "thursday": "11:00-22:00",
+      "friday": "11:00-23:00",
+      "saturday": "12:00-23:00",
+      "sunday": "12:00-21:00"
+    }
+  },
+  "theme": {
+    "primaryColor": "#191917",
+    "secondaryColor": "#F7F5EF",
+    "accentColor": "#7D3037",
+    "fontHeading": "Playfair Display",
+    "fontBody": "Plus Jakarta Sans",
+    "borderRadius": "none",
+    "mode": "light"
+  },
+  "settings": {
+    "currency": "USD",
+    "currencySymbol": "$",
+    "language": "en",
+    "showPrices": true,
+    "enableSearch": true,
+    "enableDietaryFilters": true
+  },
+  "menu": [
+    {
+      "id": "morning",
+      "name": "Morning",
+      "description": "Baked at six, served until noon.",
+      "items": [
+        {
+          "id": "sourdough-butter-jam",
+          "name": "Sourdough, Cultured Butter & Jam",
+          "description": "Two thick slices from yesterday's bake, house churned butter and whatever fruit we put up last summer.",
+          "price": 7,
+          "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80",
+          "tags": ["vegetarian", "house-made"],
+          "available": true,
+          "featured": false,
+          "spicyLevel": 0,
+          "portionSize": "Serves 1",
+          "prepTime": 5
+        },
+        {
+          "id": "buttermilk-pancakes",
+          "name": "Buttermilk Pancakes",
+          "description": "Stack of three, maple syrup poured at the table, salted butter melting into the middle.",
+          "price": 9,
+          "tags": ["vegetarian"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 12
+        },
+        {
+          "id": "poached-eggs-rye",
+          "name": "Poached Eggs on Rye",
+          "description": "Two eggs, thick rye toast, wilted spinach, a spoon of hollandaise.",
+          "price": 11,
+          "tags": ["vegetarian", "house-made"],
+          "available": true,
+          "popularity": "most-ordered",
+          "spicyLevel": 0,
+          "prepTime": 10
+        }
+      ]
+    },
+    {
+      "id": "small-plates",
+      "name": "Small Plates",
+      "description": "Shareable plates to begin.",
+      "items": [
+        {
+          "id": "padron-peppers",
+          "name": "Charred Padrón Peppers",
+          "description": "Blistered in the pan, finished with flaked salt and lemon oil. One in ten is hot.",
+          "price": 8,
+          "tags": ["vegan", "gluten-free"],
+          "available": true,
+          "spicyLevel": 1,
+          "prepTime": 8
+        },
+        {
+          "id": "whipped-feta-honey",
+          "name": "Whipped Feta & Honey",
+          "description": "Feta whipped with cream, thyme honey, toasted pistachio, warm flatbread.",
+          "price": 10,
+          "tags": ["vegetarian"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 7
+        },
+        {
+          "id": "crispy-squid",
+          "name": "Crispy Squid, Lemon & Aioli",
+          "description": "Semolina crust, fried to order, with a lemon aioli and pickled chilli.",
+          "price": 12,
+          "image": "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=800&q=80",
+          "tags": [],
+          "available": true,
+          "popularity": "chef-pick",
+          "spicyLevel": 1,
+          "prepTime": 14,
+          "allergens": [
+            { "name": "Gluten", "severity": "contains" },
+            { "name": "Egg", "severity": "contains" }
+          ]
+        },
+        {
+          "id": "heritage-tomato",
+          "name": "Heritage Tomato Salad",
+          "description": "Sliced tomatoes, basil oil, aged sherry vinegar, a snow of frozen goat's curd.",
+          "price": 11,
+          "tags": ["vegetarian", "gluten-free", "seasonal"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 6
+        },
+        {
+          "id": "smoked-mackerel-pate",
+          "name": "Smoked Mackerel Pâté",
+          "description": "Whipped with crème fraîche and horseradish, served with rye crisps and cornichons.",
+          "price": 9,
+          "tags": ["house-made"],
+          "available": true,
+          "popularity": "must-try",
+          "spicyLevel": 0,
+          "prepTime": 5,
+          "allergens": [
+            { "name": "Fish", "severity": "contains" },
+            { "name": "Dairy", "severity": "contains" }
+          ]
+        },
+        {
+          "id": "pork-pistachio-terrine",
+          "name": "Pork & Pistachio Terrine",
+          "description": "Pressed with pistachio and thyme, pickled prunes, toasted brioche.",
+          "price": 13,
+          "tags": ["house-made"],
+          "available": false,
+          "spicyLevel": 0,
+          "prepTime": 5
+        }
+      ]
+    },
+    {
+      "id": "the-grill",
+      "name": "The Grill",
+      "description": "Charcoal, smoke and patience.",
+      "heroImage": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80",
+      "heroQuote": "\"Quality ingredients, honest cooking.\"",
+      "items": [
+        {
+          "id": "dry-aged-sirloin",
+          "name": "Dry-Aged Sirloin",
+          "description": "Aged 45 days on the bone, grilled over charcoal, rested under bone marrow butter with dripping potatoes alongside.",
+          "price": 34,
+          "tags": ["house-made"],
+          "available": true,
+          "featured": true,
+          "popularity": "chef-pick",
+          "spicyLevel": 0,
+          "variants": [
+            { "id": "300g", "name": "300g", "priceModifier": 0 },
+            { "id": "450g", "name": "450g", "priceModifier": 9 }
+          ],
+          "modifiers": [
+            { "id": "bone-marrow", "name": "Extra Bone Marrow Butter", "price": 3, "group": "Add-ons" },
+            { "id": "peppercorn", "name": "Green Peppercorn Sauce", "price": 3, "group": "Add-ons" }
+          ],
+          "prepTime": 25,
+          "portionSize": "Serves 1",
+          "nutrition": { "calories": 780, "protein": 62, "carbs": 18, "fat": 52 },
+          "allergens": [{ "name": "Dairy", "severity": "contains" }]
+        },
+        {
+          "id": "half-chicken-chilli-butter",
+          "name": "Half Chicken, Chilli Butter",
+          "description": "Brined overnight, grilled skin-side down until the fat renders, finished with chilli butter and charred lemon.",
+          "price": 24,
+          "tags": ["gluten-free"],
+          "available": true,
+          "spicyLevel": 2,
+          "prepTime": 30,
+          "portionSize": "Serves 1"
+        },
+        {
+          "id": "lamb-shoulder-two",
+          "name": "Lamb Shoulder for Two",
+          "description": "Slow roasted for six hours until it falls apart, harissa and yoghurt, flatbread to tear.",
+          "price": 48,
+          "tags": ["house-made"],
+          "available": true,
+          "popularity": "most-ordered",
+          "spicyLevel": 1,
+          "prepTime": 40,
+          "portionSize": "Serves 2"
+        },
+        {
+          "id": "whole-grilled-sea-bass",
+          "name": "Whole Grilled Sea Bass",
+          "description": "Cooked whole over charcoal, fennel and lemon in the cavity, salsa verde spooned over.",
+          "price": 32,
+          "tags": ["gluten-free", "seasonal"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 22,
+          "portionSize": "Serves 1"
+        },
+        {
+          "id": "dry-aged-cheeseburger",
+          "name": "Dry-Aged Cheeseburger",
+          "description": "Coarse ground chuck and short rib, aged cheddar, pickles, mustard mayo, milk bun.",
+          "price": 18,
+          "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80",
+          "tags": [],
+          "available": true,
+          "popularity": "peoples-favorite",
+          "spicyLevel": 0,
+          "prepTime": 16,
+          "allergens": [
+            { "name": "Gluten", "severity": "contains" },
+            { "name": "Dairy", "severity": "contains" },
+            { "name": "Mustard", "severity": "may-contain" }
+          ]
+        },
+        {
+          "id": "chargrilled-hispi",
+          "name": "Chargrilled Hispi Cabbage",
+          "description": "Halved and grilled cut-side down, miso butter, crispy shallots.",
+          "price": 14,
+          "tags": ["vegetarian", "seasonal"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 18
+        },
+        {
+          "id": "smoked-short-rib",
+          "name": "Smoked Short Rib",
+          "description": "Twelve hours in the smoke, glazed with burnt onion and molasses.",
+          "price": 28,
+          "tags": ["house-made"],
+          "available": false,
+          "spicyLevel": 1,
+          "prepTime": 35
+        },
+        {
+          "id": "flat-iron-steak",
+          "name": "Flat Iron Steak",
+          "description": "Quick over the coals, chimichurri, burnt spring onion.",
+          "price": 26,
+          "tags": ["gluten-free"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 18,
+          "portionSize": "Serves 1"
+        }
+      ]
+    },
+    {
+      "id": "sides",
+      "name": "Sides",
+      "description": "Everything is better with something alongside.",
+      "items": [
+        {
+          "id": "triple-cooked-chips",
+          "name": "Triple-Cooked Chips",
+          "description": "Cooked three times, salted twice, served in paper.",
+          "price": 7,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 12
+        },
+        {
+          "id": "buttered-greens",
+          "name": "Buttered Greens",
+          "description": "Seasonal greens wilted in brown butter with a squeeze of lemon.",
+          "price": 6,
+          "tags": ["vegetarian", "seasonal"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 8
+        },
+        {
+          "id": "little-gem-anchovy",
+          "name": "Little Gem & Anchovy",
+          "description": "Cold, crisp leaves, anchovy dressing, sourdough croutons.",
+          "price": 7,
+          "tags": [],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 6,
+          "allergens": [
+            { "name": "Fish", "severity": "contains" },
+            { "name": "Gluten", "severity": "contains" }
+          ]
+        },
+        {
+          "id": "roast-potatoes",
+          "name": "Roast Potatoes",
+          "description": "Semolina crust, rosemary, sea salt.",
+          "price": 6,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 10
+        }
+      ]
+    },
+    {
+      "id": "puddings",
+      "name": "Puddings",
+      "description": "Made in the morning, served after dark.",
+      "items": [
+        {
+          "id": "basque-cheesecake",
+          "name": "Burnt Basque Cheesecake",
+          "description": "Baked hot and fast so the top blackens and the middle stays loose.",
+          "price": 10,
+          "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80",
+          "tags": ["vegetarian", "house-made"],
+          "available": true,
+          "featured": true,
+          "popularity": "chef-pick",
+          "spicyLevel": 0,
+          "prepTime": 5,
+          "portionSize": "Serves 1"
+        },
+        {
+          "id": "dark-chocolate-tart",
+          "name": "Dark Chocolate Tart",
+          "description": "Seventy per cent chocolate, buckwheat shell, crème fraîche on top.",
+          "price": 9,
+          "tags": ["vegetarian"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 5
+        },
+        {
+          "id": "buttermilk-pudding-rhubarb",
+          "name": "Buttermilk Pudding, Rhubarb",
+          "description": "Set buttermilk cream with poached forced rhubarb and shortbread rubble.",
+          "price": 8,
+          "tags": ["vegetarian", "seasonal"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 5
+        },
+        {
+          "id": "affogato",
+          "name": "Affogato",
+          "description": "Vanilla ice cream drowned in a double espresso.",
+          "price": 7,
+          "tags": ["vegetarian"],
+          "available": true,
+          "spicyLevel": 0,
+          "prepTime": 3
+        }
+      ]
+    },
+    {
+      "id": "drinks",
+      "name": "Drinks",
+      "description": "Coffee from a roaster two streets away, wine from growers we know.",
+      "items": [
+        {
+          "id": "filter-coffee",
+          "name": "Filter Coffee",
+          "description": "Single origin, brewed by the jug, refills at no charge.",
+          "price": 4,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "flat-white",
+          "name": "Flat White",
+          "description": "Two ristretto shots, silky milk.",
+          "price": 4.5,
+          "tags": ["vegetarian"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "pot-of-tea",
+          "name": "Pot of Tea",
+          "description": "Loose leaf, brewed for four minutes, served with a strainer.",
+          "price": 4,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "house-kombucha",
+          "name": "House Kombucha",
+          "description": "Fermented on the shelf behind the bar, lightly sparkling.",
+          "price": 6,
+          "tags": ["vegan", "house-made"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "craft-lager",
+          "name": "Craft Lager",
+          "description": "Dry, cold and unfiltered, poured from the keg.",
+          "price": 7,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "natural-wine-glass",
+          "name": "Natural Wine, Glass",
+          "description": "Ask what is open today. It changes with the weather.",
+          "price": 9,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0,
+          "variants": [
+            { "id": "125ml", "name": "125ml", "priceModifier": 0 },
+            { "id": "175ml", "name": "175ml", "priceModifier": 3 }
+          ]
+        },
+        {
+          "id": "bitter-aperitivo",
+          "name": "Bitter Aperitivo",
+          "description": "Bitter herbs, soda, a wide strip of orange peel.",
+          "price": 11,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "rhubarb-soda",
+          "name": "Rhubarb Soda",
+          "description": "House cordial, soda, mint.",
+          "price": 5,
+          "tags": ["vegan", "house-made"],
+          "available": true,
+          "spicyLevel": 0
+        },
+        {
+          "id": "fresh-orange",
+          "name": "Fresh Orange",
+          "description": "Squeezed to order.",
+          "price": 5,
+          "tags": ["vegan"],
+          "available": true,
+          "spicyLevel": 0
+        }
+      ]
+    }
+  ],
+  "combos": [
+    {
+      "id": "lunch-combo",
+      "name": "Lunch Combo",
+      "description": "Small plate + grill dish + side",
+      "items": ["padron-peppers", "half-chicken-chilli-butter", "triple-cooked-chips"],
+      "comboPrice": 38,
+      "available": true
+    }
+  ]
+}

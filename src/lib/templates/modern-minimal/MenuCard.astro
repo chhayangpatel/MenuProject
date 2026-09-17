@@ -9,7 +9,7 @@ const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
 const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
 const hasVariants = item.variants && item.variants.length > 0;
 ---
-<article class="mm-card-outer" data-item-id={item.id} role="button" tabindex="0" aria-label={"View "+item.name}>
+<article class="mm-card-outer" data-item-id={item.id}>
   <div class="mm-card">
     <div class="mm-card-body">
       <div class="mm-card-text">

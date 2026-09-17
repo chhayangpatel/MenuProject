@@ -1,0 +1,411 @@
+/* ============================================================================
+   NEWSPAPER EDITORIAL — a modern independent food journal
+   ----------------------------------------------------------------------------
+   A type-driven publication layout: masthead, hairline rules, numbered section
+   heads, a typeset section index and ruled dish listings instead of a card grid.
+
+   Palette: brand colors arrive from theme.ts as --ne-primary / --ne-secondary /
+   --ne-accent (restaurant config > template defaults). Everything below DERIVES
+   from those three tokens, so cream/burgundy is only a fallback and any
+   restaurant palette stays legible on this template.
+   ========================================================================== */
+
+body.tpl-template-newspaper-editorial {
+    /* Ink & paper */
+    --ne-paper: var(--ne-secondary, #f7f5ef);
+    --ne-ink: var(--ne-primary, #191917);
+    --ne-hair: color-mix(in srgb, var(--ne-ink) 26%, var(--ne-paper));
+    --ne-hair-soft: color-mix(in srgb, var(--ne-ink) 13%, var(--ne-paper));
+    --ne-muted: color-mix(in srgb, var(--ne-ink) 58%, var(--ne-paper));
+    --ne-faint: color-mix(in srgb, var(--ne-ink) 40%, var(--ne-paper));
+    --ne-wash: color-mix(in srgb, var(--ne-ink) 4%, var(--ne-paper));
+
+    /* Editorial type stack */
+    --ne-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+    --ne-sans: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+    --ne-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+    /* Shared platform pieces (footer, detail sheet) inherit this language */
+    --font-heading: var(--ne-serif);
+    --font-body: var(--ne-sans);
+
+    --ne-gutter: clamp(1.25rem, 4vw, 3.5rem);
+    --ne-measure: 78rem;
+    --ne-measure-text: 62ch;
+    --ne-rule: 1px solid var(--ne-hair);
+    --ne-rule-soft: 1px solid var(--ne-hair-soft);
+    --ne-double-rule: 3px double var(--ne-hair);
+    --ne-index-h: 3.25rem;
+
+    background-color: var(--ne-paper);
+    color: var(--ne-ink);
+    font-family: var(--ne-sans);
+    font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* ── Menu shell: a broadsheet page, not a centered column ─────────────────── */
+body.tpl-template-newspaper-editorial .mr-menu {
+    max-width: var(--ne-measure);
+    padding: 0 var(--ne-gutter) clamp(3rem, 8vw, 6rem);
+}
+
+/* Edition line: "34 dishes across 6 categories · back to top" */
+body.tpl-template-newspaper-editorial .mr-menu-overview {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    text-align: left;
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--ne-muted);
+    margin-bottom: clamp(2.25rem, 5vw, 3.5rem);
+    padding-bottom: 0.7rem;
+    border-bottom: var(--ne-double-rule);
+}
+
+body.tpl-template-newspaper-editorial .mr-menu-overview a {
+    margin-left: auto;
+    color: var(--ne-accent, #7d3037);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid currentColor;
+}
+
+body.tpl-template-newspaper-editorial .mr-menu-overview-dot {
+    margin: 0;
+    color: var(--ne-hair);
+}
+
+/* ── Section heads: number — hairline — dish count, then the headline ─────── */
+body.tpl-template-newspaper-editorial .mr-category {
+    margin-top: clamp(2.75rem, 6vw, 4.5rem);
+    scroll-margin-top: calc(var(--ne-index-h) + 1.5rem);
+}
+
+body.tpl-template-newspaper-editorial .mr-cat-head {
+    max-width: none;
+    margin: 0 0 clamp(1.25rem, 3vw, 1.75rem);
+    padding-bottom: 0.9rem;
+    border-bottom: var(--ne-rule);
+}
+
+body.tpl-template-newspaper-editorial .mr-cat-eyebrow {
+    font-family: var(--ne-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--ne-accent, #7d3037);
+    margin-bottom: 0.6rem;
+}
+
+body.tpl-template-newspaper-editorial .mr-cat-eyebrow-rule {
+    width: auto;
+    flex: 1;
+    max-width: none;
+    height: 1px;
+    background: var(--ne-hair);
+    opacity: 1;
+}
+
+body.tpl-template-newspaper-editorial .mr-cat-name {
+    font-family: var(--ne-serif);
+    font-size: clamp(2rem, 5.4vw, 3.25rem);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+    color: var(--ne-ink);
+}
+
+body.tpl-template-newspaper-editorial .mr-cat-desc {
+    margin-top: 0.65rem;
+    max-width: var(--ne-measure-text);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ne-muted);
+}
+
+/* ── Listings: ruled rows in one measured column (dense sections split) ───── */
+body.tpl-template-newspaper-editorial .mr-items-grid {
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    border-top: var(--ne-rule-soft);
+}
+
+body.tpl-template-newspaper-editorial .mr-items-grid > .mr-reveal,
+body.tpl-template-newspaper-editorial .mr-items-grid > [data-item-id] {
+    min-width: 0;
+}
+
+/* Long sections read as a two-column typeset listing with a column rule */
+@supports selector(:has(*)) {
+    @media (min-width: 1080px) {
+        body.tpl-template-newspaper-editorial .mr-items-grid:has(> .mr-reveal:nth-child(6)) {
+            position: relative;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: clamp(2rem, 5vw, 4.5rem);
+        }
+
+        body.tpl-template-newspaper-editorial .mr-items-grid:has(> .mr-reveal:nth-child(6))::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background: var(--ne-hair-soft);
+        }
+
+        /* A featured dish breaks the columns to lead the section */
+        body.tpl-template-newspaper-editorial .mr-items-grid:has(> .mr-reveal:nth-child(6)) > .mr-reveal:has(.ne-dish--featured) {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+/* ── Section divider: one hairline, no ornament ───────────────────────────── */
+body.tpl-template-newspaper-editorial .mr-divider {
+    max-width: none;
+    gap: 0;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    color: var(--ne-hair);
+    opacity: 1;
+}
+
+body.tpl-template-newspaper-editorial .mr-divider span,
+body.tpl-template-newspaper-editorial .mr-divider span:last-child {
+    height: 1px;
+    background: var(--ne-hair-soft);
+}
+
+body.tpl-template-newspaper-editorial .mr-divider svg {
+    display: none;
+}
+
+/* ── Motion: a short fade-up (registry intensity 2/10), never a bounce ───── */
+body.tpl-template-newspaper-editorial .mr-reveal {
+    animation: ne-fade-up calc(var(--mr-entry-duration, 900ms) * 0.5) var(--mr-ease-out-expo, ease-out) both;
+}
+
+body.tpl-template-newspaper-editorial .mr-reveal.revealed {
+    animation: none;
+    opacity: 1;
+    transform: none;
+}
+
+@keyframes ne-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Search jump highlight: an accent rule rather than a rounded glow */
+body.tpl-template-newspaper-editorial .mr-item-highlighted {
+    border-radius: 0;
+    box-shadow: inset 3px 0 0 var(--ne-accent, #7d3037);
+}
+
+/* ============================================================================
+   COLOPHON — the shared platform footer re-set as a publication colophon.
+   The shared component owns all the data logic (hours, address/map, contact,
+   socials, attribution); these rules only re-style it: square, ruled, and
+   labelled in mono type instead of icon chips.
+   ========================================================================== */
+
+body.tpl-template-newspaper-editorial .ne-colophon {
+    margin-top: clamp(3rem, 8vw, 6rem);
+    border-top: var(--ne-double-rule);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .site-footer {
+    margin-top: 0;
+    padding: clamp(3.5rem, 6vw, 4rem) var(--ne-gutter) 2rem;
+    background: transparent;
+    border-top: none;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-container {
+    max-width: var(--ne-measure);
+    gap: clamp(2rem, 5vw, 3rem);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-brand {
+    text-align: left;
+    align-items: flex-start;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-brand-name {
+    font-family: var(--ne-serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--ne-ink);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-tagline {
+    margin-top: 0.6rem;
+    max-width: 46ch;
+    font-size: 0.9375rem;
+    font-style: normal;
+    line-height: 1.7;
+    color: var(--ne-muted);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-brand-divider {
+    width: 3rem;
+    height: 3px;
+    margin-top: 1.1rem;
+    border-radius: 0;
+    background: var(--ne-accent, #7d3037);
+    opacity: 1;
+}
+
+/* Column headers: mono section labels, icons removed */
+body.tpl-template-newspaper-editorial .ne-colophon .footer-col-header {
+    gap: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: var(--ne-rule-soft);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-col-icon {
+    display: none;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-col-heading {
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--ne-muted);
+}
+
+/* Hours: the printed timetable */
+body.tpl-template-newspaper-editorial .ne-colophon .hours-list {
+    gap: 0.35rem;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .hours-row {
+    font-size: 0.875rem;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .hours-day {
+    min-width: 6.5rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ne-ink);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .hours-dots {
+    border-bottom: 1px dotted var(--ne-hair);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .hours-time {
+    font-family: var(--ne-mono);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--ne-muted);
+}
+
+/* Contact & socials: type, hairline rules, square hit areas */
+body.tpl-template-newspaper-editorial .ne-colophon .contact-action-link {
+    gap: 0;
+    color: var(--ne-muted);
+    border-bottom: 1px solid transparent;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .contact-action-link:hover {
+    color: var(--ne-accent, #7d3037);
+    border-bottom-color: currentColor;
+    transform: none;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .link-icon {
+    display: none;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-address {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--ne-muted);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .directions-btn {
+    align-self: flex-start;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 0;
+    border: 1px solid var(--ne-ink);
+    background: transparent;
+    color: var(--ne-ink);
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .directions-btn:hover {
+    background: var(--ne-ink);
+    color: var(--ne-paper);
+    transform: none;
+    box-shadow: none;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .social-label {
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--ne-muted);
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .social-row {
+    gap: 0.5rem;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .social-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 0;
+    border: 1px solid var(--ne-hair);
+    background: transparent;
+    color: var(--ne-ink);
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .social-btn:hover {
+    background: var(--ne-ink);
+    color: var(--ne-paper);
+    border-color: var(--ne-ink);
+    transform: none;
+    box-shadow: none;
+}
+
+body.tpl-template-newspaper-editorial .ne-colophon .footer-bottom {
+    padding-top: 1.25rem;
+    border-top: var(--ne-rule-soft);
+    font-family: var(--ne-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--ne-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.tpl-template-newspaper-editorial .mr-reveal,
+    body.tpl-template-newspaper-editorial .mr-reveal.revealed {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}

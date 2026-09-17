@@ -1,0 +1,225 @@
+---
+/**
+ * Modern Dark — MenuCard
+ * Fine-dining menu row: dish name, dotted price leader, description, tags.
+ * Image-led when a photo exists (right-set thumbnail), with a serif-monogram
+ * placeholder when the layout needs one. Opens the shared detail sheet via
+ * data-item-id. Honors showPrices and the unavailable state.
+ */
+import type { MenuItem } from '../../../schemas/restaurant.schema';
+import { resolveMenuItemImage } from '../../../lib/assets';
+import ItemBadge from '../../../components/ItemBadge.astro';
+
+interface Props {
+  item: MenuItem;
+  currencySymbol?: string;
+  showPrices?: boolean;
+  restaurant: any;
+  showImagePlaceholders?: boolean;
+}
+const { item, currencySymbol = '$', showPrices = true, restaurant, showImagePlaceholders = false } = Astro.props;
+
+const hasImage = !!item.image;
+const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
+const showPlaceholder = !hasImage && showImagePlaceholders;
+
+const TAG_LABELS: Record<string, string> = {
+  vegetarian: 'Vegetarian',
+  vegan: 'Vegan',
+  'gluten-free': 'GF',
+  'dairy-free': 'DF',
+  'nut-free': 'NF',
+  halal: 'Halal',
+  kosher: 'Kosher',
+  organic: 'Organic',
+  'house-made': 'House-made',
+  seasonal: 'Seasonal',
+};
+
+const tags = (item.tags ?? []).map((t) => TAG_LABELS[t] ?? t).filter(Boolean);
+const unavailable = item.available === false;
+---
+
+<article
+  class:list={["nr-item", { "nr-item--unavailable": unavailable, "nr-item--imageless": !hasImage && !showPlaceholder }]}
+  data-item-id={item.id}
+>
+  <div class="nr-item-body">
+    <div class="nr-item-row">
+      <h3 class="nr-item-name">{item.name}</h3>
+      {showPrices && (
+        <>
+          <span class="nr-item-leader" aria-hidden="true"></span>
+          <span class="nr-item-price">{currencySymbol}{item.price.toFixed(2)}</span>
+        </>
+      )}
+    </div>
+
+    {item.description && <p class="nr-item-desc">{item.description}</p>}
+
+    <div class="nr-item-meta">
+      <ItemBadge item={item} size="sm" />
+      {tags.map((t) => (
+        <span class="nr-item-tag">{t}</span>
+      ))}
+      {item.spicyLevel > 0 && (
+        <span class="nr-item-tag" aria-label={`Spicy level ${item.spicyLevel} of 3`}>
+          {"🌶️".repeat(item.spicyLevel)}
+        </span>
+      )}
+    </div>
+
+    {unavailable && <p class="nr-item-off">Currently unavailable</p>}
+  </div>
+
+  {hasImage && (
+    <div class="nr-item-media">
+      <img src={imageUrl} alt={item.name} loading="lazy" />
+    </div>
+  )}
+
+  {showPlaceholder && (
+    <div class="nr-item-media nr-item-media--ph" aria-hidden="true">
+      <span class="nr-item-mono">{item.name.charAt(0)}</span>
+    </div>
+  )}
+</article>
+
+<style>
+  .nr-item {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(1rem, 3vw, 1.75rem);
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    transition: border-color 0.3s ease;
+  }
+
+  .nr-item:hover {
+    border-bottom-color: var(--nr-border-strong, rgba(245, 241, 232, 0.22));
+  }
+
+  .nr-item-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nr-item-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .nr-item-name {
+    font-family: var(--nr-font-heading);
+    font-size: clamp(1.125rem, 2.4vw, 1.375rem);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    color: var(--nr-primary, #f5f1e8);
+  }
+
+  /* Classic fine-dining dotted leader between dish and price */
+  .nr-item-leader {
+    flex: 1;
+    min-width: 1.25rem;
+    height: 0.8em;
+    margin: 0 0.7rem;
+    border-bottom: 1px dotted var(--nr-border-strong, rgba(245, 241, 232, 0.22));
+  }
+
+  .nr-item-price {
+    font-family: var(--nr-font-body);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--nr-accent, #c6aa78);
+    white-space: nowrap;
+  }
+
+  .nr-item-desc {
+    font-family: var(--nr-font-body);
+    font-size: 0.8125rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--nr-muted, #aba39f);
+    margin-top: 0.4rem;
+    max-width: 52ch;
+  }
+
+  .nr-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.55rem;
+    margin-top: 0.65rem;
+  }
+
+  .nr-item-tag {
+    font-family: var(--nr-font-body);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--nr-muted, #aba39f);
+    border: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    border-radius: 2px;
+    padding: 3px 6px;
+  }
+
+  .nr-item-off {
+    font-family: var(--nr-font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--nr-accent, #c6aa78);
+    margin-top: 0.6rem;
+  }
+
+  .nr-item--unavailable .nr-item-name,
+  .nr-item--unavailable .nr-item-desc,
+  .nr-item--unavailable .nr-item-price,
+  .nr-item--unavailable .nr-item-media {
+    opacity: 0.4;
+  }
+
+  .nr-item-media {
+    flex-shrink: 0;
+    width: clamp(96px, 26vw, 128px);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    border-radius: 2px;
+    background: var(--nr-surface, #171816);
+  }
+
+  .nr-item-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.88) contrast(1.05) brightness(0.96);
+    transition: filter 0.4s ease, transform 0.6s var(--mr-ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  @media (hover: hover) {
+    .nr-item:hover .nr-item-media img {
+      filter: none;
+      transform: scale(1.045);
+    }
+  }
+
+  .nr-item-media--ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nr-item-mono {
+    font-family: var(--nr-font-heading);
+    font-size: 1.75rem;
+    line-height: 1;
+    color: color-mix(in srgb, var(--nr-accent, #c6aa78) 55%, transparent);
+  }
+</style>

@@ -28,6 +28,8 @@ const VALID_TEMPLATES = new Set([
   "zen-garden",
   "retro-diner",
   "artisan-craft",
+  "modern-dark",
+  "newspaper-editorial",
 ]);
 const VALID_MOODS = new Set([
   "fine-dining",

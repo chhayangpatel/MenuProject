@@ -1,0 +1,49 @@
+/*
+  Modern Dark (noir) — template-scoped styles
+  Contemporary fine dining after dark: charcoal canvas, champagne accent,
+  Marcellus serif display, Manrope sans supporting, dot-leader menu rows.
+
+  Bridge tokens --nr-primary / --nr-secondary / --nr-accent are emitted by
+  theme.ts from the restaurant config + registry colorDefaults, so restaurant
+  brand colors flow through. This file only adds template-owned fonts and
+  derived surfaces (derived from the bridge tokens via color-mix so restaurant
+  overrides propagate).
+*/
+
+:root {
+  /* Typography (template-owned identity — never restaurant-configurable) */
+  --nr-font-heading: "Marcellus", "Playfair Display", Georgia, serif;
+  --nr-font-body: "Manrope", "Inter", system-ui, sans-serif;
+
+  /* Derived surfaces (follow the restaurant's resolved palette) */
+  --nr-surface: color-mix(in srgb, var(--nr-primary, #f5f1e8) 4%, var(--nr-secondary, #101110));
+  --nr-surface-raised: color-mix(in srgb, var(--nr-primary, #f5f1e8) 7%, var(--nr-secondary, #101110));
+  --nr-border: color-mix(in srgb, var(--nr-primary, #f5f1e8) 10%, transparent);
+  --nr-border-strong: color-mix(in srgb, var(--nr-primary, #f5f1e8) 22%, transparent);
+  --nr-muted: color-mix(in srgb, var(--nr-primary, #f5f1e8) 68%, var(--nr-secondary, #101110));
+
+  /* Letterbox bars — a shade deeper than the canvas */
+  --nr-letterbox: color-mix(in srgb, var(--nr-secondary, #101110) 88%, #000);
+}
+
+/* Shared motion primitive: single quiet entry, honoring registry tokens */
+.nr-enter {
+  animation: nr-enter-up var(--nr-duration-enter, 900ms) var(--mr-ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+@keyframes nr-enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nr-enter {
+    animation: none;
+  }
+}

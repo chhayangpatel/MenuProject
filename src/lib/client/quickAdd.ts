@@ -13,9 +13,10 @@
  *    target ("$8.99 +"); on first add it springs into a filled − qty +
  *    stepper showing the line's running total.
  *
- * The detail sheet is disabled on ordering pages (`setupDetailSheet`
- * early-returns in effects.ts), so card taps never open a popup — the inline
- * control IS the interaction. Taps touch only the shared cart
+ * The detail sheet never opens from a card tap in any mode (`setupDetailSheet`
+ * in effects.ts is a no-op), so card taps never open a popup — the inline
+ * control IS the interaction on ordering pages. Taps touch only the shared
+ * cart
  * (`orders/cartStore`). Menu markup is never edited: controls are injected
  * into/onto existing elements, so any template that renders a photo gets the
  * overlay automatically and text rows get the pill. When ordering is off,

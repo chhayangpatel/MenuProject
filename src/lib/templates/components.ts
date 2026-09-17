@@ -89,6 +89,23 @@ import ArtisanCraftMenuCard from "./artisan-craft/MenuCard.astro";
 import ArtisanCraftFeaturedCarousel from "./artisan-craft/FeaturedCarousel.astro";
 import ArtisanCraftFooter from "./artisan-craft/Footer.astro";
 
+import NeHero from "./newspaper-editorial/Hero.astro";
+import NeHeader from "./newspaper-editorial/Header.astro";
+import NeCategoryNav from "./newspaper-editorial/CategoryNav.astro";
+import NeCategoryHero from "./newspaper-editorial/CategoryHero.astro";
+import NeMenuCard from "./newspaper-editorial/MenuCard.astro";
+import NeFeaturedCarousel from "./newspaper-editorial/FeaturedCarousel.astro";
+import NeFooter from "./newspaper-editorial/Footer.astro";
+
+// ── modern-dark ────────────────────────────────────────────────────────────
+import ModernDarkHero from "./modern-dark/Hero.astro";
+import ModernDarkHeader from "./modern-dark/Header.astro";
+import ModernDarkCategoryNav from "./modern-dark/CategoryNav.astro";
+import ModernDarkCategoryHero from "./modern-dark/CategoryHero.astro";
+import ModernDarkMenuCard from "./modern-dark/MenuCard.astro";
+import ModernDarkFeaturedCarousel from "./modern-dark/FeaturedCarousel.astro";
+import ModernDarkFooter from "./modern-dark/Footer.astro";
+
 interface TemplateComponentSet {
     Hero: typeof EditorialHero;
     Header: typeof EditorialHeader;
@@ -192,5 +209,23 @@ export const templateComponents: Record<
         MenuCard: ArtisanCraftMenuCard,
         FeaturedCarousel: ArtisanCraftFeaturedCarousel,
         Footer: ArtisanCraftFooter,
+    },
+    "modern-dark": {
+        Hero: ModernDarkHero,
+        Header: ModernDarkHeader,
+        CategoryNav: ModernDarkCategoryNav,
+        CategoryHero: ModernDarkCategoryHero,
+        MenuCard: ModernDarkMenuCard,
+        FeaturedCarousel: ModernDarkFeaturedCarousel,
+        Footer: ModernDarkFooter,
+    },
+    "newspaper-editorial": {
+        Hero: NeHero,
+        Header: NeHeader,
+        CategoryNav: NeCategoryNav,
+        CategoryHero: NeCategoryHero,
+        MenuCard: NeMenuCard,
+        FeaturedCarousel: NeFeaturedCarousel,
+        Footer: NeFooter,
     },
 };

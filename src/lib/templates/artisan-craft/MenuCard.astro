@@ -9,7 +9,7 @@ const imageUrl = hasImage ? resolveMenuItemImage(restaurant, item.image) : '';
 const isVeg = item.tags.includes('vegetarian'), isVegan = item.tags.includes('vegan'), isGF = item.tags.includes('gluten-free');
 const hasVariants = item.variants && item.variants.length > 0;
 ---
-<div class="ac-item" data-item-id={item.id} role="button" tabindex="0" aria-label={"View "+item.name}>
+<div class="ac-item" data-item-id={item.id}>
   {
     hasImage ? (
       <div class="ac-item-img"><img src={imageUrl} alt={item.name} /></div>

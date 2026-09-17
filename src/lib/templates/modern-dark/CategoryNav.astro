@@ -1,0 +1,143 @@
+---
+/**
+ * Modern Dark — CategoryNav
+ * Sticky horizontal category bar. Champagne underline indicator driven by the
+ * shared scrollspy (setupCategorySpy toggles .active via data-category-btn).
+ * Click scrolls to the category section. 44px touch targets.
+ */
+import type { MenuCategory } from '../../../schemas/restaurant.schema';
+
+interface Props { categories: MenuCategory[]; }
+const { categories } = Astro.props;
+---
+
+<nav class="nr-catnav" aria-label="Menu categories">
+  <div class="nr-catnav-track">
+    {categories.map((cat, i) => (
+      <button
+        class="nr-catnav-btn"
+        data-category-btn={cat.id}
+        data-cat-id={cat.id}
+        type="button"
+      >
+        <span class="nr-catnav-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+        {cat.name}
+      </button>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .nr-catnav {
+    position: sticky;
+    top: 56px; /* sits directly beneath the sliding nr-header */
+    z-index: 60;
+    background: color-mix(in srgb, var(--nr-secondary, #101110) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+    border-bottom: 1px solid var(--nr-border, rgba(245, 241, 232, 0.1));
+  }
+
+  .nr-catnav-track {
+    display: flex;
+    gap: clamp(0.5rem, 2.5vw, 2rem);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding: 0 clamp(1rem, 4vw, 2.5rem);
+    max-width: 72rem;
+    margin: 0 auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nr-catnav-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nr-catnav-btn {
+    position: relative;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0.5rem 0.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--nr-font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--nr-muted, #aba39f);
+    white-space: nowrap;
+    transition: color 0.3s ease;
+  }
+
+  .nr-catnav-num {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--nr-muted, #aba39f);
+    opacity: 0.7;
+    transition: color 0.3s ease;
+  }
+
+  /* Restrained champagne underline — animated via transform only */
+  .nr-catnav-btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--nr-accent, #c6aa78);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--mr-ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .nr-catnav-btn:hover {
+    color: var(--nr-primary, #f5f1e8);
+  }
+
+  .nr-catnav-btn.active {
+    color: var(--nr-accent, #c6aa78);
+  }
+
+  .nr-catnav-btn.active .nr-catnav-num {
+    color: var(--nr-accent, #c6aa78);
+    opacity: 1;
+  }
+
+  .nr-catnav-btn.active::after {
+    transform: scaleX(1);
+  }
+
+  @media (max-width: 640px) {
+    .nr-catnav {
+      top: 48px;
+    }
+  }
+</style>
+
+<script>
+  // Click → smooth-scroll to the category section. Idempotent.
+  function setupNrCatNav() {
+    const track = document.querySelector<HTMLElement>('.nr-catnav-track');
+    if (!track || track.dataset.nrNavAttached) return;
+    track.dataset.nrNavAttached = 'true';
+
+    track.querySelectorAll<HTMLElement>('.nr-catnav-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById('category-' + btn.dataset.catId);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupNrCatNav);
+  if (document.readyState !== 'loading') setupNrCatNav();
+</script>
