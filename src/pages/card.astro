@@ -1,0 +1,677 @@
+---
+/**
+ * /card — Digital NFC business card.
+ * Target page for tap-to-connect NFC cards / QR codes.
+ * Premium dark + gold, mobile-first, entrance choreography.
+ *
+ * Privacy: the phone number is never rendered as page text.
+ * It only exists inside the Call / Text / vCard action targets,
+ * so it is revealed the moment a visitor chooses to act.
+ */
+import { basePath } from '../lib/base';
+
+const person = {
+  first: 'Smita',
+  last: 'Patel',
+  initials: 'SP',
+  role: 'Sales Executive',
+  org: 'DigitalMenus',
+  tagline: 'Your direct line to a better online presence.',
+};
+
+// Number lives ONLY in link targets — never visible on the page.
+const phone = '+15512478238';
+const vcard = basePath('/smita-patel.vcf');
+
+const offerings = [
+  {
+    icon: 'star',
+    title: 'More Google Reviews',
+    body: 'We help businesses grow their 5-star reviews — a ready-made review funnel that turns happy guests into public praise.',
+  },
+  {
+    icon: 'tap',
+    title: 'Tap-to-Review Cards',
+    body: 'NFC cards placed at your counter or tables. Guests tap with any phone and land straight on your review page.',
+  },
+  {
+    icon: 'menu',
+    title: 'Tap-to-View Menu Cards',
+    body: 'Your digital menu, one tap away. No app, no scanning gymnastics — the modern replacement for printed menus.',
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smita Patel — Sales Executive · DigitalMenus</title>
+    <meta name="description"
+        content="Tap to connect with Smita Patel, Sales Executive at DigitalMenus. Save her contact, call or text in one tap. Digital menus, Google review growth & NFC smart cards for your business." />
+    <link rel="icon" href={basePath('/favicon.svg')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="bc-body">
+    <div class="bc-glow" aria-hidden="true"></div>
+    <div class="bc-grain" aria-hidden="true"></div>
+
+    <main class="bc-stage">
+        <!-- NFC tap moment -->
+        <div class="bc-tap-pill bc-rise" style="--d: 0ms">
+            <span class="bc-tap-waves" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M6 8.5a8 8 0 0 1 0 7" />
+                    <path d="M9.5 6a11 11 0 0 1 0 12" />
+                    <circle cx="16.5" cy="12" r="1" fill="currentColor" stroke="none" />
+                </svg>
+            </span>
+            You just tapped Smita&rsquo;s card
+        </div>
+
+        <!-- Profile card -->
+        <section class="bc-card bc-rise" style="--d: 150ms" aria-label="Smita Patel — digital business card">
+            <div class="bc-shine" aria-hidden="true"></div>
+
+            <div class="bc-avatar-wrap">
+                <span class="bc-avatar-ring" aria-hidden="true"></span>
+                <span class="bc-avatar-glow" aria-hidden="true"></span>
+                <div class="bc-avatar">{person.initials}</div>
+            </div>
+
+            <h1 class="bc-name">
+                <span class="bc-name-first">{person.first}</span>
+                <span class="bc-name-last">{person.last}</span>
+            </h1>
+            <p class="bc-role">
+                {person.role} <span class="bc-role-dot" aria-hidden="true">·</span>
+                <span class="bc-org">{person.org}</span>
+            </p>
+            <p class="bc-tagline">&ldquo;{person.tagline}&rdquo;</p>
+        </section>
+
+        <!-- Actions — number only revealed through action, never shown -->
+        <div class="bc-actions">
+            <a class="bc-btn bc-btn-primary bc-rise" style="--d: 300ms" href={vcard} id="bc-save">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M19 8v6M22 11h-6" />
+                </svg>
+                Save Contact
+                <span class="bc-btn-hint">iPhone &amp; Android</span>
+            </a>
+            <div class="bc-actions-row">
+                <a class="bc-btn bc-btn-ghost bc-rise" style="--d: 400ms" href={`tel:${phone}`} aria-label={`Call ${person.first} ${person.last}`}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    Call
+                </a>
+                <a class="bc-btn bc-btn-ghost bc-rise" style="--d: 480ms" href={`sms:${phone}`} aria-label={`Text ${person.first} ${person.last}`}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Text
+                </a>
+            </div>
+        </div>
+
+        <!-- What we do -->
+        <section class="bc-offer bc-rise" style="--d: 600ms" aria-label="How DigitalMenus can help">
+            <p class="bc-offer-eyebrow">How DigitalMenus can help</p>
+            <p class="bc-offer-intro">
+                Whether you run a restaurant, caf&eacute;, salon, or any local business —
+                we get you found online and bring customers through the door.
+            </p>
+            <div class="bc-offer-grid">
+                {offerings.map((o) => (
+                <article class="bc-offer-card">
+                    <span class="bc-offer-icon" aria-hidden="true">
+                        {o.icon === 'star' && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.26 6.86.6-5.2 4.52 1.55 6.72L12 16.54 5.89 20.1l1.55-6.72-5.2-4.52 6.86-.6z"/></svg>
+                        )}
+                        {o.icon === 'tap' && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5V5a1.5 1.5 0 0 1 3 0v6"/><path d="M12 11V9.5a1.5 1.5 0 0 1 3 0V12"/><path d="M15 11.5a1.5 1.5 0 0 1 3 0V15a7 7 0 0 1-7 7h-1a7 7 0 0 1-7-7v-2.5a1.5 1.5 0 0 1 3 0"/></svg>
+                        )}
+                        {o.icon === 'menu' && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v18M4 3h16M4 12h12M20 3v18"/></svg>
+                        )}
+                    </span>
+                    <h2>{o.title}</h2>
+                    <p>{o.body}</p>
+                </article>
+                ))}
+            </div>
+            <a class="bc-offer-cta" href={basePath('/digitalmenus')}>Explore DigitalMenus &rarr;</a>
+        </section>
+
+        <footer class="bc-footer bc-rise" style="--d: 700ms">
+            <p>&copy; {new Date().getFullYear()} {person.org} · Digital business card</p>
+        </footer>
+    </main>
+
+    <!-- Save feedback toast -->
+    <div class="bc-toast" id="bc-toast" role="status" aria-live="polite"></div>
+
+    <script>
+        // ── Save Contact: open natively on iPhone, one-tap vCard save on Android ──
+        const saveBtn = document.getElementById('bc-save');
+        const toast = document.getElementById('bc-toast');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        let toastTimer;
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3400);
+        }
+
+        saveBtn?.addEventListener('click', async (e) => {
+            // Haptic tick where supported (Android)
+            navigator.vibrate?.(12);
+            saveBtn.classList.add('bc-saving');
+
+            if (isIOS) {
+                // Let the native flow take over: iOS Safari opens the vCard
+                // contact preview directly — one tap on "Create New Contact".
+                showToast('Opening contact — tap \u201CCreate New Contact\u201D to save');
+                return; // no preventDefault — navigate to the .vcf
+            }
+
+            // Everyone else: fetch + Blob so the file carries text/vcard
+            // (hosts sometimes serve .vcf as octet-stream, which breaks preview)
+            e.preventDefault();
+            showToast('Preparing contact card…');
+            try {
+                const res = await fetch(saveBtn.getAttribute('href'), { cache: 'no-store' });
+                const text = await res.text();
+                const blob = new Blob([text], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'SmitaPatel.vcf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+                showToast('Contact ready — open it & tap Save ✓');
+            } catch {
+                window.location.href = saveBtn.getAttribute('href');
+            }
+        });
+
+        // Subtle haptic on Call / Text too
+        document.querySelectorAll('.bc-btn-ghost').forEach((b) => {
+            b.addEventListener('click', () => navigator.vibrate?.(8));
+        });
+    </script>
+</body>
+
+</html>
+
+<style is:global>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bc-bg: #0b0b0d;
+        --bc-ink: #f5f2ec;
+        --bc-ink-60: rgba(245, 242, 236, 0.55);
+        --bc-ink-30: rgba(245, 242, 236, 0.3);
+        --bc-gold: #d4af37;
+        --bc-gold-bright: #e8c55a;
+        --bc-card: rgba(245, 242, 236, 0.03);
+        --bc-border: rgba(245, 242, 236, 0.08);
+    }
+
+    .bc-body {
+        min-height: 100dvh;
+        background: var(--bc-bg);
+        color: var(--bc-ink);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Ambient gold glow + grain */
+    .bc-glow {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(ellipse 90% 50% at 50% -10%, rgba(212, 175, 55, 0.14), transparent 60%),
+            radial-gradient(ellipse 60% 40% at 50% 110%, rgba(212, 175, 55, 0.06), transparent 60%);
+    }
+    .bc-grain {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+    }
+
+    .bc-stage {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 30rem;
+        padding: 3rem 1.25rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Entrance choreography */
+    @keyframes bcRise {
+        from { opacity: 0; transform: translateY(24px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .bc-rise {
+        opacity: 0;
+        animation: bcRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: var(--d, 0ms);
+    }
+
+    /* ── NFC tap pill ─────────────────────────────────────── */
+    .bc-tap-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.1rem;
+        border-radius: 999px;
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        background: rgba(212, 175, 55, 0.08);
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--bc-gold);
+        margin-bottom: 1.75rem;
+        text-align: center;
+    }
+    .bc-tap-waves { display: inline-flex; color: var(--bc-gold); }
+    @keyframes bcWave {
+        0%, 100% { opacity: 0.5; transform: scale(0.92); }
+        50% { opacity: 1; transform: scale(1.08); }
+    }
+    .bc-tap-waves svg { animation: bcWave 1.8s ease-in-out infinite; }
+
+    /* ── Profile card ─────────────────────────────────────── */
+    .bc-card {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        padding: 3rem 2rem 2.25rem;
+        border-radius: 2rem;
+        border: 1px solid var(--bc-border);
+        background: var(--bc-card);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+    }
+    /* Light sweep across the card on entrance */
+    @keyframes bcShine {
+        from { transform: translateX(-120%) skewX(-15deg); }
+        to { transform: translateX(240%) skewX(-15deg); }
+    }
+    .bc-shine {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 45%;
+        height: 100%;
+        background: linear-gradient(100deg, transparent, rgba(232, 197, 90, 0.07), transparent);
+        animation: bcShine 1.6s 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        pointer-events: none;
+    }
+
+    .bc-avatar-wrap {
+        position: relative;
+        width: 7rem;
+        height: 7rem;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Rotating conic gold ring */
+    .bc-avatar-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0%, var(--bc-gold) 30%, var(--bc-gold-bright) 50%, var(--bc-gold) 70%, transparent 100%);
+        animation: bcSpin 6s linear infinite;
+    }
+    @keyframes bcSpin { to { transform: rotate(360deg); } }
+    .bc-avatar-ring::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        border-radius: 50%;
+        background: #101013;
+    }
+    .bc-avatar-glow {
+        position: absolute;
+        inset: -0.75rem;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.22), transparent 70%);
+        animation: bcPulse 3s ease-in-out infinite;
+    }
+    @keyframes bcPulse {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.06); }
+    }
+    .bc-avatar {
+        position: relative;
+        z-index: 1;
+        width: 6.5rem;
+        height: 6.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 2.25rem;
+        font-style: italic;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        background: linear-gradient(135deg, var(--bc-gold-bright), #9c7c1e);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        background-color: #101013;
+    }
+
+    .bc-name {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.08;
+        margin-bottom: 0.9rem;
+    }
+    .bc-name-first {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 1.6rem;
+        color: var(--bc-ink-60);
+    }
+    .bc-name-last {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 800;
+        font-size: 2.1rem;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #fff 30%, rgba(255, 255, 255, 0.55) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        margin-top: -0.1em;
+    }
+
+    .bc-role {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--bc-gold);
+        margin-bottom: 1rem;
+    }
+    .bc-role-dot { color: var(--bc-ink-30); margin: 0 0.35rem; }
+    .bc-org { color: var(--bc-ink); }
+
+    .bc-tagline {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 0.9375rem;
+        color: var(--bc-ink-60);
+        font-weight: 400;
+    }
+
+    /* ── Actions ──────────────────────────────────────────── */
+    .bc-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+    .bc-actions-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .bc-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 1rem 1.5rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.9375rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bc-btn-primary {
+        flex-direction: column;
+        gap: 0.2rem;
+        background: linear-gradient(135deg, var(--bc-gold-bright), var(--bc-gold));
+        color: #14100a;
+        box-shadow: 0 8px 30px -8px rgba(212, 175, 55, 0.6);
+    }
+    .bc-btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 18px 44px -10px rgba(212, 175, 55, 0.7);
+    }
+    .bc-btn-hint {
+        font-size: 0.5625rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        opacity: 0.65;
+    }
+    .bc-btn-ghost {
+        border: 1px solid var(--bc-border);
+        background: var(--bc-card);
+        color: var(--bc-ink);
+    }
+    .bc-btn-ghost:hover {
+        transform: translateY(-3px);
+        border-color: rgba(212, 175, 55, 0.5);
+        color: var(--bc-gold);
+        background: rgba(212, 175, 55, 0.06);
+    }
+    .bc-btn:active { transform: scale(0.97); }
+
+    /* ── Offerings ────────────────────────────────────────── */
+    .bc-offer {
+        width: 100%;
+        margin-top: 3rem;
+        text-align: center;
+    }
+    .bc-offer-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.625rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--bc-ink-30);
+        margin-bottom: 1.5rem;
+    }
+    .bc-offer-eyebrow::before,
+    .bc-offer-eyebrow::after {
+        content: '';
+        width: 2rem;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--bc-gold));
+    }
+    .bc-offer-eyebrow::after { background: linear-gradient(90deg, var(--bc-gold), transparent); }
+
+    .bc-offer-intro {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        color: var(--bc-ink-60);
+        font-weight: 400;
+        margin: -0.75rem auto 1.5rem;
+        max-width: 24rem;
+    }
+
+    .bc-offer-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.875rem;
+    }
+    .bc-offer-card {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 1.25rem 1.5rem;
+        border-radius: 1.25rem;
+        border: 1px solid var(--bc-border);
+        background: var(--bc-card);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bc-offer-card:hover {
+        border-color: rgba(212, 175, 55, 0.4);
+        background: rgba(212, 175, 55, 0.05);
+        transform: translateY(-3px);
+    }
+    .bc-offer-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.625rem;
+        background: rgba(212, 175, 55, 0.12);
+        color: var(--bc-gold);
+        margin-bottom: 0.25rem;
+    }
+    .bc-offer-card h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.0625rem;
+        font-style: italic;
+        font-weight: 600;
+        color: var(--bc-ink);
+    }
+    .bc-offer-card p {
+        font-size: 0.8125rem;
+        line-height: 1.65;
+        color: var(--bc-ink-60);
+        font-weight: 300;
+    }
+
+    .bc-offer-cta {
+        display: inline-block;
+        margin-top: 1.75rem;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--bc-gold);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        padding-bottom: 0.2rem;
+        transition: all 0.3s ease;
+    }
+    .bc-offer-cta:hover {
+        color: var(--bc-gold-bright);
+        border-color: var(--bc-gold-bright);
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .bc-footer {
+        margin-top: 3rem;
+        padding-bottom: 2rem;
+    }
+    .bc-footer p {
+        font-size: 0.625rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--bc-ink-30);
+    }
+
+    /* ── Save toast ───────────────────────────────────────── */
+    .bc-toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+        transform: translate(-50%, 1.5rem);
+        max-width: 20rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 999px;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        background: rgba(20, 18, 12, 0.92);
+        backdrop-filter: blur(12px);
+        color: var(--bc-gold-bright);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-align: center;
+        line-height: 1.4;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 50;
+        box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.7);
+        transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bc-toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    /* Button "working" state */
+    .bc-saving { opacity: 0.85; }
+
+    /* Gentle float on the avatar for a living, premium feel */
+    @keyframes bcFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+    .bc-avatar-wrap { animation: bcFloat 5s ease-in-out 1.2s infinite; }
+
+    /* ── Reduced motion ───────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+        .bc-rise { animation: none; opacity: 1; }
+        .bc-shine { animation: none; opacity: 0; }
+        .bc-avatar-ring, .bc-avatar-glow, .bc-tap-waves svg, .bc-avatar-wrap { animation: none; }
+        .bc-btn, .bc-offer-card { transition: none; }
+        .bc-btn:hover, .bc-offer-card:hover { transform: none; }
+        .bc-toast { transition: none; }
+    }
+
+    /* ── Small screens ────────────────────────────────────── */
+    @media (max-width: 380px) {
+        .bc-stage { padding: 2.5rem 1rem 1.5rem; }
+        .bc-card { padding: 2.5rem 1.5rem 2rem; }
+        .bc-name-last { font-size: 1.85rem; }
+        .bc-btn { font-size: 0.875rem; }
+    }
+</style>
+
+
+
+
+

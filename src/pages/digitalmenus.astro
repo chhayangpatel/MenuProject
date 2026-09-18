@@ -13,6 +13,8 @@ const features = [
   { title: 'Online Presence', body: 'We help small businesses get found and look world-class online — fast pages, social-ready links.' },
   { title: 'Designer Themes', body: 'Ten hand-crafted themes — from fine dining to street food — each with its own personality.' },
   { title: 'Live in 24 Hours', body: 'Send us your menu. We handle design, setup, codes, and launch — usually within a day.' },
+  { title: 'More Google Reviews', body: 'A ready-made review funnel that turns happy guests into 5-star reviews — the ranking boost every business needs.' },
+  { title: 'Tap Smart Cards', body: 'Premium NFC cards: tap to review, tap to view the menu. One touch with any phone — no app, no setup.' },
 ];
 
 const steps = [
@@ -84,7 +86,7 @@ const logo = {
                 <span class="dm-headline-sans">beautifully digital.</span>
             </h1>
             <p class="dm-subheadline">
-                DigitalMenus helps restaurants, cafés, and food trucks punch above
+                DigitalMenus can help. We help restaurants, cafés, and food trucks punch above
                 their weight online — with stunning digital menus, fast mobile pages,
                 and a brand presence that turns visitors into regulars.
             </p>
@@ -166,6 +168,7 @@ const logo = {
                 <span><em>Digital</em><strong>Menus</strong></span>
             </a>
             <p class="dm-footer-tag">Helping restaurants increase their online presence.</p>
+            <a class="dm-footer-cardlink" href={basePath('/card')}>Meet Smita — tap her digital business card →</a>
             <p class="dm-footer-copy">© {year} DigitalMenus. All rights reserved.</p>
         </footer>
     </div>
@@ -620,6 +623,21 @@ const logo = {
     color: var(--dm-ink-60);
     font-weight: 300;
     margin-bottom: 0.75rem;
+}
+.dm-footer-cardlink {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--dm-gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 0.2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+.dm-footer-cardlink:hover {
+    color: #e8c55a;
+    border-color: #e8c55a;
 }
 .dm-footer-copy {
     font-size: 0.6875rem;

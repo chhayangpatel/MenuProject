@@ -98,4 +98,7 @@ graph.json
 *.crt
 *.key
 
+# Verification screenshots (local QA only)
+shots/
+
 .tmp-supabase/
